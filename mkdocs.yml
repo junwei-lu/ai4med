@@ -2,11 +2,10 @@
 site_name: AI4Med
 site_url: https://junwei-lu.github.io/ai4med/
 site_description: "AI4Med"
-docs_dir: build/docs
+docs_dir: docs
 site_dir: site
 # Repository
 edit_uri: tree/main/docs
-version: 1.0.0
 
 
 # Copyright
@@ -15,7 +14,7 @@ copyright: Junwei Lu, Department of Biostatistics, Harvard T.H. Chan School of P
 # Configuration
 theme:
   name: material
-  custom_dir: build/overrides
+  custom_dir: overrides
   language: en
   features:
     - announce.dismiss
