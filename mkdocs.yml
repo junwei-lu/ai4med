@@ -1,0 +1,249 @@
+# Project information
+site_name: BST236 Computing
+site_url: https://junwei-lu.github.io/bst236/
+site_description: "BST236 Computing"
+docs_dir: build/docs
+site_dir: site
+# Repository
+edit_uri: tree/main/docs
+version: 1.0.0
+
+
+# Copyright
+copyright: Junwei Lu, Department of Biostatistics, Harvard T.H. Chan School of Public Health.
+
+# Configuration
+theme:
+  name: material
+  custom_dir: build/overrides
+  language: en
+  features:
+    - announce.dismiss
+    #- content.action.edit
+    # - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    # - navigation.expand
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.prune
+    # - navigation.sections
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    # - toc.integrate
+  palette:
+    - scheme: default
+      primary: white
+      accent: teal
+      toggle:
+        icon: material/theme-light-dark
+        name: Light mode
+    - scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/theme-light-dark
+        name: Light mode
+  font:
+    text: Noto Sans SC
+    code: Fira Code
+  favicon: assets/images/favicon-stat.png
+  logo: assets/images/stat-logo.svg
+  icon:
+    logo: logo
+    repo: fontawesome/brands/github
+    edit: fontawesome/regular/pen-to-square
+
+extra:
+  #alternate:
+    #- name: English
+      #link: /
+      #lang: en
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/junwei-lu/
+    #  - icon: fontawesome/brands/x-twitter
+    #   link: https://twitter.com/
+    - icon: fontawesome/solid/code
+      link: https://junwei-lu.github.io/
+  generator: false
+  #status:
+  #  new: 
+
+# Plugins
+plugins:
+  - search
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: none
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: false
+      auto_caption: false
+      caption_position: bottom
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  # - pymdownx.emoji:
+  #     emoji_index: !!python/name:materialx.emoji.twemoji
+  #     emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.keys
+  # - pymdownx.magiclink:
+  #     repo_url_shorthand: true
+  #     user: squidfunk
+  #     repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
+  # - javascripts/katex.js 
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js  
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js
+
+extra_css:
+  - stylesheets/extra.css
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css
+
+# Page tree
+nav:
+  - Course Information:
+    - chapter_syllabus/index.md
+  - Chapter 0. Introduction:
+    - chapter_preface/index.md
+  - Chapter 1. Basics of Coding:
+    - chapter_coding/index.md
+    - Principles: chapter_coding/code_principle.md
+    - Code in Style: chapter_coding/coding_style.md
+  - Chapter 2. Coding with AI:
+    - chapter_ai/index.md
+    - AI Copilot: chapter_ai/ai_copilot.md
+    - Prompt Engineering: chapter_ai/prompt_engineering.md
+    - AI Tools: chapter_ai/ai_tools.md
+  - Chapter 3. Computing Workflow:
+    - chapter_workflow/index.md
+    - Workflow: chapter_workflow/computing_workflow.md
+    - Git and GitHub: chapter_workflow/git.md
+    - Make: chapter_workflow/make.md
+    - Virtual Environment: chapter_workflow/venv.md
+    - Reproducible R: chapter_workflow/R.md
+    - Docker: chapter_workflow/docker.md
+  - Chapter 4. Complexity analysis:
+    - chapter_computational_complexity/index.md
+    #- Iteration and recursion: chapter_computational_complexity/iteration_and_recursion.md
+    - Time complexity: chapter_computational_complexity/time_complexity.md
+    - Space complexity: chapter_computational_complexity/space_complexity.md
+  - Chapter 5. Data Structures:
+    - chapter_data_structures/index.md
+    - Lists: chapter_data_structures/list.md
+    - Stack: chapter_data_structures/stack.md
+    - Queue: chapter_data_structures/queue.md
+    - Hash Table: chapter_data_structures/hash_map.md
+    - NumPy Arrays: chapter_data_structures/numpy_array.md
+    - Pandas DataFrame: chapter_data_structures/pandas_dataframe.md
+    - Polars: chapter_data_structures/polars.md
+    - Multiprocessing: chapter_data_structures/multiprocess.md
+  - Chapter 6. Discrete Algorithms:
+    - chapter_algorithms/index.md
+    - Depth-first Search: chapter_algorithms/climb_stairs.md
+    - Divide and Conquer: chapter_algorithms/divide_n_conquer.md
+    - Breadth-first Search: chapter_algorithms/bfs.md
+    - Dynamic Programming: chapter_algorithms/dynamic_programming.md
+    - Summary: chapter_algorithms/summary.md
+  - Chapter 7. Numerical Linear Algebra:
+    - chapter_linear_algebra/index.md
+    - Linear Algebra Basics: chapter_linear_algebra/basic_linear_algebra.md
+    - Numerical Criteria: chapter_linear_algebra/numerical_criteria.md
+    - Linear Equations: chapter_linear_algebra/linear_equation.md
+    - Eigen-Decomposition: chapter_linear_algebra/eigen.md
+    - Sparse Matrices: chapter_linear_algebra/sparse_matrix.md
+    - Randomized Methods: chapter_linear_algebra/stochastic_matrix.md
+    - GPU for Matrices: chapter_linear_algebra/gpu_matrix.md
+  - Chapter 8. Optimization:
+    - chapter_optimization/index.md
+    - Convexity: chapter_optimization/convexity.md
+    - Rate of Convergence: chapter_optimization/rate_of_convergence.md
+    - PyTorch Basics: chapter_optimization/pytorch_basics.md
+    - Gradient Descent: chapter_optimization/gradient_descent.md
+    - Accelerated Gradient Descent: chapter_optimization/agd.md
+    - Stochastic Gradient Descent: chapter_optimization/sgd.md
+    - Proximal Gradient Descent: chapter_optimization/proximal_gradient_descent.md
+    - Mirror Descent: chapter_optimization/mirror_descent.md
+    - Nesterov's Smooth Method: chapter_optimization/nesterov_smooth.md
+    - Duality and ADMM: chapter_optimization/duality_and_admm.md
+  - Chapter 9. Neural Networks:
+    - chapter_neural_networks/index.md
+    - Neural Networks: chapter_neural_networks/nn.md
+    - Regularization: chapter_neural_networks/regularization.md
+    - Convolutional Neural Networks: chapter_neural_networks/cnn.md
+    - Residual Networks: chapter_neural_networks/resnet.md
+    - Fine-tuning: chapter_neural_networks/fine_tuning.md
+    - Computer Vision: chapter_neural_networks/computer_vision.md
+    - Training Workflow: chapter_neural_networks/dl_workflow.md
+    - PyTorch for GPU: chapter_neural_networks/dl_gpu.md
+    - Deep Learning Tips: chapter_neural_networks/dl_tips.md
+    - PyTorch Pitfalls: chapter_neural_networks/pitfall.md
+  - Chapter 10. Language Models:
+    - chapter_language_model/index.md
+    - Word Vectors: chapter_language_model/wordvec.md
+    - Attention: chapter_language_model/attention.md
+    - Transformer: chapter_language_model/transformer.md
+    - Hugging Face: chapter_language_model/hg_transformers.md
+  - Chapter 11. Reinforcement Learning:
+    - chapter_reinforcement_learning/index.md
+    - Markov Decision Process: chapter_reinforcement_learning/mdp.md
+    - Policy Gradient: chapter_reinforcement_learning/policy_grad.md
+    - Proximal Policy Optimization: chapter_reinforcement_learning/ppo.md
+  - Chapter 12. Generative Models:
+    - chapter_generative_model/index.md
+    - Langevin Dynamics: chapter_generative_model/langevin_dynamics.md
+    - Diffusion Models: chapter_generative_model/ddpm.md
+    - Flow Matching: chapter_generative_model/flow_match.md
+  - Appendix:
+    - chapter_appendix/index.md
+    - Installation: chapter_appendix/installation.md
+    - Github Classroom: chapter_appendix/github.md
+    - Class Cluster: chapter_appendix/cluster.md
+    - Python 101: chapter_appendix/python_intro.md
+    - Contributing: chapter_appendix/contribution.md
+    # - Terminology: chapter_appendix/terminology.md
+  - References:
+    - chapter_reference/index.md
