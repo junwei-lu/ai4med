@@ -226,6 +226,8 @@ nav:
     - Attention: chapter_language_model/attention.md
     - Transformer: chapter_language_model/transformer.md
     - Hugging Face: chapter_language_model/hg_transformers.md
+    - PEFT: chapter_language_model/peft.md
+    - GRPO (RL Fine-Tuning): chapter_language_model/grpo.md
   - Chapter 11. Reinforcement Learning:
     - chapter_reinforcement_learning/index.md
     - Markov Decision Process: chapter_reinforcement_learning/mdp.md
@@ -236,6 +238,16 @@ nav:
     - Langevin Dynamics: chapter_generative_model/langevin_dynamics.md
     - Diffusion Models: chapter_generative_model/ddpm.md
     - Flow Matching: chapter_generative_model/flow_match.md
+  - Chapter 13. Foundation Models:
+    - chapter_foundation_model/index.md
+    - Building a Foundation Model (No Code): chapter_foundation_model/overview.md
+    - Coding Tutorial: chapter_foundation_model/coding_build_pretrain.md
+    - Fine-Tuning with Hugging Face: chapter_foundation_model/finetune.md
+  - Chapter 14. LLM Fine-Tuning:
+    - chapter_llm_ft/index.md
+    - Basics: chapter_llm_ft/basics.md
+    - PEFT: chapter_llm_ft/peft.md
+    - GRPO (RL Fine-Tuning): chapter_llm_ft/grpo.md
   - Appendix:
     - chapter_appendix/index.md
     - Installation: chapter_appendix/installation.md
