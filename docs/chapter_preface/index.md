@@ -48,11 +48,11 @@ The main content of the book is shown in the figure below.
 This course uses the materials from many fantastic resources. We thank the authors for these materials. Here are the list of resources we have used:
 
 - [MIT Missing Semester](https://missing.csail.mit.edu/)
-- [Hello Algorithms](https://www.hello-algo.com/en/chapter_hello_algo/)
+- [AI4Med](https://www.hello-algo.com/en/chapter_hello_algo/)
 - [INFO550 Data Science Toolkit](https://benkeser.github.io/info550/)
 - [Harvard Chan Bioinformatics Core Training](https://hbctraining.github.io/main/)
 - [Berkeley Statistics Tutorials](https://statistics.berkeley.edu/computing/training/tutorials)
 
 We also reference many textbooks which are listed in the [Reference](../chapter_reference/index.md).
 
-If any authors have concerns regarding the use of their materials or copyright issues, please contact us at [GitHub Issues](https://github.com/junwei-lu/bst236/issues). We are committed to respecting intellectual property rights and will promptly address any concerns.
+If any authors have concerns regarding the use of their materials or copyright issues, please contact us at [GitHub Issues](https://github.com/junwei-lu/ai4med/issues). We are committed to respecting intellectual property rights and will promptly address any concerns.

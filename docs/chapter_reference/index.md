@@ -8,7 +8,7 @@ icon: material/bookshelf
 
 [2] Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2001). *Introduction to Algorithms*. MIT Press.
 
-[3] Yudong Jin (@krahets). (2024). *Hello Algorithm*. Posts & Telecom Press.
+[3] Yudong Jin (@krahets). (2024). *AI4Med*. Posts & Telecom Press.
 
 [4] Golub, G. H., & Van Loan, C. F. (2013). *Matrix Computations*. Johns Hopkins University Press.
 
