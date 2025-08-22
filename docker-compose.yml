@@ -1,0 +1,8 @@
+version: '3'
+services:
+  bst236:
+    build: .
+    image: bst236
+    container_name: bst236
+    ports:
+      - "8000:8000"
