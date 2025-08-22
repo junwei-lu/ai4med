@@ -6,7 +6,7 @@
 
 **Best Option:**
 1. Ask AI first
-2. If still confused, post your question on [Github Discussions](https://github.com/orgs/hsph-bst236/discussions) under the "Lectures" category, we will answer you.
+2. If still confused, post your question on [Github Discussions](https://github.com/junwei-lu/ai4med/discussions) under the "Lectures" category, we will answer you.
 
 
 **Alternatives:**
@@ -16,12 +16,12 @@
 ### "I have a question about the syllabus/deadline and other logistics of the class."
 
 **Best Option:**
-- Post on [Github Discussions](https://github.com/orgs/hsph-bst236/discussions) under the "Logistics" category, we will answer you.
+- Post on [Github Discussions](https://github.com/junwei-lu/ai4med/discussions) under the "Logistics" category, we will answer you.
 
 ### "I want to share useful resources, latest AI news, my generative AI results, funny coding memes, to the class."
 
 **Best Option:**
-- Post on [Github Discussions](https://github.com/orgs/hsph-bst236/discussions) under the "Misc" category.
+- Post on [Github Discussions](https://github.com/junwei-lu/ai4med/discussions) under the "Misc" category.
 - Do not share the content irrelevant to the class.
 
 ## Homework Help

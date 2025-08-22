@@ -1,8 +1,8 @@
 version: '3'
 services:
-  bst236:
+  ai4med:
     build: .
-    image: bst236
-    container_name: bst236
+    image: ai4med
+    container_name: ai4med
     ports:
       - "8000:8000"
