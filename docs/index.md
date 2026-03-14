@@ -1,6 +1,6 @@
 # AI4Med
 
-![Turing](./assets/covers/chapter_welcome_turing.jpg)
+![Turing](./assets/covers/chapter_welcome_banana.png)
 
 Welcome to AI4Med! I am excited to welcome you. This course aims to create a beginner-friendly course on statistical computing. I hope to prepare you for all what you need for the basic computational skills for data science. 
 
