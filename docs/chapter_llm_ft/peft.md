@@ -33,12 +33,124 @@ Notes:
 - `bitsandbytes` enables 8-bit/4-bit model loading to fit larger models into memory.
 - Recent GPUs benefit from bf16; fallback to fp16 if needed.
 
+---
+
+## LoRA: The Math
+
+### Why low-rank?
+
+A pre-trained Transformer contains large weight matrices $W_0 \in \mathbb{R}^{d \times k}$ (e.g., $d = k = 4096$ for Llama 3). Fine-tuning all parameters requires storing and updating $d \times k \approx 16.8$ million numbers *per layer*.
+
+The key insight of LoRA ([Hu et al., 2021](https://arxiv.org/abs/2106.09685)) is that **the weight updates during fine-tuning have low intrinsic rank**—most of the useful signal lives in a small subspace of parameter space.
+
+### The low-rank decomposition
+
+Instead of updating $W_0$ directly, LoRA adds a **low-rank perturbation**:
+
+$$
+W = W_0 + \Delta W = W_0 + B A
+$$
+
+where:
+
+| Matrix | Shape | Role |
+|--------|-------|------|
+| $W_0$ | $d \times k$ | **Frozen** pre-trained weight |
+| $A$ | $r \times k$ | Trainable; initialized from $\mathcal{N}(0, \sigma^2)$ |
+| $B$ | $d \times r$ | Trainable; initialized to **zero** (so $\Delta W = 0$ at start) |
+| $r$ | scalar | Rank, $r \ll \min(d, k)$ (e.g., 8–64) |
+
+![LoRA adapter diagram](./ft.assets/lora_diagram.png)
+
+*Figure: The frozen weight $W_0$ passes through unchanged. The adapter path computes $BAx$ with far fewer parameters than $W_0x$.*
+
+### Scaled forward pass
+
+The full forward pass through an adapted layer is:
+
+$$
+h = W_0 x + \frac{\alpha}{r} B A x
+$$
+
+where $\alpha$ is a scaling hyperparameter (`lora_alpha` in the code). The factor $\alpha / r$ stabilizes training: increasing rank $r$without adjusting$\alpha$ would otherwise amplify the adapter's contribution.
+
+**In practice** $B$ is initialized to zero, so at the start of training $h = W_0 x$—the adapter starts as an identity perturbation and gradually learns the task-specific correction.
+
+### Parameter savings
+
+For a single weight matrix:
+
+| Method | Trainable params |
+|--------|-----------------|
+| Full fine-tuning | $d \times k$ |
+| LoRA rank $r$ | $r \times (d + k)$ |
+
+Example: $d = k = 4096$, $r = 16$ → LoRA trains $16 \times 8192 = 131{,}072$ vs. $4096^2 = 16{,}777{,}216$ parameters. That is a **128× reduction** in trainable parameters for this layer.
+
+Across all layers of Llama 3 8B, LoRA (rank 16, all-linear) typically trains ~1–2% of total parameters.
+
+### Why does $B$ start at zero?
+
+If both $A$and$B$were random at initialization, the perturbation$\Delta W = BA$would immediately shift the model away from its well-optimized starting point. Initializing$B = 0$ ensures:
+
+$$
+\Delta W \big|_{t=0} = B_0 A_0 = \mathbf{0}
+$$
+
+so the fine-tuning starts from the pre-trained model's behavior and only diverges as the task signal accumulates.
+
+---
+
+## Connecting Math to Code
+
+The LoRA math maps directly to the `LoraConfig` parameters:
+
+```python
+from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=16,               # rank r — capacity of adapter; higher = more expressive
+    lora_alpha=32,      # α scaling factor; effective scale = α/r = 2.0
+    lora_dropout=0.05,  # dropout on the adapter path for regularization
+    bias="none",        # do not train bias terms
+    target_modules="all-linear",   # apply ΔW = BA to every linear layer
+    task_type="CAUSAL_LM",
+)
+
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()
+# → trainable params: ~20M || all params: ~8B || trainable%: ~0.24%
+```
+
+To see the actual adapter matrices inside the model:
+
+```python
+# Inspect one LoRA adapter layer
+for name, module in model.named_modules():
+    if hasattr(module, "lora_A"):
+        print(f"Layer: {name}")
+        print(f"  A shape (r × k): {module.lora_A['default'].weight.shape}")
+        print(f"  B shape (d × r): {module.lora_B['default'].weight.shape}")
+        break
+```
+
+The forward pass in PEFT's source mirrors the math exactly:
+
+```python
+# Conceptual pseudocode matching h = W₀x + (α/r) * B * A * x
+result = F.linear(x, self.weight)                      # W₀ x   (frozen)
+lora_out = self.lora_B(self.lora_A(self.lora_dropout(x)))  # B(A(x))
+result += lora_out * (self.lora_alpha / self.r)        # + (α/r) B A x
+```
+
+---
+
 ## Quantization: 8-bit vs 4-bit
 
 Quantization stores model weights in lower precision to reduce memory.
 
-- 8-bit (int8): Good trade-off of speed and stability; widely used for inference and fine-tuning with LoRA.
-- 4-bit (int4): Maximum compression; combined with LoRA → QLoRA for efficient fine-tuning on very limited VRAM.
+- **8-bit (int8):** Good trade-off of speed and stability; widely used for inference and fine-tuning with LoRA.
+- **4-bit (int4):** Maximum compression; combined with LoRA → **QLoRA** for efficient fine-tuning on very limited VRAM.
 
 Loading a causal LM (e.g., Llama 3 8B) with quantization:
 
@@ -52,9 +164,9 @@ model_id = "meta-llama/Meta-Llama-3-8B"
 bnb_8bit = BitsAndBytesConfig(load_in_8bit=True)
 bnb_4bit = BitsAndBytesConfig(
     load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,   # second quantization for extra compression
+    bnb_4bit_quant_type="nf4",        # NormalFloat4: best distribution for LLM weights
+    bnb_4bit_compute_dtype=torch.bfloat16,  # compute in bf16 even though weights are 4-bit
 )
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -70,37 +182,20 @@ Tips:
 - If you encounter numerical instability on older GPUs, try `torch.float16` compute dtype.
 - For chat-tuned models, ensure the tokenizer has correct special tokens and chat template.
 
-## LoRA: Low-Rank Adaptation
-
-LoRA inserts small low-rank adapters into selected linear layers and trains only those adapters. This drastically reduces trainable parameters while keeping the base model frozen.
-
-Key hyperparameters:
-- `r` (rank): capacity of adapters (common: 8–64 for small tasks, up to 256 for complex tasks)
-- `lora_alpha`: scaling factor (e.g., 16–128)
-- `lora_dropout`: regularization (e.g., 0.05–0.1)
-- `target_modules`: which modules to adapt ("all-linear" is a robust default for many LLMs)
-
-Minimal LoRA setup with `peft`:
-
-```python
-from peft import LoraConfig, get_peft_model
-
-lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    lora_dropout=0.05,
-    bias="none",
-    target_modules="all-linear",
-    task_type="CAUSAL_LM",
-)
-
-model = get_peft_model(model, lora_config)
-model.print_trainable_parameters()
-```
+---
 
 ## QLoRA: LoRA on a 4-bit Base
 
-QLoRA applies LoRA while keeping the base model in 4-bit quantization. This allows fine-tuning larger models (e.g., 8B) on 20–24GB GPUs.
+QLoRA combines quantization and LoRA: the **base model stays in 4-bit** (frozen), while the **LoRA adapter matrices $A$and$B$ are trained in bfloat16**. This is possible because:
+
+1. The quantized weights are **dequantized on-the-fly** during the forward pass to bf16 for matrix multiplication
+2. Gradients only flow through the adapter $BA$, never through $W_0$
+
+The math remains identical; only the storage format of $W_0$ changes:
+
+$$
+h = \text{dequant}(W_0^{4\text{bit}}) \cdot x + \frac{\alpha}{r} B A x
+$$
 
 Practical tips:
 - Use `nf4` quant type and bf16 compute where possible
@@ -119,7 +214,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 model_id = "meta-llama/Meta-Llama-3-8B"
 
-# 4-bit base model
+# 4-bit base model — W₀ stored in 4-bit, dequantized to bf16 for compute
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
@@ -138,7 +233,7 @@ model = AutoModelForCausalLM.from_pretrained(
 # Ensure chat format if training on conversations
 model, tokenizer = setup_chat_format(model, tokenizer)
 
-# LoRA config typical for QLoRA
+# LoRA adapters: r=16, α=16 → effective scale α/r = 1.0
 peft_config = LoraConfig(
     r=16,
     lora_alpha=16,
@@ -180,30 +275,40 @@ trainer.train()
 trainer.save_model()
 ```
 
+---
+
 ## Merging Adapters (Optional)
 
 QLoRA saves only adapter weights. For simple deployment without PEFT, you can merge adapters into the base model on CPU and save a standalone checkpoint:
+
+$$
+W_{\text{merged}} = W_0 + \frac{\alpha}{r} B A
+$$
 
 ```python
 from peft import AutoPeftModelForCausalLM
 
 peft_dir = "llama3-8b-qlora-demo"
 peft_model = AutoPeftModelForCausalLM.from_pretrained(peft_dir, torch_dtype=torch.float16, low_cpu_mem_usage=True)
-merged = peft_model.merge_and_unload()
+merged = peft_model.merge_and_unload()   # computes W₀ + (α/r)BA for each layer
 merged.save_pretrained(peft_dir, safe_serialization=True, max_shard_size="2GB")
 ```
 
+---
+
 ## Choosing Settings
 
-- Start with 4-bit QLoRA for 8B models on 24GB VRAM; use 8-bit LoRA if you prefer extra stability
-- Increase `r` for harder tasks; increase `lora_alpha` proportionally
-- Use packing (`packing=True`) to boost throughput on short examples
-- Monitor validation loss and sample outputs; early stop if overfitting
+| Setting | Guidance |
+|---------|----------|
+| `r` (rank) | Start with 16; increase to 64–128 for harder tasks |
+| `lora_alpha` | Set equal to `r` (scale = 1) or 2× `r` (scale = 2) |
+| `lora_dropout` | 0.05–0.1 for regularization |
+| Quant bits | 4-bit for 8B+ models on 24GB VRAM; 8-bit for extra stability |
+| `packing` | `True` for short examples; boosts throughput |
 
 ## Takeaways
 
-- Quantization plus LoRA enables practical domain adaptation of LLMs on a single GPU
-- QLoRA is a robust default for large models; LoRA+8-bit is a solid alternative
+- LoRA adds a rank-$r$perturbation$\Delta W = BA$to frozen weights; only$A$and$B$ are trained
+- The scaling $\alpha / r$ separates adapter capacity (`r`) from learning magnitude (`\alpha`)
+- Quantization plus LoRA (QLoRA) enables practical domain adaptation of LLMs on a single GPU
 - Hugging Face `trl` + `peft` streamline the workflow from data to training to export
-
-

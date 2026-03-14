@@ -267,10 +267,11 @@ for epoch in range(num_epochs):
 
     # validation
     model.eval()
+    loss = 0.0
     for batch_i, batch in enumerate(eval_dataloader):
         with torch.no_grad():
             output = model(**batch)
-        loss += output.loss
+        loss += output.loss.item()
 
     avg_val_loss = loss / len(eval_dataloader)
     print(f"Validation loss: {avg_val_loss}")
@@ -301,7 +302,7 @@ arguments = TrainingArguments(
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
     num_train_epochs=2,
-    evaluation_strategy="epoch",
+    eval_strategy="epoch",
     save_strategy="epoch",
     learning_rate=2e-5,
     load_best_model_at_end=True,
@@ -390,8 +391,9 @@ Hugging Face also has the encoder models like [GPT-2](https://huggingface.co/doc
 We can use the `AutoModelForCausalLM` to load the GPT-2 model and generate text.
 
 ```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-from transformers import AutoModelForCausalLM
+gpt2_tokenizer = AutoTokenizer.from_pretrained('distilgpt2')
 gpt2 = AutoModelForCausalLM.from_pretrained('distilgpt2')
 
 prompt = "Once upon a time"
@@ -399,7 +401,7 @@ tokenized_prompt = gpt2_tokenizer(prompt, return_tensors="pt")
 
 for i in range(10):
     output = gpt2.generate(**tokenized_prompt,
-                  max_length=50,
+                  max_new_tokens=40,
                   do_sample=True,
                   top_p=0.9)
 
@@ -496,7 +498,8 @@ Here is an example of how to use the accelerate package to train the distilbert 
 # train.py
 import torch
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, get_scheduler
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, get_scheduler
+from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from accelerate import Accelerator
 from tqdm import tqdm

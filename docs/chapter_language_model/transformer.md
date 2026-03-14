@@ -88,8 +88,8 @@ class TransformerBlock(nn.Module):
 
     def forward(self, x, attn_mask=None, key_padding_mask=None):
         # Apply Multi-Head Attention (self-attention) where Q = K = V = x.
-        # attn_output shape: (batch_size, sequence_length, embed_dim)
-        attn_output = self.mha(x, x, x, need_weights=False) # need_weights=False to avoid computing the attention weights
+        # nn.MultiheadAttention returns (attn_output, attn_weights); unpack accordingly.
+        attn_output, _ = self.mha(x, x, x, need_weights=False)
         
         # First residual connection and layer normalization.
         # X' = LayerNorm(x + attn_output)
@@ -209,32 +209,69 @@ We list below the best use cases for each type of transformer architecture.
 - **Use when**: Your task involves transforming one sequence into another related sequence
 
 
-## Transformer in PyTorch
+## Transformer with Hugging Face
 
-PyTorch provides a `torch.nn.Transformer` module that implements the Transformer architecture. We will use this module to implement the encoder and decoder of the Transformer.
+Rather than building transformer blocks from scratch, Hugging Face 🤗 gives you production-ready encoder-only, decoder-only, and encoder-decoder models in a single line. The table below maps each architecture to the right `AutoModel` class.
+
+| Architecture | HF class | Example model |
+|---|---|---|
+| Encoder-only | `AutoModel` / `AutoModelForSequenceClassification` | `bert-base-uncased` |
+| Decoder-only | `AutoModelForCausalLM` | `gpt2` |
+| Encoder-Decoder | `AutoModelForSeq2SeqLM` | `t5-small`, `facebook/bart-large-cnn` |
 
 ```python
-import torch.nn as nn
 import torch
-# Transformer encoder
-encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=8)
+from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSeq2SeqLM
+
+# --- Encoder-only (BERT) ---
+enc_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+enc_model = AutoModel.from_pretrained("bert-base-uncased")
+
+inputs = enc_tokenizer("Hello, how are you?", return_tensors="pt")
+enc_out = enc_model(**inputs)
+print(enc_out.last_hidden_state.shape)  # (batch, seq_len, 768)
+
+# --- Decoder-only (GPT-2) ---
+dec_tokenizer = AutoTokenizer.from_pretrained("gpt2")
+dec_model = AutoModelForCausalLM.from_pretrained("gpt2")
+
+prompt = dec_tokenizer("Once upon a time", return_tensors="pt")
+gen_ids = dec_model.generate(**prompt, max_new_tokens=20)
+print(dec_tokenizer.decode(gen_ids[0], skip_special_tokens=True))
+
+# --- Encoder-Decoder (T5) ---
+t5_tokenizer = AutoTokenizer.from_pretrained("t5-small")
+t5_model = AutoModelForSeq2SeqLM.from_pretrained("t5-small")
+
+src_ids = t5_tokenizer("translate English to French: Hello world", return_tensors="pt")
+tgt_ids = t5_tokenizer("Bonjour le monde", return_tensors="pt").input_ids
+t5_out = t5_model(**src_ids, labels=tgt_ids)
+print(t5_out.loss)   # cross-entropy loss for training
+```
+
+For low-level research or custom architectures you can still use PyTorch's `nn.TransformerEncoder/Decoder` directly:
+
+```python
+import torch
+import torch.nn as nn
+
+# Encoder
+encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=8, batch_first=True)
 encoder = nn.TransformerEncoder(encoder_layer, num_layers=6)
-src = torch.rand(10, 32, 512)
-out = encoder(src)
+src = torch.rand(32, 10, 512)  # (batch, seq_len, d_model) with batch_first=True
+enc_out = encoder(src)
 
-# Transformer decoder
-decoder_layer = nn.TransformerDecoderLayer(d_model=512, nhead=8)
+# Decoder
+decoder_layer = nn.TransformerDecoderLayer(d_model=512, nhead=8, batch_first=True)
 decoder = nn.TransformerDecoder(decoder_layer, num_layers=6)
+tgt = torch.rand(32, 10, 512)
+dec_out = decoder(tgt, enc_out)
 
-tgt = torch.rand(10, 32, 512)
-memory = torch.rand(10, 32, 512) # the output of the last layer of the encoder
-out = decoder(tgt, memory)
-
-# Transformer encoder-decoder
-encoder_decoder = nn.Transformer(encoder, decoder)
-src = torch.rand(10, 32, 512)
-tgt = torch.rand(10, 32, 512)
-out = encoder_decoder(src, tgt)
+# Full encoder-decoder in one call
+transformer = nn.Transformer(d_model=512, nhead=8,
+                              num_encoder_layers=6, num_decoder_layers=6,
+                              batch_first=True)
+out = transformer(src, tgt)
 ```
 
 

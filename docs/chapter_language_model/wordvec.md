@@ -182,32 +182,34 @@ Here's how to implement both sinusoidal and learned position embeddings:
 
 ```python
 class PositionalEncoding(nn.Module):
-    def __init__(self, num_hiddens, dropout, max_len=1000):
+    def __init__(self, num_hiddens, dropout=0.0, max_len=1000):
         super(PositionalEncoding, self).__init__()
-        self.P = torch.zeros((1, max_len, num_hiddens))
+        self.dropout = nn.Dropout(p=dropout)
+        P = torch.zeros((1, max_len, num_hiddens))
         X = torch.arange(max_len, dtype=torch.float32).reshape(
             -1, 1) / torch.pow(10000, torch.arange(
             0, num_hiddens, 2, dtype=torch.float32) / num_hiddens)
-        self.P[:, :, 0::2] = torch.sin(X)
-        self.P[:, :, 1::2] = torch.cos(X)
+        P[:, :, 0::2] = torch.sin(X)
+        P[:, :, 1::2] = torch.cos(X)
+        self.register_buffer('P', P)  # saved with model state, moved to correct device automatically
 
     def forward(self, X):
-        X = X + self.P[:, :X.shape[1], :].to(X.device)
-        return X
+        X = X + self.P[:, :X.shape[1], :]
+        return self.dropout(X)
 ```
 
 In practice, we sometimes even directly take the positional embeddings as learnable parameters and train them together with the model parameters. See the example below.
 
 ```python
 class InputEmbeddings(nn.Module):
-    def __init__(self, d_model: int, vocab_size: int):
+    def __init__(self, d_model: int, vocab_size: int, block_size: int):
         super().__init__()
         self.tok_emb = nn.Embedding(vocab_size, d_model)
         self.pos_emb = nn.Parameter(torch.zeros(1, block_size, d_model))
 
     def forward(self, x):
-        tok_emb = self.tok_emb(x)
-        pos_emb = self.pos_emb(x)
+        tok_emb = self.tok_emb(x)                      # (batch, seq_len, d_model)
+        pos_emb = self.pos_emb[:, :x.shape[1], :]      # slice to actual seq length
         return tok_emb + pos_emb
 ```
 
