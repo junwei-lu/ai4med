@@ -8,6 +8,8 @@ venv/
 .ogg
 .flac
 .pdf
+.DS_Store
+instruction.md
 
 
 # Byte-compiled / optimized / DLL files
