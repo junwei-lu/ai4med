@@ -76,20 +76,6 @@ which is exactly the inner sum in the SFT loss.
 
 
 
-## Setup
-
-```bash
-# Install core libraries: model loading (transformers), datasets, training utils (accelerate),
-# TRL trainer, PEFT adapters, quantization (bitsandbytes), PyTorch, and TensorBoard for logs
-pip install --upgrade transformers datasets accelerate trl peft bitsandbytes torch tensorboard
-```
-
-Notes:
-- `bitsandbytes` enables 8-bit/4-bit model loading to fit into modest GPUs
-- If you don't have a GPU, the code still runs but training will be slow
-
-
-
 ## Choose a model
 
 We use the smallest Llama 3 family model that is commonly accessible: Llama 3 8B. For consumer GPUs, 4-bit loading is helpful.
