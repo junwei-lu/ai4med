@@ -10,7 +10,7 @@ You will learn to:
 
 The guide assumes a biostatistics/biomedical background—no deep ML systems knowledge required.
 
-## 1) Setup
+## Setup
 
 ```bash
 # Install core libraries: model loading (transformers), datasets, training utils (accelerate),
@@ -22,7 +22,7 @@ Notes:
 - `bitsandbytes` enables 8-bit/4-bit model loading to fit into modest GPUs
 - If you don’t have a GPU, the code still runs but training will be slow
 
-## 2) Choose a model
+## Choose a model
 
 We use the smallest Llama 3 family model that is commonly accessible: Llama 3 8B. For consumer GPUs, 4-bit loading is helpful.
 
@@ -56,7 +56,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
-## 3) Prepare a simple instruction dataset
+## Prepare a simple instruction dataset
 
 We align with the format in the PEFT lecture: OpenAI-style messages with a system instruction, a user prompt, and an assistant answer. This mirrors how you would prepare clinical data (e.g., MedCalc-style questions with ground-truth answers), but here we keep a simple schema for clarity.
 
@@ -103,7 +103,7 @@ Why this template?
 - A consistent structure simplifies tokenization and training
 - The final answer is clear and easy to evaluate later
 
-## 4) Optional: Add LoRA (PEFT)
+## Optional: Add LoRA (PEFT)
 
 LoRA reduces the number of trainable parameters. It’s often used with 4-bit loading (QLoRA) to fine-tune on small GPUs.
 
@@ -128,7 +128,7 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 ```
 
-## 5) Set up the trainer (Supervised Fine-Tuning)
+## Set up the trainer (Supervised Fine-Tuning)
 
 We use TRL’s `SFTTrainer` for simplicity. It natively supports the messages format and PEFT.
 
@@ -180,7 +180,7 @@ Tips for biomedical data:
 - If answers are numeric (e.g., mL/min), use a consistent unit and precision
 - Start with a few hundred curated examples, then scale up
 
-## 6) Quick inference
+## Quick inference
 
 ```python
 def generate(prompt):
@@ -201,7 +201,7 @@ user_q = (
 print(generate(f"You are a clinical calculator assistant.\n\n{user_q}"))
 ```
 
-## 7) What to try next
+## What to try next
 
 - Add evaluation: compare model outputs against ground truth answers
 - Expand dataset with more clinical calculators (e.g., BMI, eGFR)

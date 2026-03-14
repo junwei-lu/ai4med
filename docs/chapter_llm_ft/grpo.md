@@ -8,13 +8,13 @@ This lecture covers:
 - Writing reward functions (format + correctness)
 - Configuring and running the GRPO trainer in `trl`
 
-## 1) Environment setup
+## Environment setup
 
 ```bash
 pip install --upgrade transformers datasets accelerate trl peft bitsandbytes torch tensorboard
 ```
 
-## 2) Load model and tokenizer
+## Load model and tokenizer
 
 Use 4-bit quantization (QLoRA-style) to fit training on limited VRAM; optionally add LoRA.
 
@@ -56,7 +56,7 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 ```
 
-## 3) Data and prompt template (MedCalc-Bench)
+## Data and prompt template (MedCalc-Bench)
 
 We guide the model to produce structured outputs so rewards are easy and reliable.
 
@@ -86,7 +86,7 @@ references = [ex.get("Ground Truth Answer", "") for ex in train_ds]
 train_data = [{"prompt": p, "reference": r} for p, r in zip(prompts, references)]
 ```
 
-## 4) Reward functions
+## Reward functions
 
 Use simple, deterministic signals first.
 
@@ -138,7 +138,7 @@ def reward_wrapper(func):
     return _wrapped
 ```
 
-## 5) GRPO trainer configuration
+## GRPO trainer configuration
 
 ```python
 from trl import GRPOConfig, GRPOTrainer
@@ -171,7 +171,7 @@ trainer.train()
 trainer.save_model()
 ```
 
-## 6) Quick inference
+## Quick inference
 
 ```python
 def generate_answer(question, patient_note=""):
@@ -189,14 +189,14 @@ def generate_answer(question, patient_note=""):
     return text, (m.group(1).strip() if m else "")
 ```
 
-## 7) Tips
+## Tips
 
 - Keep rewards sparse and clear; start with one correctness signal
 - Constrain outputs with tags to simplify parsing
 - Start with `num_generations=2–4`; scale up if compute allows
 - Validate on a held-out split by computing rewards without training
 
-## 8) Safety
+## Safety
 
 - Clinical models require rigorous validation before any real use
 - Add checks for out-of-range or inconsistent results
