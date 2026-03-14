@@ -1,4 +1,4 @@
-# Parameter-Efficient Fine-Tuning (PEFT): LoRA and Quantization
+# Parameter-Efficient Fine-Tuning (PEFT)
 
 Large Language Models (LLMs) are expensive to fine-tune end-to-end. Parameter-Efficient Fine-Tuning (PEFT) adapts a pre-trained model by training a small number of additional parameters while keeping the original weights frozen. This lecture focuses on two beginner-friendly PEFT techniques widely used in practice:
 

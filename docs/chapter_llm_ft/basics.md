@@ -1,4 +1,4 @@
-# Basics of LLM Fine-Tuning (Beginner Guide)
+# Supervised Fine-Tuning 
 
 This tutorial walks you through a minimal, reliable workflow to fine-tune an open LLM using Hugging Face tools. We use the smallest Llama 3 family model as an example and a simple instruction-style dataset aligned with the format used in the PEFT lecture.
 

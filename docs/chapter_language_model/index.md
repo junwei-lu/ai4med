@@ -11,8 +11,6 @@ This chapter covers language models with utilzing the transformer architecture. 
 - [Attention](attention.md)
 - [Transformer](transformer.md)
 - [Hugging Face](hg_transformers.md)
- - [PEFT: LoRA and Quantization](peft.md)
- - [RL Fine-Tuning with GRPO](grpo.md)
 
 
 

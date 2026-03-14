@@ -1,4 +1,4 @@
-# Reinforcement Learning Fine-Tuning with GRPO (Clinical Data)
+# Reinforcement Learning Fine-Tuning
 
 Group Relative Policy Optimization (GRPO) fine-tunes LLMs via reinforcement learning without a separate value model. For each prompt, the policy samples multiple completions, receives rewards, and updates toward higher-reward behaviors.
 
