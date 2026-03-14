@@ -57,7 +57,7 @@ By convexity, $D_{\varphi}(x,z) \ge 0$, making it a type of distance. The Bregma
 The table below shows some common Bregman divergences.
 
 | Function Name     | $\phi(x)$                  | $\text{dom } \phi$ | $D_{\phi}(x, y)$ |
-|------------------|----------------------------|----------------------|--------------------|
+||-|-|--|
 | Squared norm    | $\frac{1}{2} x^2$        | $(-\infty, +\infty)$ | $\frac{1}{2} (x - y)^2$ |
 | Shannon entropy | $x \log x - x$           | $[0, +\infty)$     | $x \log \frac{x}{y} - x + y$ |
 | Bit entropy     | $x \log x + (1 - x) \log(1 - x)$ | $[0, 1]$ | $x \log \frac{x}{y} + (1 - x) \log \frac{1 - x}{1 - y}$ |

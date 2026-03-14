@@ -185,7 +185,8 @@ nav:
     - Hugging Face: chapter_language_model/hg_transformers.md
   - Chapter. Language Model Fine-Tuning:
     - chapter_llm_ft/index.md
-    - Supervised Fine-Tuning: chapter_llm_ft/basics.md
+    - Next-Token Prediction: chapter_llm_ft/ntp.md
+    - Supervised Fine-Tuning: chapter_llm_ft/sft.md
     - Parameter Efficient Fine-Tuning: chapter_llm_ft/peft.md
     - Reinforcement Learning Fine-Tuning: chapter_llm_ft/grpo.md
   - Chapter. Foundation Models:

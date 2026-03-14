@@ -10,7 +10,7 @@ You will learn to:
 
 The guide assumes a biostatistics/biomedical background—no deep ML systems knowledge required.
 
----
+
 
 ## The SFT Loss Function
 
@@ -74,7 +74,7 @@ $$
 
 which is exactly the inner sum in the SFT loss.
 
----
+
 
 ## Setup
 
@@ -88,7 +88,7 @@ Notes:
 - `bitsandbytes` enables 8-bit/4-bit model loading to fit into modest GPUs
 - If you don't have a GPU, the code still runs but training will be slow
 
----
+
 
 ## Choose a model
 
@@ -124,7 +124,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
----
+
 
 ## Prepare a simple instruction dataset
 
@@ -176,7 +176,7 @@ with open("train_dataset.json", "w") as f:
 - A consistent structure simplifies tokenization and training
 - The final answer is clear and easy to evaluate later
 
----
+
 
 ## Verifying the Masking Manually
 
@@ -215,7 +215,7 @@ print("Labels:", labels)
 # -100 positions are ignored; loss is only on response tokens
 ```
 
----
+
 
 ## Set up the trainer (Supervised Fine-Tuning)
 
@@ -273,7 +273,7 @@ trainer.save_model()
 - If answers are numeric (e.g., mL/min), use a consistent unit and precision
 - Start with a few hundred curated examples, then scale up
 
----
+
 
 ## Quick inference
 
@@ -296,7 +296,7 @@ user_q = (
 print(generate(f"You are a clinical calculator assistant.\n\n{user_q}"))
 ```
 
----
+
 
 ## What to try next
 
@@ -305,17 +305,3 @@ print(generate(f"You are a clinical calculator assistant.\n\n{user_q}"))
 - Use curriculum: start with simple tasks, then harder ones
 - Consider GRPO (see [RL Fine-Tuning](grpo.md)) if you want to optimize non-differentiable rewards
 
----
-
-## Takeaways
-
-| Concept | Detail |
-|---------|--------|
-| SFT loss | Cross-entropy on response tokens only |
-| Prompt masking | Labels set to -100 for prompt positions |
-| MLE interpretation | Maximize $\sum_i \log P_\theta(y^{(i)} \mid x^{(i)})$ |
-| Code connection | `SFTTrainer` automates masking; log the reported `train_loss` |
-
-- A clean template and consistent units make clinical fine-tuning tractable
-- 4-bit loading + LoRA allows training 8B models on a single GPU
-- `SFTTrainer` keeps the workflow simple for beginners

@@ -123,7 +123,7 @@ class TransformerEncoder(nn.Module):
 ```
 
 | Model | Layers | Hidden Size | Attention Heads | Feedforward Size | Parameters |
-|-------|--------|-------------|-----------------|------------------|------------|
+|-|--|-|--|||
 | [BERT-Base](https://huggingface.co/bert-base-uncased) | 12 | 768 | 12 | 3072 | 110M |
 | [BERT-Large](https://huggingface.co/bert-large-uncased) | 24 | 1024 | 16 | 4096 | 340M |
 | [DistilBERT](https://huggingface.co/distilbert-base-uncased) | 6 | 768 | 12 | 3072 | 66M |
@@ -170,7 +170,7 @@ The Transformer decoder stacks multiple masked self-attention layers. Modern gen
 GPT-2 is so far the last open-sourced model from OpenAI. It has 124M, 355M, and 774M parameters for small, medium, and large models, respectively.
 
 | Model | Layers | Hidden Size | Attention Heads | Feedforward Size | Parameters |
-|-------|--------|-------------|-----------------|------------------|------------|
+|-|--|-|--|||
 | [GPT-2 Small](https://huggingface.co/gpt2) | 12 | 768 | 12 | 3072 | 124M |
 | [GPT-2 Medium](https://huggingface.co/gpt2-medium) | 24 | 1024 | 16 | 4096 | 355M |
 | [GPT-2 Large](https://huggingface.co/gpt2-large) | 36 | 1280 | 20 | 5120 | 774M |
@@ -214,7 +214,7 @@ We list below the best use cases for each type of transformer architecture.
 Rather than building transformer blocks from scratch, Hugging Face 🤗 gives you production-ready encoder-only, decoder-only, and encoder-decoder models in a single line. The table below maps each architecture to the right `AutoModel` class.
 
 | Architecture | HF class | Example model |
-|---|---|---|
+||||
 | Encoder-only | `AutoModel` / `AutoModelForSequenceClassification` | `bert-base-uncased` |
 | Decoder-only | `AutoModelForCausalLM` | `gpt2` |
 | Encoder-Decoder | `AutoModelForSeq2SeqLM` | `t5-small`, `facebook/bart-large-cnn` |
@@ -223,7 +223,7 @@ Rather than building transformer blocks from scratch, Hugging Face 🤗 gives yo
 import torch
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSeq2SeqLM
 
-# --- Encoder-only (BERT) ---
+#  Encoder-only (BERT) 
 enc_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 enc_model = AutoModel.from_pretrained("bert-base-uncased")
 
@@ -231,7 +231,7 @@ inputs = enc_tokenizer("Hello, how are you?", return_tensors="pt")
 enc_out = enc_model(**inputs)
 print(enc_out.last_hidden_state.shape)  # (batch, seq_len, 768)
 
-# --- Decoder-only (GPT-2) ---
+#  Decoder-only (GPT-2) 
 dec_tokenizer = AutoTokenizer.from_pretrained("gpt2")
 dec_model = AutoModelForCausalLM.from_pretrained("gpt2")
 
@@ -239,7 +239,7 @@ prompt = dec_tokenizer("Once upon a time", return_tensors="pt")
 gen_ids = dec_model.generate(**prompt, max_new_tokens=20)
 print(dec_tokenizer.decode(gen_ids[0], skip_special_tokens=True))
 
-# --- Encoder-Decoder (T5) ---
+#  Encoder-Decoder (T5) 
 t5_tokenizer = AutoTokenizer.from_pretrained("t5-small")
 t5_model = AutoModelForSeq2SeqLM.from_pretrained("t5-small")
 

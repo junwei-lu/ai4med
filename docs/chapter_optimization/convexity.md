@@ -204,7 +204,7 @@ Geometrically, this means that the angle between the gradient $\nabla f(x^*)$ an
 The optimality conditions for convex optimization can be summarized as follows:
 
 | | Unconstrained | Constrained |
-|---|---|---|
+||||
 | Zero-order | $f(x^*) \leq f(y)$ | $f(x^*) \leq f(y)$ |
 | First-order | $0 \in \partial f(x^*)$ | $\nabla f(x^*)^\top(y - x^*) \geq 0$ |
 

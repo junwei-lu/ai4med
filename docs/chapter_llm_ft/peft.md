@@ -19,21 +19,8 @@ Typical use cases in biostatistics and biomedical research:
 - Enforcing structured outputs (e.g., report templates)
 - Reducing hallucinations via supervised examples
 
-## Setup
 
-```bash
-pip install --upgrade \
-  transformers datasets accelerate \
-  bitsandbytes \
-  trl \
-  peft
-```
 
-Notes:
-- `bitsandbytes` enables 8-bit/4-bit model loading to fit larger models into memory.
-- Recent GPUs benefit from bf16; fallback to fp16 if needed.
-
----
 
 ## LoRA: The Math
 
@@ -54,7 +41,7 @@ $$
 where:
 
 | Matrix | Shape | Role |
-|--------|-------|------|
+|--|-||
 | $W_0$ | $d \times k$ | **Frozen** pre-trained weight |
 | $A$ | $r \times k$ | Trainable; initialized from $\mathcal{N}(0, \sigma^2)$ |
 | $B$ | $d \times r$ | Trainable; initialized to **zero** (so $\Delta W = 0$ at start) |
@@ -81,7 +68,7 @@ where $\alpha$ is a scaling hyperparameter (`lora_alpha` in the code). The facto
 For a single weight matrix:
 
 | Method | Trainable params |
-|--------|-----------------|
+|--|--|
 | Full fine-tuning | $d \times k$ |
 | LoRA rank $r$ | $r \times (d + k)$ |
 
@@ -99,9 +86,12 @@ $$
 
 so the fine-tuning starts from the pre-trained model's behavior and only diverges as the task signal accumulates.
 
----
 
-## Connecting Math to Code
+
+## PEFT Package
+
+
+The [PEFT (Parameter-Efficient Fine-Tuning)](https://github.com/huggingface/peft) package, developed by Hugging Face, provides simple interfaces for applying parameter-efficient methods such as LoRA to large language models. It integrates seamlessly with common model libraries.
 
 The LoRA math maps directly to the `LoraConfig` parameters:
 
@@ -143,7 +133,7 @@ lora_out = self.lora_B(self.lora_A(self.lora_dropout(x)))  # B(A(x))
 result += lora_out * (self.lora_alpha / self.r)        # + (α/r) B A x
 ```
 
----
+
 
 ## Quantization: 8-bit vs 4-bit
 
@@ -182,7 +172,7 @@ Tips:
 - If you encounter numerical instability on older GPUs, try `torch.float16` compute dtype.
 - For chat-tuned models, ensure the tokenizer has correct special tokens and chat template.
 
----
+
 
 ## QLoRA: LoRA on a 4-bit Base
 
@@ -275,9 +265,9 @@ trainer.train()
 trainer.save_model()
 ```
 
----
 
-## Merging Adapters (Optional)
+
+## Merging Adapters  
 
 QLoRA saves only adapter weights. For simple deployment without PEFT, you can merge adapters into the base model on CPU and save a standalone checkpoint:
 
@@ -294,21 +284,14 @@ merged = peft_model.merge_and_unload()   # computes W₀ + (α/r)BA for each lay
 merged.save_pretrained(peft_dir, safe_serialization=True, max_shard_size="2GB")
 ```
 
----
 
-## Choosing Settings
+
+Tips for setting up LoRA:
 
 | Setting | Guidance |
-|---------|----------|
+||-|
 | `r` (rank) | Start with 16; increase to 64–128 for harder tasks |
 | `lora_alpha` | Set equal to `r` (scale = 1) or 2× `r` (scale = 2) |
 | `lora_dropout` | 0.05–0.1 for regularization |
 | Quant bits | 4-bit for 8B+ models on 24GB VRAM; 8-bit for extra stability |
 | `packing` | `True` for short examples; boosts throughput |
-
-## Takeaways
-
-- LoRA adds a rank-$r$perturbation$\Delta W = BA$to frozen weights; only$A$and$B$ are trained
-- The scaling $\alpha / r$ separates adapter capacity (`r`) from learning magnitude (`\alpha`)
-- Quantization plus LoRA (QLoRA) enables practical domain adaptation of LLMs on a single GPU
-- Hugging Face `trl` + `peft` streamline the workflow from data to training to export

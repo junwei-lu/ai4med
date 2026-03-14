@@ -2,7 +2,7 @@
 
 Neural network training looks simple — but often fails silently. This guide summarizes a **systematic, cautious, and debug-friendly** process for training deep learning models, with tips, visual checks, and sanity tests at every stage.
 
----
+
 
 ## 🧩 1. Understand the Data (Before Any Model!)
 

@@ -22,9 +22,9 @@ We have discussed how to set up GPU cores in the class cluster in the [GPU Matri
 salloc: Granted job allocation 38087
 [jul924@gpu-dy-gpu-cr-7 ~]$ nvidia-smi
 Mon Mar  3 19:16:23 2025       
-+---------------------------------------------------------------------------------------+
+++
 | NVIDIA-SMI 535.216.01             Driver Version: 535.216.01   CUDA Version: 12.2     |
-|-----------------------------------------+----------------------+----------------------+
+|--+-+-+
 | GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
 | Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
 |                                         |                      |               MIG M. |
@@ -32,15 +32,15 @@ Mon Mar  3 19:16:23 2025
 |   0  NVIDIA L4                      On  | 00000000:31:00.0 Off |                    0 |
 | N/A   28C    P8              16W /  72W |      0MiB / 23034MiB |      0%      Default |
 |                                         |                      |                  N/A |
-+-----------------------------------------+----------------------+----------------------+
++--+-+-+
                                                                                          
-+---------------------------------------------------------------------------------------+
+++
 | Processes:                                                                            |
 |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
 |        ID   ID                                                             Usage      |
 |=======================================================================================|
 |  No running processes found                                                           |
-+---------------------------------------------------------------------------------------+
+++
 ```
 
 In PyTorch, we can check the device type by using the `torch.cuda.is_available()` function. 
@@ -100,7 +100,7 @@ data = data.to(device, non_blocking=True)
 We summarize the best practices for `.to(device)` above in the following checklist.
 
 | Checklist | When to Use |
-|-----------|-------------|
+|--|-|
 | `.to(device)` on model | Once after model creation |
 | `.to(device)` on data | Inside the training loop, batch-by-batch |
 | `pin_memory=True` in `DataLoader` | When using GPU, to speed up transfer |
@@ -428,7 +428,7 @@ This approach significantly speeds up training, but requires **fixed input dimen
 ### GPU Training Checklist
 
 | Component | Setting / Tip | Why |
-|-----------|---------------|-----|
+|--||--|
 | DataLoader | `pin_memory=True` | Faster CPU → GPU transfer (via DMA) |
 | | `num_workers = num_CPU_cores // num_GPUs` | Loads data in parallel using CPU workers |
 | | Multi-GPU: Use `DistributedSampler` (DDP)| Ensures each GPU sees unique data |

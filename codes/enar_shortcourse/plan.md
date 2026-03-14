@@ -13,13 +13,13 @@ The instructor needs a single comprehensive Jupyter notebook for a 3-hour ENAR s
 - Math notation for attention/transformer from `docs/chapter_language_model/transformer.md`
 - Tokenization/embedding explanations from `docs/chapter_language_model/wordvec.md`
 
----
+
 
 ## File to Create
 
 `/Users/junweilu/Dropbox/Teach/AI_bootcamp/ai4med/codes/enar_shortcourse/enar_clinical_nlp_workshop.ipynb`
 
----
+
 
 ## Notebook Structure (7 sections, ~70 cells)
 
@@ -46,7 +46,7 @@ pip_install(["torch", "transformers", "datasets", "tokenizers", "trl", "peft",
 - `plot_training_curve(log_history, metric, title)` — training curve plotter
 - `display_comparison_table(...)` — HTML side-by-side renderer
 
----
+
 
 ### Section 1: Data Tour and Framing (0:00–0:20, ~7 cells)
 
@@ -77,7 +77,7 @@ pip_install(["torch", "transformers", "datasets", "tokenizers", "trl", "peft",
 
 **Markdown:** Framing recap — train on note, target is summary JSON. Data is synthetic (teaching pipeline, not clinical deployment).
 
----
+
 
 ### Section 2: Tokenization, Token IDs, Embeddings (0:20–0:45, ~9 cells)
 
@@ -120,7 +120,7 @@ Then wrap with `PreTrainedTokenizerFast`.
 - Title: "Token Embedding Similarity (Random Init)"
 - Teaching point: random before training; will be meaningful after pretraining
 
----
+
 
 ### Section 3: Attention and the Tiny Transformer (0:45–1:15, ~8 cells)
 
@@ -170,7 +170,7 @@ Print total parameters.
 
 **Code:** Generate from untrained model → show random gibberish. "The model has architecture but no knowledge."
 
----
+
 
 ### Section 4: Pretraining by Next-Token Prediction (1:15–1:45, ~9 cells)
 
@@ -217,7 +217,7 @@ else:
 - PCA to 2D, scatter plot with text labels, color-coded by category (medications=blue, diagnoses=red, body parts=green, lab terms=orange)
 - Teaching point: clinically related terms cluster together
 
----
+
 
 ### Section 5: SFT on Structured Extraction (1:45–2:20, ~10 cells)
 
@@ -264,7 +264,7 @@ def to_sft(ex):
 - 3 test examples: pretrained output (rambling) vs SFT output (structured JSON)
 - Color-coded HTML table
 
----
+
 
 ### Section 6: GRPO with Rule-Based Rewards (2:20–2:45, ~9 cells)
 
@@ -298,7 +298,7 @@ def to_sft(ex):
 
 **Code:** Generate from GRPO model on same 5 test examples as SFT section.
 
----
+
 
 ### Section 7: Compare the Three Models (2:45–3:00, ~6 cells)
 
@@ -326,12 +326,12 @@ def to_sft(ex):
 - Intentional simplifications acknowledged (no full_note training, no reward model, synthetic data)
 - Pointers for further exploration: larger models, LoRA/PEFT, real clinical data
 
----
+
 
 ## Visualization Summary (21 total)
 
 | # | Type | Section | Purpose |
-|---|------|---------|---------|
+|||||
 | 1 | 3-panel histogram | Data | Text length distributions |
 | 2 | Word cloud | Data | Clinical vocabulary |
 | 3 | Horizontal bar chart | Data | JSON key frequencies |
@@ -354,7 +354,7 @@ def to_sft(ex):
 | 20 | HTML table | Final | 3-model output comparison |
 | 21 | Grouped bar chart | Final | Quantitative metric comparison |
 
----
+
 
 ## Design Decisions
 
@@ -365,7 +365,7 @@ def to_sft(ex):
 - **Matplotlib + seaborn only** (no plotly) — ensures Colab compatibility and simplicity
 - **report_to="none"** and **save_strategy="no"** everywhere — avoids TensorBoard/WandB setup and disk usage
 
----
+
 
 ## Verification Plan
 

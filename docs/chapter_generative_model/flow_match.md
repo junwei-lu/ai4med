@@ -148,7 +148,7 @@ The animation below compares the flow matching and the DDPM on the moons dataset
 
 
 | Flow Matching | DDPM |
-| --- | --- |
+|  |  |
 | ![Flow Matching](./generative.assets/flow_moons_animation.gif) | ![DDPM](./generative.assets/ddpm_moons_animation.gif) |
 
 

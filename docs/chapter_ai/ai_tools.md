@@ -14,7 +14,7 @@
 The table below may be out-of-date. Please check the latest models from the official websites.
 
 | **Need**                         | **Recommended Models**                        | **Key Features**                                                                 |
-|-----------------------------------|-----------------------------------------------|----------------------------------------------------------------------------------|
+|--|--|-|
 | High-Quality, Nuanced Output      | GPT 5, Gemini 2.5 Pro, DeepSeek R1, Claude 4 Sonnet, Grok 4| Top-tier quality, well-structured responses, ideal for professional applications |
 | Speed-Sensitive Applications      | Gemini 2.5 Flash       | Fastest output speeds, minimal delay, great for real-time tasks                  |
 | Cost-Conscious Deployments        | Mistral 3B, Llama 4                      | Highly affordable per million tokens, cost-effective for large-scale use         |

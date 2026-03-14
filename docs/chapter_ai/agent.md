@@ -19,7 +19,7 @@ Command-line-inferface (CLI) coding becomes much more powerful when paired with 
 Modern IDEs can do far more than autocomplete—debugging, refactors, builds, plugins—but a CLI agent shines at end-to-end orchestration.
 
 | Dimension | IDE Paradigm  | CLI Paradigm |
-|---|---|---|
+||||
 | **Primary mode** | Interactive editing (you drive); tools assist inside the IDE | Delegation (agent drives); tools are invoked via commands |
 | **Automation level** | Usually **single-step** help (edit, navigate, refactor one action at a time) | **Multi-step orchestration** (plan → run → check → fix → repeat) |
 | **Execution** | Runs some tasks, but often you trigger and coordinate them manually | Directly runs shell commands/scripts; can chain many steps reliably |
@@ -66,7 +66,7 @@ In the terminal, you can run `copilot` to see this:
 Here are some commands for you to set up your Copilot CLI. We recommend you to read the official [tutorial](https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-getting-started).
 
 | Command     | Description                                           | Usage                                                                 |
-|-------------|-------------------------------------------------------|----------------------------------------------------------------------|
+|-|-|-|
 | \login      | Login to your Github account                         | Type: \login                                                        |
 | \logout     | Logout from your Github account                      | Type: \logout                                                       |
 | \help       | Get help on using Copilot CLI                        | Type: \help what can you do?                                         |
@@ -130,9 +130,9 @@ Instruction files define project-wide conventions, policies, thresholds, and imp
 
 **Example: `copilot-instructions.md`**
 ```markdown
----
+
 applyTo: "**"
----
+
 # Project-wide Instructions
 
 - Use snake_case for Python filenames.
@@ -142,9 +142,9 @@ applyTo: "**"
 ```
 **Example: `doc.instructions.md`**
 ```markdown
----
+
 applyTo: "docs/**/*.md"
----
+
 # Documentation Standards
 
 - Use sentence case for headings unless a proper noun is required.
@@ -177,7 +177,7 @@ Prompt files define specific, one-click tasks for agents to execute.
 The header is formatted as YAML frontmatter with the following fields:
 
 | Field          | Description    |
-|----------------|----------------|
+|-|-|
 | description    | A short description of the prompt. |
 | name           | The name of the prompt, used after typing / in chat. If not specified, the file name is used. |
 | argument-hint  | Optional hint text shown in the chat input field to guide users on how to interact with the prompt. |
@@ -189,12 +189,12 @@ The header is formatted as YAML frontmatter with the following fields:
 
 **Example: `fetch-crypto.prompt.md`**
 ```markdown
----
+
 mode: agent
 description: Fetch the top 50 cryptocurrencies from the CoinGecko API.
 tools: [terminalLastCommand]
 
----
+
 # Fetch Crypto Data
 
 1. Use `curl` to fetch the current top 50 cryptocurrencies by market cap from the CoinGecko API.
@@ -212,12 +212,12 @@ The agent file is a markdown file with YAML frontmatter and a markdown body. The
 
 **Example: `data-pipeline.agent.md`**
 ```markdown
----
+
 name: Data Pipeline Agent
 description: Orchestrates the entire crypto data pipeline.
 tools: [terminalLastCommand, editFiles, codebase]
 model: ['Claude Opus 4.5', 'GPT-4o']
----
+
 # Crypto Data Pipeline Workflow
 
 1.  **Fetch Data**: Use the `data-fetch` skill to get the top 50 coins from the CoinGecko API and save to `crypto_raw.json`.
@@ -246,10 +246,10 @@ In practice, a `<skill-name>/` folder can contain more than just `SKILL.md`. The
 
 **Example: `data-fetch/SKILL.md`**
 ```markdown
----
+
 name: Data Fetching
 description: How to fetch data from the CoinGecko API.
----
+
 ## Fetching Market Data with `curl`
 
 To get the top 50 cryptocurrencies, use the following `curl` command.
@@ -302,7 +302,7 @@ To build this complex system, we break it down into 3 Agents and 6 Skills.
 These are markdown files that contain the "Mission Objectives." They don't know the syntax of every tool, but they know which Skills to call.
 
 | Agent Name   | File                    | Mission                                              |
-|--------------|-------------------------|------------------------------------------------------|
+|--|-||
 | Data Pipeline| data-pipeline.agent.md  | Fetch raw data, clean it, and compute statistics.    |
 | Code Quality | code-quality.agent.md   | Review generated scripts for errors and fix them.    |
 | Publisher    | publisher.agent.md      | Create charts, build the website, and ship it.       |
@@ -312,7 +312,7 @@ These are markdown files that contain the "Mission Objectives." They don't know 
 These are folders containing specific prompt context or scripts that the Agents use to execute tasks.
 
 | Agent          | Skill            | Purpose                                    | Key Tools         |
-|----------------|------------------|--------------------------------------------|-------------------|
+|-||--|-|
 | Data Pipeline  | data-fetch/      | Knowing how to query CoinGecko correctly.  | curl, API params  |
 | Data Pipeline  | data-analysis/   | Filtering and computing stats.              | jq, pandas        |
 | Data Pipeline  | data-viz/        | Creating beautiful charts.                  | matplotlib        |

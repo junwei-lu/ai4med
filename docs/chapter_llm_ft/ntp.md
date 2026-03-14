@@ -1,8 +1,8 @@
-# Next-Token Prediction: The Foundation of LLM Training
+# Next-Token Prediction
 
 Before fine-tuning, it is essential to understand what a language model actually learns during pre-training. The core objective is **next-token prediction (NTP)**: given a sequence of tokens, predict the next one. Everything from GPT-2 to Llama 3 is trained with this single principle.
 
----
+
 
 ## The Probability Model
 
@@ -28,7 +28,7 @@ $$
 
 ![Autoregressive token generation](./ft.assets/ntp_autoregress.gif)
 
----
+
 
 ## The Training Objective: Cross-Entropy Loss
 
@@ -58,7 +58,7 @@ $$
 
 Intuitively, a perplexity of $k $ means the model is "as confused as if choosing uniformly among$k$ options" at each step. Lower is better.
 
----
+
 
 ## Why Does This Work?
 
@@ -71,19 +71,19 @@ Training on next-token prediction on large corpora forces the model to:
 
 This is why a model pre-trained purely on NTP can then be fine-tuned for specific tasks with relatively few examples.
 
----
 
-## Code: NTP Loss from Scratch
+
+## Training Next-Token Prediction Loss from Scratch
 
 Let us implement the NTP loss manually to build intuition before using high-level trainers.
 
-### 4.1 Minimal example with pure PyTorch
+### Minimal example with pure PyTorch
 
 ```python
 import torch
 import torch.nn.functional as F
 
-# --- Toy example ---
+#  Toy example 
 # Suppose we have a tiny vocabulary of 5 tokens and a sequence of length 4
 # tokens: [2, 0, 3, 1]  → input = [2, 0, 3], target = [0, 3, 1]
 
@@ -114,7 +114,7 @@ Average NTP loss: 1.8401
 Perplexity: 6.30
 ```
 
-### 4.2 Shift-by-one: input vs. target in practice
+### Shift-by-one: input vs. target in practice
 
 The key implementation detail: **the target at position $t $ is the input at position$t+1$**. This is done by shifting the token sequence by one.
 
@@ -145,7 +145,7 @@ def ntp_loss(logits: torch.Tensor, input_ids: torch.Tensor) -> torch.Tensor:
     )
     return loss
 
-# --- Demo with a batch of 2 sequences of length 6 ---
+#  Demo with a batch of 2 sequences of length 6 
 torch.manual_seed(0)
 B, T, V = 2, 6, 32000  # batch, seq_len, vocab_size
 
@@ -157,7 +157,7 @@ print(f"NTP loss: {loss.item():.4f}")         # ~log(32000) ≈ 10.37 for random
 print(f"Perplexity: {torch.exp(loss).item():.1f}")
 ```
 
-### 4.3 Using Hugging Face transformers (what happens under the hood)
+### Using Hugging Face transformers
 
 When you call `model(**inputs, labels=input_ids)`, Hugging Face models do exactly the shift-and-cross-entropy internally:
 
@@ -189,7 +189,7 @@ $$
 \mathcal{L} = -\frac{1}{T-1} \sum_{t=1}^{T-1} \log P_\theta(x_{t+1} \mid x_1, \ldots, x_t)
 $$
 
----
+
 
 ## What the Gradient Does
 
@@ -200,23 +200,8 @@ $$
 $$
 
 This means:
-- For the **correct token** $v = x_t $: the gradient is $ P_\theta - 1$, which is **negative** → the logit is pushed **up**
-- For all **other tokens**: the gradient is $P_\theta > 0$, which is **positive** → those logits are pushed **down**
+
+  - For the **correct token** $v = x_t$: the gradient is $P_\theta - 1$, which is **negative** → the logit is pushed **up**
+  - For all **other tokens**: the gradient is $P_\theta > 0$, which is **positive** → those logits are pushed **down**
 
 The model learns by repeatedly increasing the probability of observed tokens and decreasing the probability of unobserved tokens.
-
----
-
-## Summary
-
-| Concept | Formula |
-|---|---|
-| Autoregressive factorization | $P(x_{1:T}) = \prod_t P(x_t \mid x_{<t})$ |
-| NTP cross-entropy loss | $\mathcal{L} = -\frac{1}{T}\sum_t \log P_\theta(x_t \mid x_{<t})$ |
-| Perplexity | $\text{PPL} = e^{\mathcal{L}}$ |
-| Gradient on correct logit | $P_\theta(x_t) - 1$ |
-
-Understanding NTP is essential before proceeding to fine-tuning:
-- **SFT** modifies *which* token positions contribute to the loss (see [Supervised Fine-Tuning](sft.md))
-- **PEFT / LoRA** modifies *which parameters* receive gradient updates (see [PEFT](peft.md))
-- **GRPO** replaces the NTP loss with a reinforcement-learning objective (see [GRPO](grpo.md))

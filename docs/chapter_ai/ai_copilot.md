@@ -14,7 +14,7 @@ Below we list the commands you can use in the Copilot Chat. However, you do not 
 What really matters is that the list tells you what you can ask AI to help your coding.
 
 | Command     | Description                                           | Usage                                                                 |
-|-------------|-------------------------------------------------------|----------------------------------------------------------------------|
+|-|-|-|
 | /explain    | Get code explanations                                 | Open file with code or highlight code you want explained and type: /explain what is the fetchPrediction method? |
 | /fix        | Receive a proposed fix for the problems in the selected code | Highlight problematic code and type: /fix propose a fix for the problems in fetchAirports route |
 | /tests      | Generate unit tests for selected code                 | Open file with code or highlight code you want tests for and type: /tests |

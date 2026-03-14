@@ -17,7 +17,7 @@ from datasets import load_dataset, Dataset
 import torch
 from transformers import BertConfig, BertForSequenceClassification, Trainer, TrainingArguments
 
-# --- k-mer tokenizer (same as in pretraining) ---
+#  k-mer tokenizer (same as in pretraining) 
 K = 6
 alphabet = ["A", "C", "G", "T"]
 kmer_list = ["".join(p) for p in product(alphabet, repeat=K)]

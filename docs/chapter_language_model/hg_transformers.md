@@ -127,7 +127,7 @@ print(model_inputs['attention_mask'])
 #         [1,1,1,1,1,1,1,1,0,0,0,0,0]])
 ```
 
----
+
 
 ### Model Parameters
 

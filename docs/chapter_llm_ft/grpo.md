@@ -2,14 +2,6 @@
 
 Group Relative Policy Optimization (GRPO) fine-tunes LLMs via reinforcement learning without a separate value model. For each prompt, the policy samples multiple completions, receives rewards, and updates toward higher-reward behaviors.
 
-This lecture covers:
-- The mathematical objective of GRPO and how it compares to PPO
-- Setting up Llama 3 (smallest) with PEFT/quantization
-- Preparing MedCalc-Bench-v1.0 data and a robust output template
-- Writing reward functions (format + correctness)
-- Configuring and running the GRPO trainer in `trl`
-
----
 
 ## From SFT to RL Fine-Tuning
 
@@ -17,13 +9,13 @@ SFT (see [Supervised Fine-Tuning](sft.md)) trains the model to imitate gold-stan
 
 RL fine-tuning replaces the supervised signal with a **reward function** $r(y, x)$ that scores a sampled response $ y $ for a given prompt $ x$. This lets you optimize for non-differentiable objectives like numerical accuracy, format compliance, or clinical correctness.
 
----
+
 
 ## The GRPO Objective
 
 GRPO was introduced in the [DeepSeekMath paper](https://arxiv.org/abs/2402.03300) and popularized for chain-of-thought reasoning tasks. It eliminates the value/critic network required by PPO, making it simpler and more memory-efficient.
 
-### 2.1 Algorithm overview
+### Algorithm overview
 
 For each training step:
 
@@ -34,7 +26,7 @@ For each training step:
 4. **Normalize** rewards within the group to compute advantages
 5. **Update** the policy $\pi_\theta$ to increase the probability of high-advantage completions
 
-### 2.2 Advantage computation
+### Advantage computation
 
 Unlike PPO which trains a separate value network $V(s)$ to estimate expected return, GRPO uses the **group mean and standard deviation** as a baseline:
 
@@ -44,7 +36,7 @@ $$
 
 This is the reward of completion $i$ relative to its peers in the group. A completion that scores above the group average gets a positive advantage; one below average gets a negative advantage. No separate value network is needed.
 
-### 2.3 The GRPO objective (full formula)
+### The GRPO objective (full formula)
 
 $$
 \mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E}_{q,\, \{o_i\}_{i=1}^{G} \sim \pi_{\theta_{\text{old}}}} \left[
@@ -59,7 +51,7 @@ $$
 where:
 
 | Symbol | Meaning |
-|--------|---------|
+|--||
 | $\rho_{i,t} = \dfrac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$ | Probability ratio: new policy vs. old (importance weight) |
 | $\hat{A}_i $ | Group-normalized advantage for completion $ i$ |
 | $\epsilon$ | Clipping range (e.g., 0.2); prevents too-large policy updates |
@@ -67,16 +59,16 @@ where:
 | $\pi_{\text{ref}}$ | Reference (base) policy, typically the SFT-initialized model |
 | $G$ | Group size (number of completions per prompt, e.g., 4–16) |
 
-### 2.4 The clipped surrogate loss
+### The clipped surrogate loss
 
 The $\min(\rho\hat{A},\, \text{clip}(\rho, 1-\epsilon, 1+\epsilon)\hat{A})$ term is the PPO clipped surrogate objective:
 
-- When $\hat{A}_i > 0 $ (good completion): the ratio $\rho $ is clipped at $ 1 + \epsilon$, preventing the policy from jumping too aggressively toward this completion
-- When $\hat{A}_i < 0 $ (bad completion): the ratio $\rho $ is clipped at $ 1 - \epsilon$, preventing the policy from moving too far away from it in one step
+- When $\hat{A}_i > 0$ (good completion): the ratio $\rho$ is clipped at $1 + \epsilon$, preventing the policy from jumping too aggressively toward this completion
+- When $\hat{A}_i < 0$ (bad completion): the ratio $\rho$ is clipped at $1 - \epsilon$, preventing the policy from moving too far away from it in one step
 
 This trust-region mechanism is what makes the training stable.
 
-### 2.5 The KL divergence term
+### The KL divergence term
 
 The KL penalty:
 
@@ -86,18 +78,6 @@ $$
 
 prevents the policy from collapsing into reward hacking—producing nonsensical outputs that happen to score high on a simple reward function. A typical value is $\beta = 0.01$.
 
-### 2.6 GRPO vs PPO: key difference
-
-| Feature | PPO | GRPO |
-|---------|-----|------|
-| Advantage estimate | Requires trained value network $V_\phi(s)$ | Group mean/std normalization |
-| Memory | Model + value network + ref model | Model + ref model (no value net) |
-| Stability | High (value network reduces variance) | Good (group baseline reduces variance) |
-| Simplicity | More complex | Simpler to implement |
-
-GRPO's trick: **the group of completions for the same prompt acts as a natural control group**, giving a low-variance advantage estimate without a separate network.
-
----
 
 ## Connecting the Math to Code
 
@@ -135,15 +115,7 @@ config = GRPOConfig(
 )
 ```
 
----
 
-## Environment Setup
-
-```bash
-pip install --upgrade transformers datasets accelerate trl peft bitsandbytes torch tensorboard
-```
-
----
 
 ## Load Model and Tokenizer
 
@@ -187,7 +159,7 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 ```
 
----
+
 
 ## Data and Prompt Template (MedCalc-Bench)
 
@@ -219,7 +191,7 @@ references = [ex.get("Ground Truth Answer", "") for ex in train_ds]
 train_data = [{"prompt": p, "reference": r} for p, r in zip(prompts, references)]
 ```
 
----
+
 
 ## Reward Functions
 
@@ -304,7 +276,7 @@ def reward_wrapper(func):
     return _wrapped
 ```
 
----
+
 
 ## GRPO Trainer Configuration
 
@@ -350,9 +322,9 @@ trainer.save_model()
 5. Compute clipped surrogate loss + KL penalty
 6. Backpropagate and update `θ`
 
----
 
-## Quick Inference
+
+You can then quickly infer the model's response to check the tuning results.
 
 ```python
 def generate_answer(question, patient_note=""):
@@ -370,7 +342,7 @@ def generate_answer(question, patient_note=""):
     return text, (m.group(1).strip() if m else "")
 ```
 
----
+
 
 ## Tips
 
