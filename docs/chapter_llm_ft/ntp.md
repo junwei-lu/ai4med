@@ -58,6 +58,7 @@ $$
 
 Intuitively, a perplexity of $k $ means the model is "as confused as if choosing uniformly among$k$ options" at each step. Lower is better.
 
+![NTP Pipeline](ft.assets/nft_plot.png)
 
 
 ## Why Does This Work?
@@ -116,7 +117,7 @@ Perplexity: 6.30
 
 ### Shift-by-one: input vs. target in practice
 
-The key implementation detail: **the target at position $t $ is the input at position$t+1$**. This is done by shifting the token sequence by one.
+The key implementation detail: **the target at position $t$ is the input at position$t+1$**. This is done by shifting the token sequence by one.
 
 ```python
 import torch
@@ -157,38 +158,6 @@ print(f"NTP loss: {loss.item():.4f}")         # ~log(32000) ≈ 10.37 for random
 print(f"Perplexity: {torch.exp(loss).item():.1f}")
 ```
 
-### Using Hugging Face transformers
-
-When you call `model(**inputs, labels=input_ids)`, Hugging Face models do exactly the shift-and-cross-entropy internally:
-
-```python
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-model_id = "gpt2"  # small model, no auth required
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id)
-
-text = "The patient's creatinine clearance is"
-inputs = tokenizer(text, return_tensors="pt")
-input_ids = inputs["input_ids"]
-
-# Pass labels=input_ids → HF computes the shifted NTP loss automatically
-outputs = model(**inputs, labels=input_ids)
-
-print(f"NTP loss:   {outputs.loss.item():.4f}")
-print(f"Perplexity: {torch.exp(outputs.loss).item():.2f}")
-
-# The loss is stored in outputs.loss; logits in outputs.logits
-print(f"Logits shape: {outputs.logits.shape}")  # [1, T, 50257]
-```
-
-The `outputs.loss` corresponds exactly to:
-
-$$
-\mathcal{L} = -\frac{1}{T-1} \sum_{t=1}^{T-1} \log P_\theta(x_{t+1} \mid x_1, \ldots, x_t)
-$$
-
 
 
 ## What the Gradient Does
@@ -205,3 +174,193 @@ This means:
   - For all **other tokens**: the gradient is $P_\theta > 0$, which is **positive** → those logits are pushed **down**
 
 The model learns by repeatedly increasing the probability of observed tokens and decreasing the probability of unobserved tokens.
+
+
+## Training NTP with Hugging Face Transformers
+
+The manual PyTorch code above builds intuition, but in practice we use the Hugging Face `Trainer` API. This section walks through a complete pipeline: prepare the data, configure the model, train, and generate text.
+
+### Step 1: Install dependencies
+
+```bash
+pip install transformers datasets torch
+```
+
+### Step 2: Load a pre-trained model and tokenizer
+
+We start from a pre-trained GPT-2 checkpoint. Even when the goal is continued pre-training on domain-specific text, initializing from an existing checkpoint is much cheaper than training from scratch.
+
+```python
+import torch
+from transformers import AutoTokenizer, GPT2LMHeadModel
+
+model_name = "gpt2"  # 124M parameters
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = GPT2LMHeadModel.from_pretrained(model_name)
+
+tokenizer.pad_token = tokenizer.eos_token
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+
+print(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
+print(f"Vocab size: {tokenizer.vocab_size}")
+```
+
+??? note "Training from scratch"
+    To train a randomly initialized model instead (as done in the workshop notebook), replace `from_pretrained` with a fresh config:
+
+    ```python
+    from transformers import GPT2Config, GPT2LMHeadModel
+
+    config = GPT2Config(
+        vocab_size=len(tokenizer),
+        n_positions=256,
+        n_embd=256,
+        n_layer=4,
+        n_head=4,
+        bos_token_id=tokenizer.bos_token_id,
+        eos_token_id=tokenizer.eos_token_id,
+        pad_token_id=tokenizer.pad_token_id,
+    )
+    model = GPT2LMHeadModel(config)
+    ```
+
+### Step 3: Prepare the dataset
+
+NTP training requires **long, contiguous chunks** of tokens. The standard recipe is:
+
+1. Tokenize every document
+2. Concatenate all token IDs into one long stream
+3. Slice the stream into fixed-length blocks
+
+```python
+from datasets import load_dataset
+
+dataset = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
+
+BLOCK_SIZE = 256
+
+def tokenize_and_chunk(examples):
+    tokenized = tokenizer(examples["text"], truncation=False)
+    all_ids = []
+    for ids in tokenized["input_ids"]:
+        all_ids.extend(ids)
+    chunks = [
+        all_ids[i : i + BLOCK_SIZE]
+        for i in range(0, len(all_ids) - BLOCK_SIZE, BLOCK_SIZE)
+    ]
+    return {"input_ids": chunks}
+
+lm_dataset = dataset.map(
+    tokenize_and_chunk,
+    batched=True,
+    remove_columns=dataset.column_names,
+    batch_size=1000,
+)
+lm_dataset.set_format("torch")
+
+print(f"Training chunks: {len(lm_dataset)} (each {BLOCK_SIZE} tokens)")
+```
+
+**Why concatenate-then-chunk?** Documents vary in length. If we padded each document to the block size individually, most tokens in a batch would be padding—wasting computation. Concatenating documents into a continuous stream and slicing into equal-length blocks keeps every token meaningful.
+
+### Step 4: Data collator
+
+`DataCollatorForLanguageModeling` with `mlm=False` handles the shift-by-one logic: it copies `input_ids` into `labels` so the model's internal loss function can compare position $t$ logits against position $t+1$ tokens.
+
+```python
+from transformers import DataCollatorForLanguageModeling
+
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer=tokenizer,
+    mlm=False,  # causal LM, not masked LM
+)
+```
+
+### Step 5: Configure training
+
+```python
+from transformers import TrainingArguments
+
+training_args = TrainingArguments(
+    output_dir="gpt2-ntp",
+    max_steps=500,
+    per_device_train_batch_size=8,
+    learning_rate=5e-4,
+    warmup_steps=100,
+    logging_steps=10,
+    fp16=torch.cuda.is_available(),
+    save_strategy="no",
+    report_to="none",
+    seed=42,
+)
+```
+
+| Argument | Purpose |
+|---|---|
+| `max_steps` | Total gradient updates. Use `num_train_epochs` instead for full-epoch training. |
+| `learning_rate` | Peak LR after warmup. 5e-4 is typical for small-scale continued pre-training. |
+| `warmup_steps` | Linear warmup avoids large early updates that destabilize training. |
+| `fp16` | Mixed-precision training — roughly 2x speed on modern GPUs with no quality loss. |
+
+### Step 6: Train
+
+```python
+from transformers import Trainer
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=lm_dataset,
+    data_collator=data_collator,
+)
+
+trainer.train()
+```
+
+The training loss should drop quickly in the first 100 steps (the model learns basic token co-occurrence patterns) and then decrease more slowly as it captures longer-range dependencies.
+
+### Step 7: Generate text
+
+After training, test the model with autoregressive generation:
+
+```python
+def generate(prompt, max_new_tokens=100, temperature=0.7):
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    with torch.no_grad():
+        output = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            do_sample=True,
+            pad_token_id=tokenizer.pad_token_id,
+        )
+    return tokenizer.decode(
+        output[0][inputs["input_ids"].shape[1]:],
+        skip_special_tokens=True,
+    )
+
+prompts = [
+    "The patient presented with",
+    "Recent studies have shown that",
+    "In this paper, we propose",
+]
+
+for p in prompts:
+    print(f"Prompt: '{p}'")
+    print(f"Output: {generate(p)}\n")
+```
+
+### Step 8: Save and reload
+
+```python
+model.save_pretrained("gpt2-ntp")
+tokenizer.save_pretrained("gpt2-ntp")
+
+reloaded = GPT2LMHeadModel.from_pretrained("gpt2-ntp").to(device)
+```
+
+The saved model can later serve as the starting point for [supervised fine-tuning](sft.md) or [parameter-efficient fine-tuning](peft.md).
+
+
