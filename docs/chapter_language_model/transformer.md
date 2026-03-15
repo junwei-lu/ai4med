@@ -165,6 +165,8 @@ When we apply softmax to a row containing $-\infty$ values, those positions effe
 
 The Transformer decoder stacks multiple masked self-attention layers. Modern generative language models like GPT-2 and GPT-3 use the **decoder-only** architecture with a stack of masked self-attention layers followed by a feed-forward network.
 
+There is an interactive visualization of the transformer in [transformer-explainer](https://poloclub.github.io/transformer-explainer/).
+
 ![GPT-2](./tf.assets/gpt.png)
 
 GPT-2 is so far the last open-sourced model from OpenAI. It has 124M, 355M, and 774M parameters for small, medium, and large models, respectively.

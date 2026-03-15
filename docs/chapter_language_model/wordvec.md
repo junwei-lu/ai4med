@@ -146,6 +146,64 @@ input_ids = inputs["input_ids"]
 word_embeddings = model.get_input_embeddings()(input_ids) # [batch_size, seq_length, embedding_dim]
 ```
 
+### Training a Domain-Specific Tokenizer
+
+Standard pre-trained tokenizers (like BERT's or GPT-2's) are trained on general-purpose corpora. When working with specialized domains like medical or legal text, these tokenizers might be suboptimal. They may split domain-specific terms into many small, meaningless subwords, which increases sequence length and makes learning harder.
+
+Training a domain-specific BPE tokenizer can solve this by learning to represent frequent domain terms as single tokens.
+
+#### Principles of Byte-Pair Encoding (BPE)
+
+BPE is an iterative algorithm that builds a vocabulary of subword units:
+
+1.  **Initialization**: Start with a vocabulary containing only individual characters (or bytes).
+2.  **Stats Collection**: Count the frequency of every adjacent pair of symbols in the corpus.
+3.  **Merge**: Find the most frequent pair (e.g., 'e' and 's') and merge them into a new symbol ('es'). Add this to the vocabulary.
+4.  **Repeat**: Continue steps 2 and 3 until a target vocabulary size is reached.
+
+This process naturally learns common words as single tokens while keeping rare words as sequences of subwords.
+
+#### Implementation with `PreTrainedTokenizerFast`
+
+We can use the Hugging Face `tokenizers` library to train a BPE tokenizer and then wrap it in `PreTrainedTokenizerFast` for use with the `transformers` library.
+
+```python
+from tokenizers import Tokenizer, models, pre_tokenizers, decoders, trainers, processors
+from transformers import PreTrainedTokenizerFast
+
+# 1. Initialize a BPE tokenizer
+tokenizer = Tokenizer(models.BPE())
+
+# 2. Configure pre-tokenization (e.g., ByteLevel for GPT-2 style)
+tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
+
+# 3. Configure the trainer
+trainer = trainers.BpeTrainer(
+    vocab_size=30000,
+    special_tokens=["<|endoftext|>", "<|padding|>"],
+    initial_alphabet=pre_tokenizers.ByteLevel.alphabet()
+)
+
+# 4. Train on your domain corpus
+# 'medical_corpus.txt' should be a plain text file with your data
+# tokenizer.train(["medical_corpus.txt"], trainer)
+
+# 5. Post-processing (decoding)
+tokenizer.post_processor = processors.ByteLevel(trim_offsets=False)
+tokenizer.decoder = decoders.ByteLevel()
+
+# 6. Wrap in PreTrainedTokenizerFast
+# This makes it compatible with the AutoModel and pipeline APIs
+fast_tokenizer = PreTrainedTokenizerFast(
+    tokenizer_object=tokenizer,
+    unk_token="<|endoftext|>",
+    pad_token="<|padding|>"
+)
+
+# Save for later use
+# fast_tokenizer.save_pretrained("./medical_bpe_tokenizer")
+```
+
 ## Position Embeddings
 
 In language models, position embeddings are crucial because the [self-attention mechanism](attention.md) is inherently permutation-invariant. Without position information, the model would treat tokens the same regardless of their position in the sequence.
