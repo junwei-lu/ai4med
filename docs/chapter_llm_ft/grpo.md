@@ -39,7 +39,7 @@ This is the reward of completion $i$ relative to its peers in the group. A compl
 
 ![GRPO Advantage Computation](ft.assets/grpo_math.png)
 
-### The GRPO objective (full formula)
+### The GRPO objective
 
 $$
 \mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E}_{q,\, \{o_i\}_{i=1}^{G} \sim \pi_{\theta_{\text{old}}}} \left[
