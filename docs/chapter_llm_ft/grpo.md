@@ -71,6 +71,8 @@ The $\min(\rho\hat{A},\, \text{clip}(\rho, 1-\epsilon, 1+\epsilon)\hat{A})$ term
 
 This trust-region mechanism is what makes the training stable.
 
+![Clipped Surrogate Loss](ft.assets/clip.png)
+
 ### The KL divergence term
 
 The KL penalty:
