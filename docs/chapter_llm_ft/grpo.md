@@ -37,6 +37,8 @@ $$
 
 This is the reward of completion $i$ relative to its peers in the group. A completion that scores above the group average gets a positive advantage; one below average gets a negative advantage. No separate value network is needed.
 
+![GRPO Advantage Computation](ft.assets/grpo_math.png)
+
 ### The GRPO objective (full formula)
 
 $$
