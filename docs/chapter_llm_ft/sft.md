@@ -10,7 +10,7 @@ You will learn to:
 
 The guide assumes a biostatistics/biomedical background—no deep ML systems knowledge required.
 
-
+![SFT Pipeline](ft.assets/sft_plot.png)
 
 ## The SFT Loss Function
 
@@ -161,6 +161,124 @@ with open("train_dataset.json", "w") as f:
 **Why this template?**
 - A consistent structure simplifies tokenization and training
 - The final answer is clear and easy to evaluate later
+
+
+
+## Training Prompt Examples
+
+The prompt $x^{(i)}$ fed to the model during SFT can take many shapes depending on your task. The only requirement is that the format is **consistent across all training examples** so the model can learn the pattern. Below are representative templates for common biomedical and general NLP tasks.
+
+---
+
+### 1 · Closed-Form Q&A
+
+The most common pattern: a short factual question with a single correct answer.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "You are a medical knowledge assistant. Answer concisely."},
+  {"role": "user",      "content": "What is the first-line treatment for type 2 diabetes?"},
+  {"role": "assistant", "content": "Metformin, combined with lifestyle modification (diet and exercise)."}
+]}
+```
+
+Key design choices:
+
+- The system prompt sets the persona and answer style ("concisely")
+- The user turn contains *only* the question—no scaffolding text
+- The assistant answer is the single ground-truth string the model must learn to reproduce
+
+---
+
+### 2 · Clinical Calculator / Numeric Reasoning
+
+For tasks where the answer is a number derived from patient data, include all necessary values in the note.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "You are a clinical calculator. Return only the numeric result with units."},
+  {"role": "user",      "content": "Patient: 65-year-old male, weight 80 kg, serum creatinine 1.2 mg/dL.\nCompute creatinine clearance using the Cockcroft-Gault equation.\nAnswer:"},
+  {"role": "assistant", "content": "64 mL/min"}
+]}
+```
+
+The trailing `Answer:` in the user turn is a **prompt cue**—it primes the model to emit the answer token immediately, reducing the chance it starts with preamble text.
+
+---
+
+### 3 · Multi-Choice / Classification
+
+Frame the choices explicitly in the prompt so the model learns to pick exactly one option.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "You are a clinical decision support assistant. Choose the single best answer."},
+  {"role": "user",      "content": "A 45-year-old woman presents with pleuritic chest pain, dyspnea, and a positive D-dimer. Which diagnosis is most likely?\nA. Pneumonia\nB. Pulmonary embolism\nC. Myocardial infarction\nD. Pneumothorax\nAnswer:"},
+  {"role": "assistant", "content": "B. Pulmonary embolism"}
+]}
+```
+
+Restrict the assistant turn to the letter + label (not an explanation) if your goal is accurate classification. Add reasoning only if chain-of-thought is required.
+
+---
+
+### 4 · Summarization
+
+Teach the model to compress long clinical text into a structured summary.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "You are a clinical documentation assistant. Summarize the discharge note in 2–3 sentences covering diagnosis, treatment, and follow-up."},
+  {"role": "user",      "content": "Discharge Note:\nThe patient is a 72-year-old male admitted for acute decompensated heart failure with bilateral lower extremity edema and shortness of breath on exertion. He was treated with IV furosemide with marked improvement in fluid status. Echocardiography showed an ejection fraction of 35%. He was discharged on oral furosemide 40 mg daily, lisinopril 10 mg daily, and carvedilol 6.25 mg twice daily with close outpatient follow-up in 1 week.\n\nSummary:"},
+  {"role": "assistant", "content": "A 72-year-old male was admitted for acute decompensated heart failure (EF 35%) and responded well to IV diuresis. He was discharged on oral furosemide, lisinopril, and carvedilol. Follow-up is scheduled in 1 week."}
+]}
+```
+
+---
+
+### 5 · Information / Entity Extraction
+
+Instruct the model to extract structured fields from unstructured text.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "Extract the requested clinical fields from the note. Return valid JSON only."},
+  {"role": "user",      "content": "Note: Patient is a 58-year-old female with a history of hypertension and type 2 diabetes, currently on metformin 1000 mg BID and amlodipine 5 mg daily. She presents with a 3-day history of productive cough and fever (38.4°C).\n\nExtract: {\"age\": ..., \"sex\": ..., \"conditions\": [...], \"medications\": [...], \"presenting_symptoms\": [...]}"},
+  {"role": "assistant", "content": "{\"age\": 58, \"sex\": \"female\", \"conditions\": [\"hypertension\", \"type 2 diabetes\"], \"medications\": [\"metformin 1000 mg BID\", \"amlodipine 5 mg daily\"], \"presenting_symptoms\": [\"productive cough\", \"fever\"]}"}
+]}
+```
+
+Enforcing JSON output in the assistant turn makes the results machine-readable and easy to evaluate.
+
+---
+
+### 6 · Chain-of-Thought (Step-by-Step) Reasoning
+
+For complex reasoning tasks, the assistant turn should include the reasoning steps, not just the final answer.
+
+```json
+{"messages": [
+  {"role": "system",    "content": "You are a clinical reasoning assistant. Think step by step before giving your final answer."},
+  {"role": "user",      "content": "A patient with a serum sodium of 118 mEq/L is started on hypertonic saline. What is the maximum safe correction rate, and why?\nAnswer:"},
+  {"role": "assistant", "content": "Step 1: Identify the risk. Rapid correction of chronic hyponatremia can cause osmotic demyelination syndrome (ODS).\nStep 2: Apply the guideline limit. The maximum safe rate is 8–10 mEq/L per 24 hours (some guidelines cite 10–12 mEq/L for the first 24 h).\nStep 3: Conclusion. Correct at no more than 8 mEq/L/24 h in this patient to avoid ODS; check serum sodium every 2–4 hours."}
+]}
+```
+
+!!! tip "Consistency is key"
+    Mix-and-match formats cause the model to learn *when* to reason vs. when to answer directly—which is powerful—but only if the distinction is intentional and consistently labelled in your training data. If all tasks are the same type, use a single unified template.
+
+---
+
+### Prompt Design Checklist
+
+| Element | Recommendation |
+|---|---|
+| System prompt | One sentence: role + output style |
+| User turn | Task description + all necessary inputs |
+| Trailing cue | End with `Answer:` or `Output:` to cue generation |
+| Assistant turn | Ground-truth response only—no meta-commentary |
+| Format consistency | Same template for every example in the dataset |
+| Output type | Match the assistant turn to evaluation metric (string, JSON, letter, etc.) |
 
 
 

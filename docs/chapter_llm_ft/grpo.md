@@ -9,6 +9,7 @@ SFT (see [Supervised Fine-Tuning](sft.md)) trains the model to imitate gold-stan
 
 RL fine-tuning replaces the supervised signal with a **reward function** $r(y, x)$ that scores a sampled response $ y $ for a given prompt $ x$. This lets you optimize for non-differentiable objectives like numerical accuracy, format compliance, or clinical correctness.
 
+![GRPO Pipeline](ft.assets/grpo.gif)
 
 
 ## The GRPO Objective
