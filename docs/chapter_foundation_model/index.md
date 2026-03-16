@@ -1,17 +1,19 @@
 # Chapter 13. Foundation Models
 
-This chapter introduces how to build, pretrain, and fine-tune a modern foundation model with a beginner-friendly focus for students in biostatistics and biomedical research. We use a tiny, toy SNP-related dataset from Hugging Face to illustrate end-to-end workflows without requiring heavy compute.
+This chapter explores the concept of **Foundation Models**—large-scale models trained on vast amounts of data that can be adapted to a wide range of downstream tasks. We will cover both general-purpose foundation models and their specific application to **Genomics** (SNP Foundation Models).
 
-What you will learn:
+## Building Foundation Models
+We start by understanding how to build and pretrain foundation models from scratch.
 
-- The big picture of building a foundation model (no code)
-- A simple coding tutorial to build a transformer and pretrain it with masked token prediction
-- How to fine-tune the pretrained model for downstream tasks using the Hugging Face ecosystem
+*   **[Building a Foundation Model](overview.md)**: An overview of the architecture, data requirements, and training objectives.
+*   **[Coding Tutorial: Pretraining](coding_build_pretrain.md)**: A step-by-step guide to coding the pretraining loop.
+*   **[Fine-Tuning with Hugging Face](finetune.md)**: How to adapt a pretrained model to specific tasks using the Hugging Face ecosystem.
 
-Suggested reading order:
+## SNP Foundation Models
+We then dive deep into applying these principles to DNA sequences, treating the genome as a language.
 
-1. Building a Foundation Model (No Code)
-2. Coding Tutorial: Build and Pretrain a Foundation Model (SNP toy dataset)
-3. Fine-Tuning a Foundation Model with Hugging Face (SNP toy dataset)
-
-
+*   **[SNP Tokenization & Architecture](snp_tokenization.md)**: How to tokenize DNA (K-mers) and why Encoder-only architectures are preferred.
+*   **[SNP Model Training](snp_training.md)**: Pretraining objectives (Masked Language Modeling) and downstream tasks (eQTL prediction).
+*   **[SNP Fine-Tuning](snp_finetuning.md)**: Practical tutorial on fine-tuning genomic models using LoRA.
+*   **[Advanced Genomic Models](snp_advanced_models.md)**: Exploring long-range models (Enformer) and single-cell foundation models (scGPT).
+*   **[Model Interpretation](snp_interpretation.md)**: Using Saliency Maps and attention analysis to interpret model predictions biologically.

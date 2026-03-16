@@ -306,50 +306,5 @@ for _ in range(10000):
 
 
 
-## Contextual DDPM
-
-We can generalize the DDPM model to generate the conditional distribution $p(x |c)$ where $c$ could be even be a text prompt.
-
-We can just simple add the context $c$ to the input of the noise predictor $\varepsilon_\theta(x_t, t, c)$ and train the loss function as:
-
-$$
-\mathbb{E}_{(x_0, c) \sim \text{Data}, t \sim \text{Uniform}\{1 ,\ldots, T\}, \varepsilon \sim \mathcal{N}(0, I)} \| \varepsilon - \varepsilon_\theta(\bar{\alpha}_t x_0 + \bar{\beta}_t \varepsilon, t, c)\|^2 
-$$
-
-More technologies like the [CLIP](https://arxiv.org/abs/2103.00020) can be used to improve the quality of the generated images. Please refer to the [OpenAI DALL-E paper](https://arxiv.org/pdf/2204.06125) for more details.
-
-![dalle](generative.assets/dalle.png)
-
-
-
-### Classifier-Free Guidance
-
-For conditional probabiltiy generation, there is a trade-off between the fidelity and mode-coverage (diversity) of the generated images. In order to tune the trade-off, we can use the **classifier-free guidance** to sample using a linear combination of conditional and unconditional samples:
-
-$$
-\tilde{\varepsilon}_\theta(x_t, t, c) = (1+w) \varepsilon_\theta(x_t, t, c) - w \varepsilon_\theta(x_t, t),
-$$
-
-where $\varepsilon_\theta(x_t, t)$ is an unconditional noise predictor. Usually, we will use the same network for both conditional and unconditional cases. For unconditional case, we will use a null token $\varnothing$ as the context $c$ and fit $\varepsilon_\theta(x_t, t) = \varepsilon_\theta(x_t, t, \varnothing)$.
-
-The training process can be summarized as follows.
-
-**Input**: $p_{uncond}$: probability of unconditional training
-
-**Repeat**:
-
-  1. Sample data with conditioning from the dataset: $(x, c) \sim p(x, c)$
-  2. Randomly discard conditioning to train unconditionally: $c \leftarrow \emptyset$ with probability $p_{uncond}$
-  3. Sample log SNR value: $\lambda \sim p(\lambda)$
-  4. Sample Gaussian noise: $\epsilon \sim \mathcal{N}(0, I)$
-  5. Corrupt data to the sampled log SNR value: $z_\lambda = \alpha_\lambda x + \sigma_\lambda \epsilon$
-  6. Take gradient step on $\nabla_\theta \|\epsilon_\theta(z_\lambda, c) - \epsilon\|^2$
-
-**Until** converged
-
-
-We will then use $\tilde{\varepsilon}_\theta(x_t, t, c)$ to sample from the model.
-
-When $w$ increases from 0 to $\infty$, the generated images will become less fidelity and more diversity.
 
 

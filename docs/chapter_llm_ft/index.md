@@ -10,9 +10,12 @@ This chapter covers fine-tuning large language models (LLMs) built on the Transf
 - **[Supervised Fine-Tuning (SFT)](sft.md)**  
   The SFT loss function with prompt masking, MLE interpretation, and end-to-end training with `SFTTrainer`.
 
-- **[PEFT: LoRA and QLoRA](peft.md)**  
-  Low-rank adaptation math ($\Delta W = BA$), scaling, parameter savings, and QLoRA with quantized base models.
-
 - **[RL Fine-Tuning with GRPO](grpo.md)**  
   The GRPO objective, group-relative advantage, clipped surrogate loss, KL penalty, and reward function design.
+
+- **[Direct Preference Optimization (DPO)](dpo.md)**  
+  Aligning models with human preferences directly using preference pairs (chosen vs. rejected) without a reward model.
+
+- **[PEFT: LoRA and QLoRA](peft.md)**  
+  Low-rank adaptation math ($\Delta W = BA$), scaling, parameter savings, and QLoRA with quantized base models.
 

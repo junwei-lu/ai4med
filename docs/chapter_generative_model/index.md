@@ -10,3 +10,6 @@ Lectures:
 - [Langevin Dynamics](./langevin_dynamics.md)
 - [Diffusion Models](./ddpm.md)
 - [Flow Matching](./flow_match.md)
+- [Diffusion Transformers (DiT)](./dit.md)
+- [Stable Diffusion](./stable_diffusion.md)
+- [Text-to-Image Generation](./text_to_image.md)

@@ -266,7 +266,21 @@ def to_sft(ex):
 
 
 
-### Section 6: GRPO with Rule-Based Rewards (2:20–2:45, ~9 cells)
+### Section 6: Direct Preference Optimization (DPO) (2:20–2:35, ~5 cells)
+
+**Markdown:** DPO optimizes preferences directly without a reward model. Stable alternative to PPO.
+
+**Code:** Prepare DPO dataset. Chosen = gold summary, Rejected = random other summary (teaching specificity).
+
+**Code:** Configure DPOTrainer: `beta=0.1`, `lr=5e-6`.
+
+**Code:** Train or load DPO checkpoint.
+
+**Visualization:** DPO training loss curve.
+
+
+
+### Section 7: GRPO with Rule-Based Rewards (2:35–2:55, ~9 cells)
 
 **Markdown:** What is GRPO? Sample multiple completions per prompt, score with reward functions, update policy toward higher-reward completions. No reward model needed. `beta=0.0` skips reference model (saves memory).
 
@@ -300,7 +314,7 @@ def to_sft(ex):
 
 
 
-### Section 7: Compare the Three Models (2:45–3:00, ~6 cells)
+### Section 8: Compare the Models (2:55–3:15, ~6 cells)
 
 **Markdown:** Grand comparison — three checkpoints from same architecture: pretrained (clinical language), SFT (instruction following), GRPO (reward optimization).
 
