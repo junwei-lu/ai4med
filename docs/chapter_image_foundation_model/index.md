@@ -12,6 +12,10 @@ Why this chapter matters for AI in medicine:
 - Chest X-rays and CT slices often start from pretrained visual encoders.
 - Modern multimodal medical systems often build on image encoders that descended from ViT. -->
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/vit/vit_multimodal_cxr_workshop.ipynb" target="_parent">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 Lectures:
 
 - [ViT Basics: Patches, Tokens, and Encoders](./vit_basics.md)

@@ -10,7 +10,11 @@ venv/
 .pdf
 .DS_Store
 instruction.md
-
+.claude/
+codes/**/*.md
+codes/*.md
+.vscode/
+materials/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
