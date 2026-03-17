@@ -5,6 +5,11 @@ This chapter covers language models with utilzing the transformer architecture. 
 ![Transformer](./tf.assets/optimus.gif)
 
 
+<a href="https://drive.google.com/file/d/1oAxtxF1OVTlwZDr5c2-n45LJI8B_22tt/view?usp=sharing" target="_parent">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+
 ## Lectures
 
 - [Word Vectors](wordvec.md)
