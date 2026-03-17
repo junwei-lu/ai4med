@@ -33,7 +33,9 @@ Stable Diffusion has three main learned components:
 3. **U-Net denoiser**: predicts the noise inside a noisy latent while attending to the text.
 
 
-## Mathematical Principle
+## Mathematics of Stable-Diffusion
+
+For self-consistency, we assemble all math procedures of stable diffusion here.
 
 ### 1. Compress Images into Latent Space
 
@@ -408,7 +410,7 @@ image = pipe(
 
 image.save("stable_diffusion_sample.png")
 ```
-
+<!-- 
 ### Watching the denoising process
 
 If you want to watch how the image forms step by step, use the pipeline's built-in `callback_on_step_end` instead of writing your own sampling loop. The callback receives the in-progress latents at every step:
@@ -441,4 +443,4 @@ image = pipe(
 # snapshots now contains images from steps 0, 5, 10, 15, 20, 25.
 for i, snap in enumerate(snapshots):
     display(snap)
-```
+``` -->

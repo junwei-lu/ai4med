@@ -183,7 +183,6 @@ nav:
     - Word Vectors: chapter_language_model/wordvec.md
     - Attention: chapter_language_model/attention.md
     - Transformer: chapter_language_model/transformer.md
-    - Model Families: chapter_language_model/model_families.md
     - Hugging Face: chapter_language_model/hg_transformers.md
   - Chapter 5. Language Model Training:
     - chapter_llm_ft/index.md
