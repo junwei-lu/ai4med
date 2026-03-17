@@ -13,6 +13,8 @@ The first direction extends sequence modeling across much longer genomic distanc
 
 Standard Transformers scale quadratically with sequence length ($O(N^2)$). This limits them to windows of ~512-4096 base pairs. However, gene regulation often involves **enhancers** interacting with **promoters** over distances of 100,000+ base pairs (100kb).
 
+![Enformer](assets/enformer.png)
+
 ### The Architecture: Dilated Convolutions + Transformer
 **Enformer** (DeepMind) solves this by combining two architectures:
 
@@ -31,7 +33,7 @@ The paper gives a more concrete architecture:
     *   **mouse**: **1,643 tracks**
 
 The convolution tower reduces the 196,608-bp input into **1,536 sequence positions**, so each latent position roughly corresponds to a **128-bp regulatory chunk**. This is a useful compromise: fine enough to represent regulatory elements, but coarse enough to make transformer attention tractable.
-
+<!-- 
 ### What Changed Relative to Basenji2
 
 The paper emphasizes that Enformer is not "just Basenji2 plus attention". Several architectural changes were made together:
@@ -41,7 +43,7 @@ The paper emphasizes that Enformer is not "just Basenji2 plus attention". Severa
 *   **twice as many channels**
 *   **longer input sequence**: about **197 kb** instead of **131 kb**
 
-Among these, the most important scientific change is the switch from dilated convolutions to attention. The paper shows that attention layers outperform dilated convolutions across model sizes and training settings, and that restricting Enformer back to a local receptive field causes a large performance drop.
+Among these, the most important scientific change is the switch from dilated convolutions to attention. The paper shows that attention layers outperform dilated convolutions across model sizes and training settings, and that restricting Enformer back to a local receptive field causes a large performance drop. -->
 
 ### Attention Pooling and Relative Position Encoding
 
@@ -137,8 +139,6 @@ The paper reports that Enformer improves the fine-mapped GTEx classifier in **47
 
 The paper also evaluates Enformer on **massively parallel reporter assay (MPRA)** data from CAGI5-style saturation mutagenesis experiments. Again, the model scores a variant by comparing the predicted output for the reference versus alternate allele. Enformer outperforms several competing approaches on average across loci.
 
-![Enformer Architecture](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41592-021-01252-x/MediaObjects/41592_2021_1252_Fig1_HTML.png)
-*(Source: Avsec et al., Nature Methods 2021)*
 
 ### Impact on SNP Prediction
 Enformer can predict gene expression from DNA sequence with remarkable accuracy because it can "see" the distant enhancer that a SNP might disrupt. If a SNP is 50kb away from a gene, a standard BERT model (seeing only 1kb) would miss the connection. Enformer captures it.
@@ -165,7 +165,9 @@ Beyond DNA sequence, we have models trained on **Single-Cell RNA-sequencing (scR
 | **Objective** | **Masked Gene Modeling (MGM)**: Predict expression of masked genes. | **Masked Gene Modeling**: Predict identity of masked genes. |
 | **Analogy** | Like GPT generating text, it generates a "cell". | Like BERT understanding a sentence (cell). |
 
-### Deep Dive: scGPT Architecture
+![scGPT](assets/scGPT_pipeline.png)
+
+### scGPT Architecture
 
 **scGPT** (Single-Cell Generative Pre-trained Transformer) treats a single cell as a "sentence" where genes are "words". However, unlike text, the order of genes doesn't matter (permutation invariant), and each gene has a continuous expression value.
 

@@ -2,7 +2,7 @@
 
 A major challenge with "Black Box" foundation models is trust. If a model predicts a SNP is pathogenic, a biologist needs to know *why*.
 
-## Saliency Maps (Gradient-Based Attribution)
+## Saliency Maps
 
 The most direct way to interpret a genomic model is to ask: "Which token positions contributed most to this prediction?"
 
@@ -13,6 +13,8 @@ We compute the gradient of the model's output with respect to the **input embedd
 $$ \text{Saliency}(i) = \left\| \frac{\partial \hat{y}}{\partial \mathbf{e}_i} \right\|_2 $$
 
 A high score at position $i$ means that small changes to that token's embedding would strongly affect the prediction.
+
+![saliency](assets/saliency_snp.png)
 
 ### Template Code: Gradient Saliency
 

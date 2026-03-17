@@ -6,7 +6,7 @@ The Transformer is a neural network architecture that is used for natural langua
 
 The Transformer block is the main building block of the Transformer.
 
-Let $X \in \mathbb{R}^{n \times d}$ be the input matrix, where $n$ is the sequence length and $d$ is the embedding dimension. The Transformer block consists of the following ope`rations:
+Let $X \in \mathbb{R}^{n \times d}$ be the input matrix, where $n$ is the sequence length and $d$ is the embedding dimension. The Transformer block consists of the following operations:
 
 - **Multi-Head Attention**:
 
@@ -176,6 +176,118 @@ GPT-2 is so far the last open-sourced model from OpenAI. It has 124M, 355M, and 
 | [GPT-2 Small](https://huggingface.co/gpt2) | 12 | 768 | 12 | 3072 | 124M |
 | [GPT-2 Medium](https://huggingface.co/gpt2-medium) | 24 | 1024 | 16 | 4096 | 355M |
 | [GPT-2 Large](https://huggingface.co/gpt2-large) | 36 | 1280 | 20 | 5120 | 774M |
+
+## From Decoder Output to Token Generation
+
+After the final transformer decoder layer, we have a hidden state vector for each position. To *generate* the next token, we need to convert this vector into a probability distribution over the vocabulary. This happens in two steps: a linear projection (the **language model head**) and a softmax (optionally with temperature).
+
+### Logits: Projecting to Vocabulary Space
+
+Let $\mathbf{h}_L \in \mathbb{R}^d$ be the hidden state at the last decoder position (i.e., after all transformer blocks). The vocabulary has size $V$ (e.g., 50,257 for GPT-2). We apply a linear layer without bias:
+
+$$
+\mathbf{z} = \mathbf{h}_L \, W_{\text{lm}} \in \mathbb{R}^V
+$$
+
+where $W_{\text{lm}} \in \mathbb{R}^{d \times V}$ is the language model head. The vector $\mathbf{z} = (z_1, z_2, \ldots, z_V)$ contains one score (called a **logit**) per vocabulary token. These logits are unnormalized: higher values mean the model considers that token more likely.
+
+### Softmax: Logits to Probabilities
+
+The softmax function converts logits into a valid probability distribution:
+
+$$
+p_i = \frac{e^{z_i}}{\sum_{j=1}^{V} e^{z_j}} = \frac{e^{z_i}}{Z}
+$$
+
+where $Z = \sum_{j=1}^{V} e^{z_j}$ is the partition function (normalizing constant). Each $p_i \in (0, 1)$ and $\sum_{i=1}^{V} p_i = 1$. The model then samples the next token from this distribution.
+
+### Temperature
+
+During generation, we often introduce a **temperature** hyperparameter $T > 0$ to control how sharply we pick tokens. We divide the logits by $T$ before applying softmax:
+
+$$
+p_i(T) = \frac{e^{z_i / T}}{\sum_{j=1}^{V} e^{z_j / T}}
+$$
+
+**Effect of temperature:**
+
+| Temperature | Effect | Typical use |
+|-------------|--------|-------------|
+| $T = 1$ | Standard softmax; no change | Default, balanced behavior |
+| $T < 1$ (e.g. 0.5, 0.2) | Sharper distribution: high-probability tokens get more mass, low-probability ones get suppressed | More deterministic, conservative output |
+| $T > 1$ (e.g. 1.2, 2.0) | Flatter distribution: probabilities become more uniform | More diverse, creative output |
+
+Intuitively: with $T \to 0$, we approach **argmax** (always pick the highest-scoring token); with $T \to \infty$, we approach uniform random sampling over the vocabulary.
+
+### Putting It Together
+
+For autoregressive generation at each step:
+
+1. Run the decoder on the current input sequence to get $\mathbf{h}_L$.
+2. Compute logits: $\mathbf{z} = \mathbf{h}_L \, W_{\text{lm}}$.
+3. (Optional) Apply temperature: $\tilde{z}_i = z_i / T$.
+4. Apply softmax to get $p_i = e^{\tilde{z}_i} / \sum_j e^{\tilde{z}_j}$.
+5. Sample the next token from this distribution (e.g., multinomial sampling or argmax for greedy decoding).
+
+Below is sample code for softmax (with temperature) and sampling. We assume `logits` is a tensor of shape `(batch_size, vocab_size)` from the model's language model head:
+
+```python
+import torch
+import torch.nn.functional as F
+
+def logits_to_probs(logits, temperature=1.0):
+    """Apply temperature scaling and softmax to get probabilities."""
+    # temperature: divide logits by T before softmax
+    scaled_logits = logits / temperature
+    probs = F.softmax(scaled_logits, dim=-1)
+    return probs
+
+def sample_next_token(probs, method="multinomial"):
+    """
+    Sample the next token from the probability distribution.
+    
+    Args:
+        probs: (batch_size, vocab_size) - probability distribution over vocabulary
+        method: "greedy" for argmax, "multinomial" for random sampling
+    """
+    if method == "greedy":
+        # Always pick the highest-probability token (T → 0 behavior)
+        next_token = probs.argmax(dim=-1)
+    elif method == "multinomial":
+        # Sample according to the distribution
+        next_token = torch.multinomial(probs, num_samples=1).squeeze(-1)
+    return next_token
+
+# Example: get logits from a GPT-2 forward pass, then generate next token
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model = AutoModelForCausalLM.from_pretrained("gpt2")
+tokenizer = AutoTokenizer.from_pretrained("gpt2")
+inputs = tokenizer("The capital of France is", return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**inputs)
+    logits = outputs.logits  # (batch_size, seq_len, vocab_size)
+
+# Take the last position (prediction for next token after "is")
+last_logits = logits[:, -1, :]  # (batch_size, vocab_size)
+
+# Softmax with temperature
+probs = logits_to_probs(last_logits, temperature=0.8)
+print("Top-5 token probabilities:", probs[0].topk(5))
+
+# Sampling
+next_token_greedy = sample_next_token(probs, method="greedy")
+next_token_sampled = sample_next_token(probs, method="multinomial")
+print("Greedy:", tokenizer.decode(next_token_greedy))
+print("Sampled:", tokenizer.decode(next_token_sampled))
+```
+
+In practice, Hugging Face handles this internally when you call `model.generate()`:
+
+```python
+gen_ids = dec_model.generate(**prompt, max_new_tokens=20, temperature=0.8)
+```
 
 ## Encoder-Decoder Transformer
 

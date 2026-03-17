@@ -18,6 +18,5 @@ This chapter focuses on one big theme:
 We will cover:
 
 - **[Why Train an Encoder First?](./encoder_motivation.md)**
-- **[Contrastive Learning](./contrastive_learning.md)**
-- **[CLIP: Contrastive Language-Image Pretraining](./clip.md)**
+- **[Contrastive Learning and CLIP](./contrastive_learning.md)**
 - **[DINOv2: Self-Distillation for Universal Visual Features](./dinov2.md)**

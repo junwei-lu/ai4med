@@ -1,6 +1,4 @@
-# DINOv2: Self-Distillation for Universal Visual Features
-
-## Why DINOv2 Matters
+# DINO: Self-Distillation
 
 If contrastive learning says:
 
@@ -18,8 +16,8 @@ DINOv2 is one of the strongest examples of this idea at scale. It trains a power
 - depth estimation,
 - dense patch matching.
 
-![DINOv2](./ssl.assets/dinov2_share.png)
-> Public image from the official DINOv2 page, emphasizing that one pretrained encoder can support many image-level and pixel-level tasks.
+![dino](ssl.assets/dino_collapse.png)
+
 
 ## The Teacher-Student Setup
 
@@ -43,7 +41,7 @@ $$
 
 This makes the teacher a slowly moving target, which stabilizes training.
 
-## Multi-Crop Intuition
+### Multi-Crop Intuition
 
 One image can generate:
 
@@ -52,39 +50,8 @@ One image can generate:
 
 The model learns that these all describe the same underlying scene or object. This encourages invariance across scale, viewpoint, and partial observation.
 
-```mermaid
-graph TD
-    A[One image] --> B[Global crop 1]
-    A --> C[Global crop 2]
-    A --> D[Local crop 1]
-    A --> E[Local crop 2]
-    A --> F[Local crop 3]
-    B --> G[Teacher]
-    C --> G
-    B --> H[Student]
-    C --> H
-    D --> H
-    E --> H
-    F --> H
-    G --> I[Target probabilities]
-    H --> J[Student probabilities]
-    I --> K[Cross-entropy matching loss]
-    J --> K
-```
 
-## From DINO to DINOv2
-
-DINOv2 is not just "run DINO on a bigger dataset." It combines several ideas:
-
-- DINO-style self-distillation,
-- iBOT-style masked patch objectives,
-- large curated image data,
-- strong ViT backbones,
-- distillation from a large teacher into smaller deployable models.
-
-The result is a family of encoders that behave much more like general-purpose visual backbones than narrow pretraining tricks.
-
-## The DINO Loss Idea
+## DINO Loss
 
 Let:
 
@@ -101,7 +68,28 @@ $$
 
 where the teacher target is treated as fixed for that step.
 
-But there are two important stabilizers:
+## Avoid Collapse
+
+A beginner might worry:
+
+> If the student just copies the teacher, couldn’t both output the same boring constant vector forever?
+
+Yes, that is exactly the collapse problem. From the figure below, we can get the higher loss by just simply predicting the singular probability.
+
+![dino](ssl.assets/dino_sig.png)
+
+DINO-style methods avoid it using a combination of:
+
+- multi-crop views,
+- teacher EMA updates,
+- centering,
+- sharpening,
+
+These ingredients make the teacher signal informative enough to organize the representation space instead of flattening it. 
+
+
+
+We have introduced the first two. Let us introduce the later two important stabilizers to avoid collapsing:
 
 ### 1. Teacher Centering
 
@@ -129,24 +117,9 @@ $$
 
 Then the student is trained to match the teacher.
 
-## Why This Avoids Collapse
 
-A beginner might worry:
 
-> If the student just copies the teacher, couldn’t both output the same boring constant vector forever?
-
-Yes, that is exactly the collapse problem.
-
-DINO-style methods avoid it using a combination of:
-
-- centering,
-- sharpening,
-- multi-crop views,
-- teacher EMA updates,
-- architectural and optimization details.
-
-These ingredients make the teacher signal informative enough to organize the representation space instead of flattening it.
-
+<!-- 
 ## DINOv2 Training Objective at a High Level
 
 The DINOv2 model card summarizes the training objective as:
@@ -197,9 +170,11 @@ $$
 - \sum_k p_t^{(k)} \log p_s^{(k)}
 $$
 
-If there are multiple views, sum this across view pairs.
+If there are multiple views, sum this across view pairs. -->
 
-## A Minimal PyTorch-Style DINO Loss
+## DINO Code
+
+Here is a sample code to define DINO loss.
 
 ```python
 import torch
@@ -219,7 +194,7 @@ This is simplified, but it captures the central pattern:
 - student matches it with cross-entropy,
 - center and temperatures help stabilize learning.
 
-## EMA Teacher Update
+### EMA Teacher Update
 
 ```python
 @torch.no_grad()
@@ -230,7 +205,7 @@ def update_teacher(student, teacher, momentum=0.996):
 
 This is one of the most elegant ideas in self-supervised learning: the teacher improves by being a moving average of the student rather than a separately trained network.
 
-## Simplified Training Skeleton
+### Simplified Training Skeleton
 
 ```python
 for global_views, local_views in train_loader:
@@ -257,7 +232,7 @@ for global_views, local_views in train_loader:
 ```
 
 This hides many engineering details, but the conceptual loop is correct.
-
+<!-- 
 ## Why DINOv2 Features Are So Useful
 
 DINOv2 features are especially attractive because they work well without much fine-tuning.
@@ -296,7 +271,7 @@ DINOv2 teaches a student encoder using a slowly moving teacher and multiple view
 - It does not need explicit negative pairs in the SimCLR sense.
 - It scales into a strong universal visual backbone.
 
-That makes it one of the clearest examples of how self-supervised learning can train an encoder first and reuse it almost everywhere later.
+That makes it one of the clearest examples of how self-supervised learning can train an encoder first and reuse it almost everywhere later. -->
 
 ## References and Further Reading
 

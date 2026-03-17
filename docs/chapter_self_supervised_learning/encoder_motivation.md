@@ -1,168 +1,156 @@
-# Why Train an Encoder First?
+# Encoder Training
 
-## The Main Motivation
 
-Imagine you are building a medical imaging system. You may want to classify diabetic retinopathy, detect lesions, retrieve similar scans, or segment anatomy. Training a separate network from scratch for every task is wasteful.
-
-What you really want is a model that has already learned:
-
-- edges and textures,
-- shape and layout,
-- object parts,
-- semantic structure.
-
-That reusable front half of the model is the **encoder**.
-
-## What an Encoder Actually Does
-
-An encoder maps a raw input $x$ into a feature vector or feature map:
+An encoder turns a raw input $x$ into a useful representation:
 
 $$
 z = f_\theta(x)
 $$
 
-where:
+Instead of training a new model from scratch for every task, we often train one strong encoder first and reuse it many times.
 
-- $x$ is an image,
-- $f_\theta$ is the encoder,
-- $z$ is a representation.
+In practice, an encoder can support:
 
-The dream is that $z$ keeps the important information and throws away the junk.
+- representation learning,
+- classification or regression,
+- retrieval and nearest-neighbor search,
+- segmentation or detection with task-specific heads,
+- modality alignment such as image-text matching.
 
-For example, we might want the representation to remember:
+This is why encoder pretraining matters so much: once the representation is good, many downstream tasks become easier.
 
-- "this looks like lung tissue,"
-- "this image has vessel-like structures,"
-- "these two images are visually similar,"
+## Why Pretrain an Encoder?
 
-without overreacting to small nuisances like crop position, lighting, or background clutter.
+Labels are expensive, but raw data is abundant. In medicine, this gap is especially large: hospitals may store millions of images, while only a small fraction have reliable expert annotations.
 
-## Why Labels Are Not the Best Teacher for Everything
+Self-supervised learning uses the raw data itself as the training signal. The goal is to learn features that are:
 
-Supervised training is powerful, but it only teaches what the labels ask for.
+- stable under small irrelevant changes,
+- different for genuinely different content,
+- useful across many tasks.
 
-If the dataset label is "cat" vs "dog", the model may never be rewarded for learning:
+That is the basic foundation-model idea for vision: learn general features first, specialize later.
 
-- material,
-- viewpoint,
-- texture,
-- background context,
-- relationships to language.
 
-Self-supervised learning tries to build a broader visual understanding before task-specific supervision narrows it down.
+After pretraining, we can freeze the encoder and test it with a small classifier, or fine-tune it for a specific task.
 
-## The Reuse Pattern
+### Why This Matters in Medicine
 
-The modern workflow often looks like this:
+This is especially useful in medical AI because:
 
-```mermaid
-graph LR
-    A[Large unlabeled dataset] --> B[Self-supervised pretraining]
-    B --> C[Encoder]
-    C --> D[Linear probe]
-    C --> E[Fine-tuning]
-    C --> F[Retrieval]
-    C --> G[Segmentation head]
-    C --> H[Multimodal model]
-```
+- unlabeled data is common,
+- labels are expensive and sometimes noisy,
+- a single encoder may be reused across tasks,
+- transfer across scanners, hospitals, and modalities matters.
 
-This reuse is why encoder training is such a big deal. Once the encoder is strong, many downstream tasks become easier.
+An encoder pretrained on large image collections can later support diagnosis, retrieval, report alignment, or fine-tuning on a small labeled dataset.
 
-## What Makes a "Good" Representation?
+## High-Level Idea of Self-Supervised Learning
 
-A useful encoder representation should usually have three properties:
+Self-supervised learning creates supervision from the data itself. Instead of asking for a human label, we build an artificial target from the same sample.
 
-### 1. Invariance
+For example, we may take one image, create two augmented views, and ask the model to recognize that they came from the same underlying object. In that sense, self-supervision often means making a sample into its own positive example.
 
-Small irrelevant changes should not drastically change the representation.
+The exact target can vary: match two views, recover masked content, predict a teacher output, or align two modalities. But the common idea is simple: the data teaches the encoder how to represent itself.
 
-If I crop an image slightly or flip it, the representation should still say, "yes, same underlying scene."
+## PCA as a Simple Self-Supervised Encoder
 
-### 2. Discriminability
+Even Principal Component Analysis can be viewed as a simple self-supervised method.
 
-Different semantic content should map to different features.
-
-A chest X-ray and a retinal image should not collapse into the same embedding soup.
-
-### 3. Transferability
-
-The features should work across many tasks, not just the one used during pretraining.
-
-This is the part that makes self-supervised learning feel like a "foundation model" story.
-
-## A Simple Downstream Objective
-
-Once the encoder is trained, a very common evaluation is a **linear probe**.
-
-Freeze the encoder and train a small classifier:
+If $X$ is a centered data matrix, then
 
 $$
-\hat{y} = W z + b, \qquad z = f_\theta(x)
+XX^\top = U D U^\top
 $$
 
-If a linear classifier works well, it means the encoder already organized the representation space in a useful way.
+is an eigendecomposition of the sample-similarity matrix $XX^\top$. Two samples have a large value in $XX^\top$ when their inner product is large, so this matrix captures which samples are similar.
 
-That is why papers often report:
+The top columns of $U$ give a low-dimensional representation that preserves the strongest structure in the data. In that sense, PCA learns a linear encoder from unlabeled data: it uses the similarity structure already present in $X$, without any external labels.
 
-- linear evaluation,
-- k-NN evaluation,
-- retrieval quality,
-- dense task transfer.
+## Self-Supervised Training Methods
 
-## Why This Matters in Medicine
+A clean way to organize self-supervised training methods is by the target the encoder is asked to match.
 
-Self-supervised encoders are especially attractive in healthcare because:
 
-- unlabeled images are much easier to collect than expert annotations,
-- labels may be noisy or inconsistent,
-- transfer across hospitals and devices matters,
-- one pretrained encoder can support multiple downstream pipelines.
+### Reconstruction and Masked Modeling Methods
 
-Think about pathology slides, retinal images, ultrasound, or CT. You may have millions of images and only a tiny fraction with reliable labels. Self-supervised learning is designed for exactly this situation.
+Core idea: hide part of the input and train the encoder to recover what is missing. We have introduced this idea in [masked language model](../chapter_foundation_model/snp_training.md#masked-language-modeling-mlm).
 
-## Two Big Families We Will Study
+Typical methods: [**MAE**](https://arxiv.org/abs/2111.06377), [**BEiT**](https://arxiv.org/abs/2106.08254), [**iBOT**](https://arxiv.org/abs/2111.07832) (hybrid: masking + self-distillation).
 
-This chapter focuses on two especially influential ideas:
+Simple memory aid: recover what was hidden.
 
-### Contrastive Learning
+![mlm](ssl.assets/mlm_bear.png)
 
-Learn by pulling similar views together and pushing different examples apart.
+### Contrastive Methods
 
-This includes:
+Core idea: make matching views close and non-matching examples far apart. We will introduce this method later [here](contrastive_learning.md).
 
-- SimCLR-style image-image contrastive learning,
-- CLIP-style image-text contrastive learning.
+This is the classic positive-pair and negative-pair setup.
+
+Typical methods: [**SimCLR**](https://arxiv.org/abs/2002.05709), [**MoCo**](https://arxiv.org/abs/1911.05722), [**CLIP**](https://arxiv.org/abs/2103.00020) (multimodal contrastive, image-text alignment).
+
+Simple memory aid: same image close, different images apart.
+
+![clip](ssl.assets/clip_bear.png)
 
 ### Self-Distillation
 
-Learn by making a student network match a teacher network across views, often without explicit negative pairs.
+Core idea: make two views match without using explicit negative pairs.
 
-This is the family that leads us to **DINO** and **DINOv2**.
+These methods avoid collapse through asymmetry, such as a teacher-student setup, stop-gradient, or predictor heads.
+We will introduce this method later [here](dinov2.md).
 
-## The Big Picture
+Typical methods: [**BYOL**](https://arxiv.org/abs/2006.07733), [**SimSiam**](https://arxiv.org/abs/2011.10566), [**DINO**](https://arxiv.org/abs/2104.14294).
 
-If supervised learning says:
+Simple memory aid: match two views without negatives.
 
-> "Here is the correct label."
+![dino](ssl.assets/dino_collapse.png)
 
-self-supervised learning says:
+### Clustering and Prototype Methods
 
-> "There is structure hidden in the data. Learn that first."
+Core idea: map features to shared prototypes or cluster assignments, then make different views agree on those assignments.
 
-That shift is why encoder pretraining changed modern vision.
+Typical methods: [**SwAV**](https://arxiv.org/abs/2006.09882), [**DeepCluster**](https://arxiv.org/abs/1807.05520).
 
-## Summary
+Simple memory aid: learn through stable pseudo-labels.
 
-The central reason to train an encoder first is simple:
+### Redundancy-Reduction Methods
 
-- the world contains much more raw data than labeled data,
-- a strong encoder can compress that raw experience into reusable features,
-- downstream tasks become cheaper, faster, and often more accurate.
+Core idea: make views agree while also encouraging different feature dimensions to carry different information.
 
-The rest of this chapter shows three major ways to make that happen.
+Typical methods: [**Barlow Twins**](https://arxiv.org/abs/2103.03230), [**VICReg**](https://arxiv.org/abs/2105.04906).
+
+Simple memory aid: match views, but do not let features collapse into copies of each other.
+
+
+### Hybrid Methods
+
+Some influential methods combine multiple ideas.
+
+- [**DINO**](https://arxiv.org/abs/2104.14294) is mostly self-distillation, but also has prototype-like behavior.
+- [**iBOT**](https://arxiv.org/abs/2111.07832) combines masked modeling and self-distillation.
+- [**CLIP**](https://arxiv.org/abs/2103.00020) extends contrastive learning to multiple modalities.
+
+The exact boundaries are not always strict, but this taxonomy is a useful mental map.
+
+
+| Family | Core question | Representative methods |
+| --- | --- | --- |
+| Contrastive | Which views should be close, and which should be far? | [SimCLR](https://arxiv.org/abs/2002.05709), [MoCo](https://arxiv.org/abs/1911.05722), [CLIP](https://arxiv.org/abs/2103.00020) |
+| Non-contrastive / self-distillation | How can two views match without negatives? | [BYOL](https://arxiv.org/abs/2006.07733), [SimSiam](https://arxiv.org/abs/2011.10566), [DINO](https://arxiv.org/abs/2104.14294) |
+| Clustering / prototypes | Can two views get the same prototype? | [SwAV](https://arxiv.org/abs/2006.09882), [DeepCluster](https://arxiv.org/abs/1807.05520) |
+| Redundancy reduction | Can views match while features stay non-redundant? | [Barlow Twins](https://arxiv.org/abs/2103.03230), [VICReg](https://arxiv.org/abs/2105.04906) |
+| Reconstruction / masked modeling | Can the model infer what was hidden? | [MAE](https://arxiv.org/abs/2111.06377), [BEiT](https://arxiv.org/abs/2106.08254) |
+| Hybrid | Can we combine masking, distillation, or prototypes? | [iBOT](https://arxiv.org/abs/2111.07832), DINO-style variants |
+
+
 
 ## References and Further Reading
 
 - Chen et al., [A Simple Framework for Contrastive Learning of Visual Representations](https://arxiv.org/abs/2002.05709), *ICML* 2020.
+- He et al., [Momentum Contrast for Unsupervised Visual Representation Learning](https://arxiv.org/abs/1911.05722), *CVPR* 2020.
+- Grill et al., [Bootstrap Your Own Latent](https://arxiv.org/abs/2006.07733), *NeurIPS* 2020.
+- Caron et al., [Emerging Properties in Self-Supervised Vision Transformers](https://arxiv.org/abs/2104.14294), *ICCV* 2021.
+- He et al., [Masked Autoencoders Are Scalable Vision Learners](https://arxiv.org/abs/2111.06377), *CVPR* 2022.
 - Radford et al., [Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020), *ICML* 2021.
-- Oquab et al., [DINOv2: Learning Robust Visual Features without Supervision](https://arxiv.org/abs/2304.07193), 2023.

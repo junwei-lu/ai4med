@@ -5,7 +5,13 @@ This course aims to create a beginner-friendly course on statistical computing a
 
 ## Target audience
 
-This course is designed for professionals and students in the biomedical field—whether in academia or industry—who want to leverage Artificial Intelligence to enhance their work. Whether you are a biologist, clinician, or data scientist looking to integrate AI into your research or product development, this course will provide you with the foundational skills and practical workflows you need. We emphasize breadth over depth, giving you a comprehensive overview of the AI landscape to prepare you for specialized applications in your specific domain. 
+This course is designed for biomedical researchers, clinicians, trainees, and industry practitioners who want to understand and apply artificial intelligence in their own work.
+
+Whether you are a biologist hoping to analyze complex experimental data, a clinician or clinical researcher interested in AI methods for diagnosis, prognosis, or decision support, a public health or translational scientist working with large-scale health data, or a data scientist or engineer building tools for biomedical and healthcare applications, this course will provide a strong foundation. No matter your starting point, the course is intended to help you connect modern AI methods to real biomedical questions.
+
+We emphasize practical breadth with biomedical relevance. You will gain exposure to the major ideas shaping modern AI—from deep learning and Transformers to fine-tuning and generative modeling—while learning how these methods can be used in areas such as imaging, electronic health records, molecular biology, drug discovery, and scientific communication. The aim is not to make you an expert in every topic in a single semester, but to give you a clear map of the field, a usable computational toolkit, and the confidence to pursue more specialized applications in your own domain.
+
+If you are excited by the possibility of using AI to accelerate discovery, improve patient care, and tackle important problems in medicine and biology, this course is for you.
 
 <!-- !!! success "Prerequisites"
 

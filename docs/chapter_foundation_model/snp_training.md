@@ -14,6 +14,8 @@ This is the standard objective for Encoder models (like BERT).
 *   **Formula**: $$ P(x_i \mid x_{\setminus i}) $$
 *   **Biological Intuition**: To predict a masked region, the model must learn patterns like "TATA box is usually followed by a transcription start site" or "this motif pairs with that motif."
 
+![mlm](./assets/mlm.png)
+
 ### Template Code: Applying MLM Masking
 
 ```python
@@ -40,7 +42,7 @@ print("Original IDs: ", tokenized["input_ids"])
 print("Masked IDs:   ", batch["input_ids"])   # Some tokens replaced with [MASK]
 print("Labels:       ", batch["labels"])        # -100 means 'not masked, ignore'
 ```
-
+<!-- 
 ### Other Pretraining Tasks
 Beyond MLM, models can be trained on auxiliary tasks to boost performance:
 
@@ -98,4 +100,4 @@ print(f"Alt: ...{alt[snp_pos-5:snp_pos]}[{alt[snp_pos]}]{alt[snp_pos+1:snp_pos+6
 Tissue: Spleen,  Label: 1
 Ref: ...AAAAAA[G]GTATG...
 Alt: ...AAAAAA[T]GTATG...
-```
+``` -->

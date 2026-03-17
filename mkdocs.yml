@@ -208,8 +208,7 @@ nav:
   - Chapter 8. Self-Supervised Learning:
     - chapter_self_supervised_learning/index.md
     - Encoder: chapter_self_supervised_learning/encoder_motivation.md
-    - Contrastive Learning: chapter_self_supervised_learning/contrastive_learning.md
-    - CLIP: chapter_self_supervised_learning/clip.md
+    - Contrastive Learning and CLIP: chapter_self_supervised_learning/contrastive_learning.md
     - DINO: chapter_self_supervised_learning/dinov2.md
   - Chapter 9. Reinforcement Learning:
     - chapter_reinforcement_learning/index.md
