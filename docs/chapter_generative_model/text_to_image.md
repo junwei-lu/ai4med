@@ -3,6 +3,8 @@
 
 ## Contextual DDPM
 
+
+
 We can generalize the DDPM model to generate the conditional distribution $p(x |c)$ where $c$ could be even be a text prompt.
 
 We can just simple add the context $c$ to the input of the noise predictor $\varepsilon_\theta(x_t, t, c)$ and train the loss function as:
@@ -19,13 +21,37 @@ More technologies like the [CLIP](https://arxiv.org/abs/2103.00020) can be used 
 
 ### Classifier-Free Guidance
 
+
+
+
+
+
+
+
 For conditional probabiltiy generation, there is a trade-off between the fidelity and mode-coverage (diversity) of the generated images. In order to tune the trade-off, we can use the **classifier-free guidance** to sample using a linear combination of conditional and unconditional samples:
 
 $$
-\tilde{\varepsilon}_\theta(x_t, t, c) = (1+w) \varepsilon_\theta(x_t, t, c) - w \varepsilon_\theta(x_t, t),
+\tilde{\varepsilon}_\theta(x_t, t, c) = \epsilon_{\theta}(z_t, t, \varnothing)
++ s \left[
+\epsilon_{\theta}(z_t, t, c)
+- \epsilon_{\theta}(z_t, t, \varnothing)
+\right]
 $$
 
 where $\varepsilon_\theta(x_t, t)$ is an unconditional noise predictor. Usually, we will use the same network for both conditional and unconditional cases. For unconditional case, we will use a null token $\varnothing$ as the context $c$ and fit $\varepsilon_\theta(x_t, t) = \varepsilon_\theta(x_t, t, \varnothing)$.
+
+![CFG](generative.assets/classifier_free.png)
+
+
+Classifier-Free Guidance works by training the model to handle both **conditional** (with text) and **unconditional** (without text) generation.
+
+During **training**, we randomly "drop" the text caption about 10% of the time (replacing it with an empty string `""`). This forces the model to learn how to generate images even without instructions.
+
+During **inference** (generation), we perform two forward passes for every step:
+1.  **Unconditional pass**: Predict noise given the empty string ($\varnothing$).
+2.  **Conditional pass**: Predict noise given the actual text prompt.
+
+We then combine these predictions to push the image away from the "generic" result and towards the "text-specific" result.
 
 The training process can be summarized as follows.
 
@@ -49,7 +75,7 @@ When $w$ increases from 0 to $\infty$, the generated images will become less fid
 
 This guide introduces the concepts behind modern text-to-image generation models (like Stable Diffusion) and walks through building a small-scale version from scratch. We will cover the core architecture, the mathematics of guidance, and the code structure needed to train your own model.
 
-## The Big Picture: How Text-to-Image Works
+## Example: Text-to-Image Generation
 
 At a high level, a text-to-image model learns to transform random noise into coherent images that match a text description. It does this through a process called **diffusion**, where the model learns to iteratively remove noise from an image.
 
@@ -66,32 +92,10 @@ We will build a model that generates 64x64 Pokemon images from captions. The arc
 2.  **U-Net (The Denoiser)**: The core neural network that predicts noise. It takes a noisy image and the text features as input.
 3.  **Cross-Attention**: The mechanism inside the U-Net that allows the image generation process to "look at" specific parts of the text description (e.g., attending to the word "blue" when generating the body).
 
-```mermaid
-graph LR
-    A[Text: 'a blue dragon'] -->|CLIP Encoder| B[Text Features]
-    C[Noisy Image] --> D[U-Net]
-    B -->|Cross-Attention| D
-    D --> E[Predicted Noise]
-```
 
-## The Math of Classifier-Free Guidance (CFG)
 
-One of the most important tricks in modern generative AI is **Classifier-Free Guidance**. It dramatically improves how well the generated image follows the text prompt.
 
-### The Problem
-If you just train a model to generate images from text, it often ignores the text or produces generic images. It might generate *a* dragon, but not necessarily the *blue* dragon you asked for.
-
-### The Solution: Two Forward Passes
-Classifier-Free Guidance works by training the model to handle both **conditional** (with text) and **unconditional** (without text) generation.
-
-During **training**, we randomly "drop" the text caption about 10% of the time (replacing it with an empty string `""`). This forces the model to learn how to generate images even without instructions.
-
-During **inference** (generation), we perform two forward passes for every step:
-1.  **Unconditional pass**: Predict noise given the empty string ($\varnothing$).
-2.  **Conditional pass**: Predict noise given the actual text prompt.
-
-We then combine these predictions to push the image away from the "generic" result and towards the "text-specific" result.
-
+<!-- 
 ### The Formula
 
 The final predicted noise $\hat{\epsilon}$ is calculated as:
@@ -109,9 +113,9 @@ Where:
 The scale $s$ controls how strongly the model listens to the text:
 *   **$s = 1$**: No guidance. The model generates what it thinks is likely, often ignoring specific details.
 *   **$s \approx 3-7$**: The "Sweet Spot". The model follows the text well while maintaining good image quality.
-*   **$s > 10$**: Strong guidance. The image will strictly follow the prompt but might look "fried" or have artifacts because we are pushing the values too far.
+*   **$s > 10$**: Strong guidance. The image will strictly follow the prompt but might look "fried" or have artifacts because we are pushing the values too far. -->
 
-## Building the Model: A Code Template
+## Code for Classifier-Free Guidance
 
 Here is a breakdown of the code structure for building this system using PyTorch and the Hugging Face `diffusers` library.
 

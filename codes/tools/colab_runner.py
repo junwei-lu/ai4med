@@ -149,10 +149,78 @@ class ColabRunner:
             await t4_radio.click(timeout=5_000)
 
         await asyncio.sleep(0.5)
+        await self._screenshot("04b_t4_selected")
 
-        # Click Save
-        save_btn = page.locator('button:has-text("Save")').first
-        await save_btn.click(timeout=5_000)
+        # Click Save — try multiple strategies to handle Colab UI variations
+        saved = False
+
+        # Strategy 1: Playwright locators (pierce shadow DOM automatically)
+        for label in ("Save", "OK"):
+            try:
+                btn = page.get_by_role("button", name=label, exact=True)
+                if await btn.count() > 0 and await btn.first.is_visible():
+                    await btn.first.click(timeout=3_000)
+                    saved = True
+                    print(f"  ✏️  Save clicked (playwright role: {label})")
+                    break
+            except (PwTimeout, Exception):
+                continue
+
+        # Strategy 2: mwc-button with label attribute (shadow DOM component)
+        if not saved:
+            try:
+                for label in ("save", "ok"):
+                    mwc_btn = page.locator(f'mwc-button[label="{label}" i], mwc-button[slot="primaryAction"]').first
+                    if await mwc_btn.count() > 0:
+                        await mwc_btn.click(timeout=3_000)
+                        saved = True
+                        print(f"  ✏️  Save clicked (mwc-button label)")
+                        break
+            except (PwTimeout, Exception):
+                pass
+
+        # Strategy 3: JS fallback — click via shadow DOM traversal
+        if not saved:
+            saved = await page.evaluate("""
+                () => {
+                    // mwc-dialog with shadow DOM
+                    const dialogs = document.querySelectorAll('mwc-dialog, dialog, [role="dialog"], [role="alertdialog"]');
+                    for (const dialog of dialogs) {
+                        if (!dialog.open && !dialog.hasAttribute('open') && !dialog.offsetParent) continue;
+                        // mwc-button stores text in label attribute, not textContent
+                        const mwcBtns = dialog.querySelectorAll('mwc-button');
+                        for (const b of mwcBtns) {
+                            const lbl = (b.getAttribute('label') || '').trim().toLowerCase();
+                            if (lbl === 'save' || lbl === 'ok') { b.click(); return 'mwc-attr'; }
+                        }
+                        // regular buttons
+                        const btns = dialog.querySelectorAll('button');
+                        for (const b of btns) {
+                            const txt = (b.textContent || '').trim().toLowerCase();
+                            if (txt === 'save' || txt === 'ok') { b.click(); return 'btn-text'; }
+                        }
+                        // slot="primaryAction" is how mwc-dialog marks the primary action button
+                        const primary = dialog.querySelector('[slot="primaryAction"]');
+                        if (primary) { primary.click(); return 'primary-slot'; }
+                    }
+                    // last resort: any visible button with Save/OK text on the page
+                    for (const b of document.querySelectorAll('button, mwc-button')) {
+                        const txt = (b.textContent || b.getAttribute('label') || '').trim().toLowerCase();
+                        if ((txt === 'save' || txt === 'ok') && (b.offsetParent || b.tagName === 'MWC-BUTTON')) {
+                            b.click();
+                            return 'global-fallback';
+                        }
+                    }
+                    return false;
+                }
+            """)
+            if saved:
+                print(f"  ✏️  Save clicked (JS: {saved})")
+
+        if not saved:
+            await self._screenshot("04c_save_failed")
+            print("  ⚠  Could not find Save/OK button in runtime dialog — continuing")
+
         await asyncio.sleep(2)
         await self._screenshot("05_t4_set")
         print("  ✅  T4 GPU runtime set")

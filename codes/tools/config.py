@@ -35,7 +35,7 @@ SELECTORS = {
     # Runtime type dialog
     "runtime_type_dropdown": 'div[role="listbox"], select',
     "gpu_option_t4": 'text="T4 GPU"',
-    "runtime_save_button": 'button >> text="Save"',
+    "runtime_save_button": 'button:has-text("Save"), button:has-text("OK"), button:has-text("SAVE")',
 
     # Execution status indicators
     "running_cell_indicator": '.running, [class*="running"], colab-run-button[aria-label="Stop"]',
@@ -50,7 +50,7 @@ SELECTORS = {
     "quota_exceeded_text": 'text="GPU quota exceeded"',
 
     # User avatar (session validity check)
-    "user_avatar": 'img[aria-label="User avatar"], img[alt*="profile"], a[aria-label="Google Account"]',
+    "user_avatar": 'img[aria-label="User avatar"], img[alt*="profile"], a[aria-label="Google Account"], [data-email], colab-signed-in-panel, #gb_70, .gb_d',
 
     # Cells
     "code_cell": 'div.cell.code, .code-cell',

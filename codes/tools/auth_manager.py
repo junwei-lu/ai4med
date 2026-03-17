@@ -70,7 +70,12 @@ async def get_authenticated_context(
 
     # Session is stale — close headless and re-login interactively
     await context.close()
-    print("⚠  Google session expired or not found. Opening browser for login…")
+    print(
+        "\n⚠  No valid Google session found."
+        "\n   A browser window will open — please log in to Google, then press Enter here."
+        "\n   Your session will be saved and reused on future runs."
+        "\n   (To skip this step in future, run: python -m tools.auth_manager first)\n"
+    )
     return await _interactive_login(playwright, profile_dir)
 
 
@@ -91,7 +96,12 @@ async def _interactive_login(
     print("    Once you see your Colab homepage, press ENTER here to continue…")
 
     # Wait for user input (non-blocking in the event loop)
-    await asyncio.get_event_loop().run_in_executor(None, input)
+    # Gracefully skip if there is no TTY (e.g. background process)
+    try:
+        await asyncio.get_event_loop().run_in_executor(None, input)
+    except EOFError:
+        print("  ℹ  No TTY detected — continuing with saved session…")
+        await asyncio.sleep(3)
 
     # Verify
     if not await _has_valid_session(context):

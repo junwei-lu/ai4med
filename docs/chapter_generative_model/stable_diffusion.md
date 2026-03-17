@@ -1,10 +1,8 @@
-# Stable Diffusion: A Practical Math-to-Code Tutorial
-
+# Stable Diffusion
 Stable Diffusion feels a bit like hiring a very patient painter who starts from television static and, one denoising step at a time, turns it into "a corgi wearing a lab coat in watercolor style." The surprising part is that the model does not paint directly in pixel space. Instead, it works in a compressed **latent space**, which is the main trick that makes high-resolution diffusion practical.
 
 This lecture explains the mathematical principle behind Stable Diffusion, its architecture, the main training losses, and code templates for loading data, training, and sampling.
 
-## Why Stable Diffusion Was a Big Deal
 
 Classic diffusion models are powerful, but pixel-space generation is expensive. If you try to denoise a large image directly, memory and compute costs rise quickly. Stable Diffusion solves this by pushing the diffusion process into a smaller latent representation:
 
@@ -23,8 +21,8 @@ $$
 
 This is why Stable Diffusion can make detailed images without needing the compute budget of a small moon mission.
 
-![Stable Diffusion architecture](https://upload.wikimedia.org/wikipedia/commons/f/f6/Stable_Diffusion_architecture.png)
-> Public architecture figure from Wikimedia Commons, adapted from the Latent Diffusion work.
+![Stable Diffusion architecture](generative.assets/stable_diffusion.png)
+
 
 ## The Core Idea in One Pipeline
 
@@ -34,22 +32,6 @@ Stable Diffusion has three main learned components:
 2. **Text encoder**: turns a prompt into token embeddings.
 3. **U-Net denoiser**: predicts the noise inside a noisy latent while attending to the text.
 
-```mermaid
-graph LR
-    A[Prompt] --> B[Tokenizer + Text Encoder]
-    B --> C[Text Embeddings]
-    D[Image] --> E[VAE Encoder]
-    E --> F[Latents z]
-    F --> G[Add Noise]
-    G --> H[Noisy Latent z_t]
-    C --> I[Cross-Attention in U-Net]
-    H --> I
-    I --> J[Predicted Noise]
-    J --> K[Scheduler Step]
-    K --> L[Cleaner Latent]
-    L --> M[VAE Decoder]
-    M --> N[Generated Image]
-```
 
 ## Mathematical Principle
 
@@ -231,7 +213,7 @@ Rule of thumb:
 - medium `guidance_scale` such as `5-8`: good balance
 - very large `guidance_scale`: prompt-following becomes stronger, but artifacts can appear
 
-## A Minimal Training Recipe
+## Training Recipe
 
 If you want to fine-tune Stable Diffusion on a captioned dataset, the standard workflow is:
 
@@ -245,151 +227,158 @@ If you want to fine-tune Stable Diffusion on a captioned dataset, the standard w
 
 This is already enough for a strong first fine-tuning baseline.
 
-![DreamBooth-style fine-tuning example](https://upload.wikimedia.org/wikipedia/commons/e/e5/Demonstration_of_DreamBooth_AI_model_fine-tuning_for_Stable_Diffusion_using_Jimmy_Wales_training_data_from_Wikimedia_Commons.png)
-> Public Wikimedia Commons example showing how a text-to-image diffusion model can be specialized through fine-tuning.
 
-## Code Template: Data
+### Data loading
 
-This template assumes a local folder with images and captions in a CSV file.
+The Hugging Face `datasets` library can load a folder of images and captions with one call. No custom Dataset class needed.
 
-```python
-import os
-import pandas as pd
-from PIL import Image
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
+Organize your folder like this:
 
-
-class ImageCaptionDataset(Dataset):
-    def __init__(self, csv_path: str, image_root: str, tokenizer, size: int = 512):
-        self.df = pd.read_csv(csv_path)
-        self.image_root = image_root
-        self.tokenizer = tokenizer
-        self.transform = transforms.Compose([
-            transforms.Resize(size, interpolation=transforms.InterpolationMode.BILINEAR),
-            transforms.CenterCrop(size),
-            transforms.ToTensor(),
-            transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
-        ])
-
-    def __len__(self):
-        return len(self.df)
-
-    def __getitem__(self, idx):
-        row = self.df.iloc[idx]
-        image = Image.open(os.path.join(self.image_root, row["image"])).convert("RGB")
-        image = self.transform(image)
-
-        text = row["caption"]
-        tokens = self.tokenizer(
-            text,
-            max_length=self.tokenizer.model_max_length,
-            padding="max_length",
-            truncation=True,
-            return_tensors="pt",
-        )
-
-        return {
-            "pixel_values": image,
-            "input_ids": tokens.input_ids[0],
-            "attention_mask": tokens.attention_mask[0],
-            "caption": text,
-        }
+```
+my_data/
+  train/
+    image_001.png
+    image_002.png
+    ...
+  metadata.csv          # columns: file_name, text
 ```
 
-## Code Template: Model Load
+Then load and preprocess:
 
-This template uses the Hugging Face `diffusers` and `transformers` ecosystem.
+```python
+from datasets import load_dataset
+from torchvision import transforms
+
+# One line to load the whole dataset.
+dataset = load_dataset("imagefolder", data_dir="my_data", split="train")
+
+# Define the image transform (resize, crop, normalize to [-1, 1]).
+transform = transforms.Compose([
+    transforms.Resize(512, interpolation=transforms.InterpolationMode.BILINEAR),
+    transforms.CenterCrop(512),
+    transforms.ToTensor(),
+    transforms.Normalize([0.5], [0.5]),
+])
+
+
+def preprocess(examples):
+    """Apply transform to images and tokenize captions."""
+    examples["pixel_values"] = [transform(img.convert("RGB")) for img in examples["image"]]
+    examples["input_ids"] = tokenizer(
+        examples["text"],
+        max_length=tokenizer.model_max_length,
+        padding="max_length",
+        truncation=True,
+        return_tensors="pt",
+    ).input_ids
+    return examples
+
+
+dataset.set_transform(preprocess)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=4, shuffle=True)
+```
+
+### Model loading
+
+Load everything at once through `StableDiffusionPipeline`, then pull out the parts you need. This avoids importing and loading four separate classes.
 
 ```python
 import torch
-from diffusers import AutoencoderKL, DDPMScheduler, UNet2DConditionModel
-from transformers import CLIPTextModel, CLIPTokenizer
-
+from diffusers import StableDiffusionPipeline, DDPMScheduler
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_id = "runwayml/stable-diffusion-v1-5"
 
-tokenizer = CLIPTokenizer.from_pretrained(model_id, subfolder="tokenizer")
-text_encoder = CLIPTextModel.from_pretrained(model_id, subfolder="text_encoder").to(device)
-vae = AutoencoderKL.from_pretrained(model_id, subfolder="vae").to(device)
-unet = UNet2DConditionModel.from_pretrained(model_id, subfolder="unet").to(device)
+# One call downloads the VAE, text encoder, U-Net, tokenizer, and scheduler.
+pipe = StableDiffusionPipeline.from_pretrained(model_id).to(device)
+
+# Pull out individual components for training.
+tokenizer = pipe.tokenizer
+text_encoder = pipe.text_encoder
+vae = pipe.vae
+unet = pipe.unet
+
+# Use DDPM scheduler for training (the pipeline default may differ).
 noise_scheduler = DDPMScheduler.from_pretrained(model_id, subfolder="scheduler")
 
-# Common fine-tuning setup: only train the U-Net.
+# Freeze everything except the U-Net (the part we want to fine-tune).
 vae.requires_grad_(False)
 text_encoder.requires_grad_(False)
 unet.train()
 ```
 
-## Code Template: Training Loop
+### Training by `diffusers` 
 
-This is the essential latent-diffusion training loop. It is intentionally simple so the moving parts are visible.
+The [`diffusers` library](https://huggingface.co/docs/diffusers/index) ships an official fine-tuning script that handles the training loop, mixed precision, multi-GPU, logging, and checkpointing for you. Just point it at your data:
+
+```bash
+pip install accelerate diffusers transformers datasets
+
+accelerate launch diffusers/examples/text_to_image/train_text_to_image.py \
+  --pretrained_model_name_or_path="runwayml/stable-diffusion-v1-5" \
+  --train_data_dir="my_data"  \
+  --resolution=512 \
+  --train_batch_size=4 \
+  --learning_rate=1e-5 \
+  --max_train_steps=5000 \
+  --output_dir="sd-finetuned"
+```
+
+That single command does everything: data loading, VAE encoding, noise scheduling, U-Net training, and checkpoint saving.
+
+
+### Training: under the hood
+
+If you want to understand what the script above is doing, here is the core loop stripped to its essentials. Each numbered comment marks one stage of the latent-diffusion training step.
 
 ```python
-import random
 import torch
 import torch.nn.functional as F
-from torch.optim import AdamW
 
-
-optimizer = AdamW(unet.parameters(), lr=1e-5, weight_decay=1e-2)
-cfg_dropout = 0.1
+optimizer = torch.optim.AdamW(unet.parameters(), lr=1e-5, weight_decay=1e-2)
 
 for batch in dataloader:
     pixel_values = batch["pixel_values"].to(device)
     input_ids = batch["input_ids"].to(device)
 
     with torch.no_grad():
-        # Encode image to latent space.
+        # ① Encode image → latent.
         latents = vae.encode(pixel_values).latent_dist.sample()
         latents = latents * vae.config.scaling_factor
 
-        # Randomly drop text conditioning for classifier-free guidance training.
-        if random.random() < cfg_dropout:
-            empty = tokenizer(
-                [""] * input_ids.shape[0],
-                max_length=tokenizer.model_max_length,
-                padding="max_length",
-                truncation=True,
-                return_tensors="pt",
-            )
-            input_ids = empty.input_ids.to(device)
-
+        # ② Get text embeddings from captions.
         encoder_hidden_states = text_encoder(input_ids)[0]
 
+    # ③ Add random noise at a random timestep.
     noise = torch.randn_like(latents)
     timesteps = torch.randint(
-        0,
-        noise_scheduler.config.num_train_timesteps,
-        (latents.shape[0],),
-        device=device,
+        0, noise_scheduler.config.num_train_timesteps,
+        (latents.shape[0],), device=device,
     ).long()
-
     noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
-    noise_pred = unet(
-        noisy_latents,
-        timesteps,
-        encoder_hidden_states=encoder_hidden_states,
-    ).sample
 
-    loss = F.mse_loss(noise_pred.float(), noise.float(), reduction="mean")
+    # ④ U-Net predicts the noise that was added.
+    noise_pred = unet(noisy_latents, timesteps,
+                      encoder_hidden_states=encoder_hidden_states).sample
 
-    optimizer.zero_grad(set_to_none=True)
+    # ⑤ MSE between predicted and actual noise → backprop.
+    loss = F.mse_loss(noise_pred, noise)
+    optimizer.zero_grad()
     loss.backward()
     optimizer.step()
 
     print(f"loss={loss.item():.4f}")
 ```
 
-### Practical notes
+**Practical notes**
 
 - Fine-tuning the whole model is expensive; many workflows train only the U-Net or LoRA adapters.
 - Mixed precision and gradient accumulation are usually necessary on limited GPUs.
 - Caption quality matters a lot. If captions are vague, the model learns vague associations.
 - For domain adaptation, keep prompts close to the visual content you actually want the model to learn.
+- To train with classifier-free guidance, randomly replace some captions with empty strings so the model also learns unconditional denoising. The math is explained in the Classifier-Free Guidance section above.
 
-## Code Template: Sampling with a Pipeline
+###  Sampling
 
 The easiest way to sample is through a high-level pipeline:
 
@@ -420,63 +409,36 @@ image = pipe(
 image.save("stable_diffusion_sample.png")
 ```
 
-## Code Template: Sampling Step-by-Step
+### Watching the denoising process
 
-If you want to see the reverse process more explicitly, here is the low-level structure:
+If you want to watch how the image forms step by step, use the pipeline's built-in `callback_on_step_end` instead of writing your own sampling loop. The callback receives the in-progress latents at every step:
 
 ```python
-import torch
+from diffusers.image_processor import VaeImageProcessor
+from IPython.display import display
+
+processor = VaeImageProcessor()
+snapshots = []   # collect intermediate images here
 
 
-prompt = "a watercolor painting of a fox reading a medical textbook"
-batch_size = 1
-guidance_scale = 7.5
-num_inference_steps = 30
+def save_snapshot(pipe, step, timestep, callback_kwargs):
+    """Decode the current latent and save a snapshot every 5 steps."""
+    if step % 5 == 0:
+        latents = callback_kwargs["latents"]
+        with torch.no_grad():
+            image = pipe.vae.decode(latents / pipe.vae.config.scaling_factor).sample
+        snapshots.append(processor.postprocess(image, output_type="pil")[0])
+    return callback_kwargs
 
-text_inputs = tokenizer(
-    [prompt],
-    padding="max_length",
-    max_length=tokenizer.model_max_length,
-    truncation=True,
-    return_tensors="pt",
-)
-uncond_inputs = tokenizer(
-    [""],
-    padding="max_length",
-    max_length=tokenizer.model_max_length,
-    return_tensors="pt",
-)
 
-with torch.no_grad():
-    text_embeds = text_encoder(text_inputs.input_ids.to(device))[0]
-    uncond_embeds = text_encoder(uncond_inputs.input_ids.to(device))[0]
+image = pipe(
+    "a watercolor painting of a fox reading a medical textbook",
+    num_inference_steps=30,
+    guidance_scale=7.5,
+    callback_on_step_end=save_snapshot,
+).images[0]
 
-latents = torch.randn(
-    (batch_size, unet.config.in_channels, 64, 64),
-    device=device,
-) * noise_scheduler.init_noise_sigma
-
-noise_scheduler.set_timesteps(num_inference_steps, device=device)
-
-for t in noise_scheduler.timesteps:
-    latent_model_input = torch.cat([latents, latents], dim=0)
-    embeds = torch.cat([uncond_embeds, text_embeds], dim=0)
-
-    with torch.no_grad():
-        noise_pred = unet(
-            latent_model_input,
-            t,
-            encoder_hidden_states=embeds,
-        ).sample
-
-    noise_uncond, noise_text = noise_pred.chunk(2)
-    noise_guided = noise_uncond + guidance_scale * (noise_text - noise_uncond)
-    latents = noise_scheduler.step(noise_guided, t, latents).prev_sample
-
-with torch.no_grad():
-    latents = latents / vae.config.scaling_factor
-    image = vae.decode(latents).sample
-
-image = (image / 2 + 0.5).clamp(0, 1)
-image = image.cpu().permute(0, 2, 3, 1).numpy()[0]
+# snapshots now contains images from steps 0, 5, 10, 15, 20, 25.
+for i, snap in enumerate(snapshots):
+    display(snap)
 ```
