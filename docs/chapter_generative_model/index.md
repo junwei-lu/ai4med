@@ -7,24 +7,10 @@ This chapter introduces the concept of generative models. We will discuss the ba
 > Generative video of Will Smith eating spaghetti: method in 2023 vs 2025
 
 
-<table style="border-collapse: collapse; width: 100%;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid currentColor; padding: 0.5rem;">Topic</th>
-			<th style="border: 1px solid currentColor; padding: 0.5rem;">Code</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid currentColor; padding: 0.5rem;">DDPM &amp; Flow Match</td>
-			<td style="border: 1px solid currentColor; padding: 0.5rem;"><a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid currentColor; padding: 0.5rem;">Stable Diffusion</td>
-			<td style="border: 1px solid currentColor; padding: 0.5rem;"><a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/stable_diffusion_pokemon.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></td>
-		</tr>
-	</tbody>
-</table>
+| Topic | Code |
+|-------|------|
+| DDPM & Flow Match | [Open In Colab](https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb) |
+| Stable Diffusion | [Open In Colab](https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/stable_diffusion_pokemon.ipynb) |
 
 Lectures:
 
