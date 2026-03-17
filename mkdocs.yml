@@ -146,15 +146,15 @@ extra_css:
 nav:
   # - Course Information:
   #   - chapter_syllabus/index.md
-  - Chapter. Introduction:
+  - Chapter 0. Introduction:
     - chapter_preface/index.md
-  - Chapter. Coding with AI:
+  - Chapter 1. Coding with AI:
     - chapter_ai/index.md
     - AI Copilot: chapter_ai/ai_copilot.md
     - Prompt Engineering: chapter_ai/prompt_engineering.md
     - AI Agents: chapter_ai/agent.md
     - AI Tools: chapter_ai/ai_tools.md
-  - Chapter. Optimization:
+  - Chapter 2. Optimization:
     - chapter_optimization/index.md
     - Convexity: chapter_optimization/convexity.md
     - Rate of Convergence: chapter_optimization/rate_of_convergence.md
@@ -166,7 +166,7 @@ nav:
     - Mirror Descent: chapter_optimization/mirror_descent.md
     - Nesterov's Smooth Method: chapter_optimization/nesterov_smooth.md
     - Duality and ADMM: chapter_optimization/duality_and_admm.md
-  - Chapter. Neural Networks:
+  - Chapter 3. Neural Networks:
     - chapter_neural_networks/index.md
     - Neural Networks: chapter_neural_networks/nn.md
     - Regularization: chapter_neural_networks/regularization.md
@@ -178,45 +178,45 @@ nav:
     - PyTorch for GPU: chapter_neural_networks/dl_gpu.md
     - Deep Learning Tips: chapter_neural_networks/dl_tips.md
     - PyTorch Pitfalls: chapter_neural_networks/pitfall.md
-  - Chapter. Language Model Architecture:
+  - Chapter 4. Language Model Architecture:
     - chapter_language_model/index.md
     - Word Vectors: chapter_language_model/wordvec.md
     - Attention: chapter_language_model/attention.md
     - Transformer: chapter_language_model/transformer.md
     - Hugging Face: chapter_language_model/hg_transformers.md
-  - Chapter. Language Model Fine-Tuning:
+  - Chapter 5. Language Model Training:
     - chapter_llm_ft/index.md
     - Next-Token Prediction: chapter_llm_ft/ntp.md
     - Supervised Fine-Tuning: chapter_llm_ft/sft.md
     - Parameter Efficient Fine-Tuning: chapter_llm_ft/peft.md
     - Reinforcement Learning Fine-Tuning: chapter_llm_ft/grpo.md
     - Direct Preference Optimization: chapter_llm_ft/dpo.md
-  - Chapter. Genomic Foundation Models:
+  - Chapter 6. Genomic Foundation Models:
     - chapter_foundation_model/index.md
     - Tokenization & Architecture: chapter_foundation_model/snp_tokenization.md
     - Model Training: chapter_foundation_model/snp_training.md
     - Fine-Tuning: chapter_foundation_model/snp_finetuning.md
     - Advanced Genomic Models: chapter_foundation_model/snp_advanced_models.md
     - Model Interpretation: chapter_foundation_model/snp_interpretation.md
-  - Chapter. Image Foundation Models:
+  - Chapter 7. Image Foundation Models:
     - chapter_image_foundation_model/index.md
     - ViT Basics: chapter_image_foundation_model/vit_basics.md
     - Pretraining Image Foundation Models: chapter_image_foundation_model/vit_pretraining.md
     - Fine-Tuning ViT in Practice: chapter_image_foundation_model/vit_finetuning.md
     - Advanced Vision Transformer Variants: chapter_image_foundation_model/vit_advanced_models.md
     - Interpreting Vision Transformers: chapter_image_foundation_model/vit_interpretation.md
-  - Chapter. Self-Supervised Learning:
+  - Chapter 8. Self-Supervised Learning:
     - chapter_self_supervised_learning/index.md
     - Encoder: chapter_self_supervised_learning/encoder_motivation.md
     - Contrastive Learning: chapter_self_supervised_learning/contrastive_learning.md
     - CLIP: chapter_self_supervised_learning/clip.md
     - DINO: chapter_self_supervised_learning/dinov2.md
-  - Chapter. Reinforcement Learning:
+  - Chapter 9. Reinforcement Learning:
     - chapter_reinforcement_learning/index.md
     - Markov Decision Process: chapter_reinforcement_learning/mdp.md
     - Policy Gradient: chapter_reinforcement_learning/policy_grad.md
     - Proximal Policy Optimization: chapter_reinforcement_learning/ppo.md
-  - Chapter. Generative Models:
+  - Chapter 10. Generative Models:
     - chapter_generative_model/index.md
     - Langevin Dynamics: chapter_generative_model/langevin_dynamics.md
     - Diffusion Models: chapter_generative_model/ddpm.md

@@ -20,6 +20,52 @@ Typical use cases in biostatistics and biomedical research:
 - Reducing hallucinations via supervised examples
 
 
+## Quantization Before Adapters
+
+Before introducing LoRA, it helps to separate two ideas that are often mixed together:
+
+1. **Quantization** reduces the memory footprint of the **frozen base model**
+2. **PEFT adapters** decide **which trainable parameters** you update
+
+Quantization is not the same thing as PEFT, but the two are often combined. In practice, the most common options in the Hugging Face + PEFT workflow are:
+
+| Option | Typical tool | When to use it | Main trade-off |
+|--|--|--|--|
+| bf16 / fp16 weights | native `transformers` loading | Model already fits in memory | Simplest and most stable |
+| 8-bit quantization | `bitsandbytes` (`load_in_8bit=True`) | Moderate memory pressure | Good stability, modest compression |
+| 4-bit quantization | `bitsandbytes` (`load_in_4bit=True`) | Severe memory pressure | Best compression, more care needed |
+| GPTQ / AWQ style quantization | specialized inference stacks | Mostly inference deployment | Fast inference, less common for training |
+
+### How to choose
+
+- Choose **full precision / mixed precision** if the model fits and you want the simplest debugging experience
+- Choose **8-bit + LoRA** when memory is somewhat tight but you still want a conservative setup
+- Choose **4-bit + LoRA (QLoRA)** when the model would otherwise not fit on your GPU
+- Prefer **`bfloat16` compute** on newer GPUs; fall back to `float16` on older hardware
+- If you add new special tokens or resize embeddings, keep an eye on embedding layers because they may need higher precision
+
+### Minimal loading patterns
+
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+model_id = "meta-llama/Meta-Llama-3-8B"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# 8-bit base model
+bnb_8bit = BitsAndBytesConfig(load_in_8bit=True)
+
+# 4-bit base model for QLoRA
+bnb_4bit = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+```
+
+
 
 
 ## LoRA: The Math
@@ -285,6 +331,88 @@ merged.save_pretrained(peft_dir, safe_serialization=True, max_shard_size="2GB")
 ```
 
 
+## Combining PEFT with `trl`
+
+Once the base model is loaded, the practical recipe is straightforward:
+
+- **LoRA** = full-precision or bf16 base model + `LoraConfig`
+- **8-bit LoRA** = 8-bit base model + `LoraConfig`
+- **QLoRA** = 4-bit base model + `LoraConfig`
+
+The trainer class changes with the learning objective, but the PEFT pattern stays almost the same.
+
+### Shared adapter config
+
+```python
+from peft import LoraConfig
+
+peft_config = LoraConfig(
+    r=16,
+    lora_alpha=16,
+    lora_dropout=0.05,
+    bias="none",
+    target_modules="all-linear",
+    task_type="CAUSAL_LM",
+)
+```
+
+### SFT + LoRA / QLoRA
+
+```python
+from trl import SFTTrainer
+
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=train_data,
+    args=args,
+    peft_config=peft_config,
+)
+```
+
+### DPO + LoRA / QLoRA
+
+```python
+from trl import DPOTrainer
+
+trainer = DPOTrainer(
+    model=model,
+    ref_model=None,
+    tokenizer=tokenizer,
+    train_dataset=preference_data,
+    args=dpo_args,
+    peft_config=peft_config,
+)
+```
+
+### GRPO + LoRA / QLoRA
+
+```python
+from trl import GRPOTrainer
+
+trainer = GRPOTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=train_data,
+    reward_funcs=reward_funcs,
+    args=grpo_args,
+    peft_config=peft_config,
+)
+```
+
+### Practical rules of thumb
+
+| Goal | Recommended setup |
+|--|--|
+| Small model fits comfortably | Full fine-tuning or LoRA |
+| Medium model, limited VRAM | 8-bit LoRA |
+| Large model, tight VRAM | QLoRA |
+| Fastest iteration for teaching/demo | LoRA on a smaller model |
+| Lowest memory footprint | 4-bit base + LoRA |
+
+If you are unsure, a good default is: **start with LoRA on a small model, then move to QLoRA only when memory becomes the bottleneck**.
+
+
 
 Tips for setting up LoRA:
 
@@ -295,3 +423,11 @@ Tips for setting up LoRA:
 | `lora_dropout` | 0.05–0.1 for regularization |
 | Quant bits | 4-bit for 8B+ models on 24GB VRAM; 8-bit for extra stability |
 | `packing` | `True` for short examples; boosts throughput |
+
+
+## References
+
+- Hu et al., [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
+- Dettmers et al., [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314)
+- Hugging Face, [PEFT documentation](https://huggingface.co/docs/peft/index)
+- Hugging Face, [TRL documentation](https://huggingface.co/docs/trl/index)

@@ -1,6 +1,6 @@
 # Supervised Fine-Tuning
 
-This tutorial walks you through a minimal, reliable workflow to fine-tune an open LLM using Hugging Face tools. We use the smallest Llama 3 family model as an example and a simple instruction-style dataset aligned with the format used in the PEFT lecture.
+This lecture covers the topic on supervised fine-tuning (SFT) through a minimal, reliable workflow to fine-tune an open LLM using Hugging Face tools.
 
 You will learn to:
 - Understand the SFT loss function and how it differs from raw pre-training
@@ -8,7 +8,7 @@ You will learn to:
 - Prepare a beginner-friendly dataset and template
 - Set up a supervised fine-tuning trainer and run training
 
-The guide assumes a biostatistics/biomedical background—no deep ML systems knowledge required.
+
 
 ![SFT Pipeline](ft.assets/sft_plot.png)
 
@@ -47,6 +47,7 @@ $$
 - Masking focuses capacity on learning the *style* and *content* of the target response
 - It also allows much longer prompts without inflating the loss denominator
 
+<!-- 
 ### Masking in practice
 
 The `SFTTrainer` implements this via a label mask: positions corresponding to the prompt are set to `-100`, and PyTorch's `cross_entropy` ignores positions with label `-100`.
@@ -56,7 +57,7 @@ Full sequence:  [SYS] You are a clinical assistant.  [USER] What is the eGFR?  [
                 ↑________________________ prompt _____________________↑  ↑____ response ____↑
 Label mask:         -100    -100    ...      -100       -100   -100  ...   45    mL   /   min
 Loss computed:      ✗       ✗                ✗          ✗      ✗           ✓    ✓    ✓    ✓
-```
+``` -->
 
 ### SFT as maximum likelihood estimation
 
@@ -74,47 +75,48 @@ $$
 
 which is exactly the inner sum in the SFT loss.
 
+## SFT Training Guidelines
 
+Next, we will cover how to implement the SFT in practice.
 
-## Choose a model
+### Choose a model
 
-We use the smallest Llama 3 family model that is commonly accessible: Llama 3 8B. For consumer GPUs, 4-bit loading is helpful.
+For a first end-to-end SFT run, it is usually better to choose a **small instruct model** that you can fine-tune in the simplest possible way. Here we use `Qwen/Qwen2.5-1.5B-Instruct` and load it **without LoRA or quantization** so the training recipe stays close to the underlying math.
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# Choose a compact, widely used open model (8B parameters)
-model_id = "meta-llama/Meta-Llama-3-8B"
+model_id = "Qwen/Qwen2.5-1.5B-Instruct"
 
-# 4-bit loading reduces GPU memory usage so the model fits on consumer GPUs
-# - double_quant: second quantization for improved memory/accuracy tradeoff
-# - quant_type nf4: recommended 4-bit data type for LLMs
-# - compute_dtype bf16: math is done in bfloat16 for speed/accuracy on modern GPUs
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16,
-)
-
-# Tokenizer splits text into tokens (ids); must match the model
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
 
-# Load the model with quantization and let HF infer device placement (CPU/GPU)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    device_map="auto",
-    quantization_config=bnb_config,
-    torch_dtype=torch.bfloat16,
+    torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
 )
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
 ```
 
 
 
-## Prepare a simple instruction dataset
+## Instruction Dataset
 
-We align with the format in the PEFT lecture: OpenAI-style messages with a system instruction, a user prompt, and an assistant answer. This mirrors how you would prepare clinical data (e.g., MedCalc-style questions with ground-truth answers), but here we keep a simple schema for clarity.
+Instruction data is what turns a base language model from a **text continuer** into a **task-following assistant**. Pre-training teaches general language patterns, but SFT teaches the model what kinds of prompts it should respond to, what output format to follow, and what style of answer is desired.
+
+In practice, several instruction-data templates are common:
+
+- **Alpaca-style triples**: `instruction`, optional `input`, and `output` ([Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca))
+- **Chat-style messages**: a list of `{role, content}` turns, compatible with Hugging Face [chat templates](https://huggingface.co/docs/transformers/chat_templating)
+- **ShareGPT-style conversations**: multi-turn chat records, often converted into the same `messages` schema before training
+
+For this lecture, we use the chat-style `messages` template because it maps directly to modern instruct models and to Hugging Face tooling.
+
+Chat-style messages with a system instruction, a user prompt, and an assistant answer. This mirrors how you would prepare clinical data (e.g., MedCalc-style questions with ground-truth answers), but here we keep a simple schema for clarity.
 
 Data format (JSONL), each line is one record corresponding to one $(x^{(i)}, y^{(i)})$ pair:
 
@@ -165,6 +167,8 @@ with open("train_dataset.json", "w") as f:
 
 
 ## Training Prompt Examples
+
+You should find out the proper SFT tasks for your own model and dataset. Here we provide some ideas you may use for SFT.
 
 The prompt $x^{(i)}$ fed to the model during SFT can take many shapes depending on your task. The only requirement is that the format is **consistent across all training examples** so the model can learn the pattern. Below are representative templates for common biomedical and general NLP tasks.
 
@@ -281,7 +285,7 @@ For complex reasoning tasks, the assistant turn should include the reasoning ste
 | Output type | Match the assistant turn to evaluation metric (string, JSON, letter, etc.) |
 
 
-
+<!-- 
 ## Verifying the Masking Manually
 
 Before training, it is instructive to verify that the trainer correctly masks prompt tokens. Here is a minimal check:
@@ -317,13 +321,15 @@ print("Prompt tokens (masked):", full_ids[:prompt_len])
 print("Response tokens (loss):", full_ids[prompt_len:])
 print("Labels:", labels)
 # -100 positions are ignored; loss is only on response tokens
-```
+``` -->
 
 
 
-## Set up the trainer (Supervised Fine-Tuning)
+## Hugging Face SFT Training Guidelines
 
-We use TRL's `SFTTrainer` for simplicity. It natively supports the messages format and PEFT. Under the hood it:
+Hugging Face [TRL](https://huggingface.co/docs/trl/index) is the main high-level library for post-training LLMs. It provides specialized trainers such as `SFTTrainer`, `DPOTrainer`, and `GRPOTrainer`, so you can focus on data format and objective design instead of rewriting training loops.
+
+We use TRL's `SFTTrainer` for simplicity. Under the hood it:
 
 1. Applies the chat template to flatten messages into a single string
 2. Tokenizes the full sequence
@@ -348,7 +354,7 @@ args = TrainingArguments(
     per_device_train_batch_size=1,        # small batch to fit in memory
     gradient_accumulation_steps=8,        # effective batch size = 1 × 8
     gradient_checkpointing=True,          # trade compute for lower memory
-    learning_rate=2e-4,                   # typical LR for LoRA fine-tuning
+    learning_rate=2e-5,                   # smaller LR is typical for full-model SFT
     bf16=True,                            # use bfloat16 on supported GPUs (e.g., A100/4090)
     tf32=True,                            # faster matmul on Ampere+
     logging_steps=10,                     # log every N steps
@@ -356,7 +362,7 @@ args = TrainingArguments(
     report_to="none",                     # set to "tensorboard" if you want TB logs
 )
 
-# SFTTrainer handles message formatting, masking prompts, and PEFT integration
+# SFTTrainer handles message formatting and prompt masking
 trainer = SFTTrainer(
     model=model,
     tokenizer=tokenizer,
@@ -379,7 +385,7 @@ trainer.save_model()
 
 
 
-## Quick inference
+### Quick inference
 
 ```python
 def generate(prompt):
@@ -408,4 +414,11 @@ print(generate(f"You are a clinical calculator assistant.\n\n{user_q}"))
 - Expand dataset with more clinical calculators (e.g., BMI, eGFR)
 - Use curriculum: start with simple tasks, then harder ones
 - Consider GRPO (see [RL Fine-Tuning](grpo.md)) if you want to optimize non-differentiable rewards
+
+
+## References
+
+- Ouyang et al., [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
+- Hugging Face, [TRL documentation](https://huggingface.co/docs/trl/index)
+- Hugging Face, [Chat templates](https://huggingface.co/docs/transformers/chat_templating)
 

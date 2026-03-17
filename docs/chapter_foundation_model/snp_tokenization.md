@@ -1,4 +1,4 @@
-# SNP Foundation Models: Tokenization and Architecture
+# SNP Foundation Models Basics
 
 ## Introduction: The Language of DNA
 
@@ -71,28 +71,86 @@ Alt tokens: ['TATGAG', 'AAAAAA', 'TGTATG', 'CCCCGT']
 
 Notice that a single SNP can affect **up to two adjacent tokens** (since the SNP can sit near a 6-mer boundary), but leaves all other tokens unchanged.
 
-## Model Architecture: Encoder vs. Decoder
+## Architecture Principles of Genomic Foundation Models
 
-When building a foundation model for SNPs, we must choose between an **Encoder-only** (BERT-style) or **Decoder-only** (GPT-style) architecture.
+After tokenization, a genomic foundation model still needs a neural architecture that can combine information across the whole sequence. Most current DNA foundation models follow the same high-level recipe as NLP foundation models: **token embedding + positional encoding + Transformer blocks + self-supervised pretraining objective**.
 
-### Encoder-Only (The Choice for SNPs)
-Models like **DNABERT** and **Nucleotide Transformer** use an **Encoder-only** architecture.
+### Why Transformers Are Common
 
-*   **Mechanism**: Bidirectional attention. Every token attends to every other token in the sequence (left and right).
-*   **Why it fits SNPs**: To predict the effect of a SNP, the model needs to understand the **full context**—both the upstream promoter and downstream coding regions. A SNP's function is determined by its surrounding environment.
-*   **Task**: Discriminative tasks (Classification, Regression).
+Transformers are popular for genomic sequences because they can model interactions between distant positions in the input.
 
-### Decoder-Only (Generative)
-Models like **HyenaDNA** or **GenomicGPT** might use Decoder-only architectures.
+*   **Token embeddings** map each nucleotide token or k-mer token into a dense vector.
+*   **Positional information** tells the model where each token occurs in the sequence.
+*   **Self-attention** lets one motif attend to other motifs elsewhere in the same sequence.
+*   **Stacked layers** build increasingly abstract representations, from local motifs to higher-order regulatory patterns.
 
-*   **Mechanism**: Causal attention. Tokens only attend to previous tokens.
-*   **Use Case**: Generating new DNA sequences (designing synthetic promoters).
-*   **Limitation for SNPs**: Less effective for understanding the relationship between a SNP and its downstream context simultaneously.
+This is useful in genomics because the function of a SNP usually depends on **context**: nearby motifs, promoter regions, splice signals, and sometimes more distal regulatory elements.
 
-### Summary
-For **Variant Effect Prediction** (predicting if a SNP causes a disease), **Encoder-only models** are generally superior because they build a comprehensive representation of the entire sequence context.
+### Encoder-Only vs. Decoder-Only
 
-### Template Code: Loading the Pretrained Model
+When building a genomic foundation model, we usually choose between two Transformer styles.
+
+#### Encoder-only models
+Models such as **DNABERT** and **Nucleotide Transformer** use **bidirectional attention**.
+
+*   Each token can attend to both its left and right context.
+*   This is well suited for **classification**, **regression**, and **variant effect prediction**.
+*   It matches SNP analysis well, because interpreting a variant requires the full surrounding sequence.
+
+#### Decoder-only models
+Generative DNA models use **causal attention**.
+
+*   Each token only attends to previous tokens.
+*   This is useful for **sequence generation** or **design** tasks.
+*   It is usually less natural than encoder-only modeling for SNP interpretation, where we want a contextual representation of the whole locus.
+
+For most downstream SNP tasks in this course, the practical default is therefore an **encoder-only Transformer**.
+
+## Example Architecture: `InstaDeepAI/nucleotide-transformer-v2-50m-multi-species`
+
+As a concrete example, consider `InstaDeepAI/nucleotide-transformer-v2-50m-multi-species`, one of the most accessible pretrained genomic foundation models on Hugging Face.
+
+### High-Level Design
+
+This model is a **BERT-style masked language model for DNA**.
+
+*   **Backbone**: encoder-only Transformer
+*   **Model size**: about **56M parameters**
+*   **Tokenizer**: primarily **6-mer tokenization**, with single-nucleotide fallback when needed
+*   **Vocabulary size**: **4107** tokens
+*   **Context window**: `max_position_embeddings = 2050`, corresponding to sequences of about **1000 tokens** during pretraining plus special tokens
+*   **Pretraining objective**: **masked language modeling (MLM)** on DNA tokens
+
+The model was pretrained on a **multi-species genome collection**, which helps it learn regulatory patterns that generalize beyond a single reference genome.
+
+### Transformer Configuration
+
+Its architecture is small enough to run in teaching settings, but still large enough to illustrate the main ideas of genomic foundation models.
+
+*   **Hidden size**: **512**
+*   **Number of Transformer layers**: **12**
+*   **Attention heads**: **16**
+*   **Feed-forward dimension**: **2048**
+*   **Positional encoding**: **rotary positional embeddings**
+*   **V2 design change**: introduces **Gated Linear Units (GLUs)** in the feed-forward sublayers
+
+These choices reflect a common design pattern: use a moderate-size encoder so the model can learn rich sequence representations without the extreme computational cost of the largest language models.
+
+### Why This Architecture Fits SNP Analysis
+
+This example is especially useful for SNP tasks because:
+
+*   **bidirectional attention** helps the model interpret a variant using both upstream and downstream context
+*   **k-mer tokenization** gives each token more biological meaning than a single nucleotide alone
+*   **masked pretraining** teaches the model sequence grammar before any task-specific labels are introduced
+*   the model can later be adapted for **classification**, **regression**, or **embedding extraction**
+
+In practice, we often use this pretrained encoder in one of two ways:
+
+1.  extract embeddings from the frozen model and train a small downstream predictor, or
+2.  attach a task head and fine-tune the model on labeled SNP data.
+
+### Loading the Pretrained Model
 
 ```python
 import torch

@@ -61,6 +61,25 @@ Intuitively, a perplexity of $k $ means the model is "as confused as if choosing
 ![NTP Pipeline](ft.assets/nft_plot.png)
 
 
+## Contrast: Masked Encoder Training
+
+Autoregressive next-token prediction is the standard objective for **decoder-only** models such as GPT and Llama. By contrast, **encoder-only** models such as BERT are usually trained with **masked language modeling (MLM)**: randomly hide a subset of tokens, then predict the missing tokens from both left and right context.
+
+If $\mathcal{M}$ is the set of masked positions, the MLM loss is:
+
+$$
+\mathcal{L}_{\text{MLM}}(\theta) = -\frac{1}{|\mathcal{M}|} \sum_{t \in \mathcal{M}} \log P_\theta(x_t \mid x_{\setminus \mathcal{M}})
+$$
+
+The key difference is architectural:
+
+- **Causal NTP** uses a triangular mask and only looks left, so it supports text generation naturally
+- **Masked encoder training** uses bidirectional context, so it learns strong contextual representations for classification, retrieval, and token labeling
+- Encoder models are excellent feature extractors, but they are not usually used as standalone autoregressive generators
+
+So when you hear "masked encoder training," think **representation learning with missing-token reconstruction**, not step-by-step text generation.
+
+
 ## Why Does This Work?
 
 Training on next-token prediction on large corpora forces the model to:
@@ -76,7 +95,7 @@ This is why a model pre-trained purely on NTP can then be fine-tuned for specifi
 
 ## Training Next-Token Prediction Loss from Scratch
 
-Let us implement the NTP loss manually to build intuition before using high-level trainers.
+Let us implement the NTP loss manually to build intuition before using high-level trainers. If you are beginner, we suggest you skip this part and directly use the `transformer` package in the [next part](#training-ntp-with-hugging-face-transformers).
 
 ### Minimal example with pure PyTorch
 
@@ -362,5 +381,12 @@ reloaded = GPT2LMHeadModel.from_pretrained("gpt2-ntp").to(device)
 ```
 
 The saved model can later serve as the starting point for [supervised fine-tuning](sft.md) or [parameter-efficient fine-tuning](peft.md).
+
+
+## References
+
+- Vaswani et al., [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- Radford et al., [Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+- Devlin et al., [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
 
 

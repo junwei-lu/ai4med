@@ -1,6 +1,8 @@
 # Direct Preference Optimization
 
-This tutorial introduces **Direct Preference Optimization (DPO)**, a stable and efficient method to align Large Language Models (LLMs) with human preferences. Unlike traditional Reinforcement Learning from Human Feedback (RLHF), DPO does not require training a separate reward model or using complex RL algorithms like PPO.
+This lecture introduces **Direct Preference Optimization (DPO)**, a stable and efficient method to align Large Language Models (LLMs) with human preferences. Unlike traditional Reinforcement Learning from Human Feedback (RLHF), DPO does not require training a separate reward model or using complex RL algorithms like PPO.
+
+The main motivation is practical: in many domains, **pairwise preference is easier to collect than absolute grading**. A clinician may find it hard to assign a precise score to a response on a 1-10 scale, but it is often easy to say **response A is safer than response B**. Likewise, for summarization or bedside advice, comparing two answers is often easier than writing the perfect answer from scratch.
 
 You will learn to:
 - Understand the mathematical derivation of DPO
@@ -125,7 +127,7 @@ with open("preference_data.json", "w") as f:
 
 ## Training with TRL
 
-We use the `DPOTrainer` from the `trl` library. It handles the data processing, reference model management, and loss computation.
+We use the `DPOTrainer` from the [TRL library](https://huggingface.co/docs/trl/index). It handles the data processing, reference model management, and loss computation.
 
 ### Setup
 
@@ -138,7 +140,7 @@ from trl import DPOTrainer, DPOConfig
 from datasets import load_dataset
 
 # 1. Load the base model (usually an SFT model)
-model_id = "meta-llama/Meta-Llama-3-8B-Instruct" 
+model_id = "Qwen/Qwen2.5-1.5B-Instruct"
 
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -190,3 +192,10 @@ dpo_trainer.save_model("./dpo_final_model")
     - Lower `beta` (e.g., 0.1): Allows more deviation to maximize preference satisfaction; risk of over-optimization.
 - **`learning_rate`**: Typically smaller than SFT (e.g., `5e-6` or `1e-6`).
 - **`ref_model`**: Ideally, this is the exact model state before DPO starts. `DPOTrainer` handles this automatically if you pass `ref_model=None`.
+
+
+## References
+
+- Rafailov et al., [Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290)
+- Ouyang et al., [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
+- Hugging Face, [TRL documentation](https://huggingface.co/docs/trl/index)

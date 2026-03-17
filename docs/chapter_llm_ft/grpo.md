@@ -2,6 +2,8 @@
 
 Group Relative Policy Optimization (GRPO) fine-tunes LLMs via reinforcement learning without a separate value model. For each prompt, the policy samples multiple completions, receives rewards, and updates toward higher-reward behaviors.
 
+Why use RL at all after SFT? Because **high-quality target answers are expensive**, but **reward signals are often cheaper**. For example, solving a math problem step by step may require an expert-written solution, yet checking whether the final numeric answer is correct is easy. Likewise, in biomedical tasks, it may be expensive to author ideal long-form responses, but relatively cheap to verify whether the answer format is valid, the units are correct, or the predicted label matches the gold label.
+
 
 ## From SFT to RL Fine-Tuning
 
@@ -84,8 +86,9 @@ $$
 prevents the policy from collapsing into reward hacking—producing nonsensical outputs that happen to score high on a simple reward function. A typical value is $\beta = 0.01$.
 
 
-## Connecting the Math to Code
+## Huggingface `trl` GRPO Training
 
+Just as SFT, `trl` provides the training for GRPO.
 The GRPO formula maps directly to the `GRPOConfig` parameters:
 
 ```python
@@ -122,46 +125,27 @@ config = GRPOConfig(
 
 
 
-## Load Model and Tokenizer
+### Load Model and Tokenizer
 
-Use 4-bit quantization (QLoRA-style) to fit training on limited VRAM; optionally add LoRA.
+For a first GRPO experiment, keep the setup simple: use a manageable instruct model and fine-tune it directly.
 
 ```python
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_id = "meta-llama/Meta-Llama-3-8B"
-
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16,
-)
+model_id = "Qwen/Qwen2.5-1.5B-Instruct"
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
+
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    device_map="auto",
-    quantization_config=bnb_config,
-    torch_dtype=torch.bfloat16,
+    torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
 )
-```
 
-Optional: add LoRA to further reduce trainable parameters during RL.
-
-```python
-from peft import LoraConfig, get_peft_model
-
-lora_config = LoraConfig(
-    r=16,
-    lora_alpha=16,
-    lora_dropout=0.05,
-    bias="none",
-    target_modules="all-linear",
-    task_type="CAUSAL_LM",
-)
-model = get_peft_model(model, lora_config)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
 ```
 
 
@@ -356,3 +340,10 @@ def generate_answer(question, patient_note=""):
 - Start with `num_generations=4`; scale up if compute allows
 - Validate on a held-out split by computing rewards without training
 - If all completions in a group score identically, advantages are all zero → no learning signal; diversify prompts
+
+
+## References
+
+- Shao et al., [DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models](https://arxiv.org/abs/2402.03300)
+- Schulman et al., [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+- Hugging Face, [TRL documentation](https://huggingface.co/docs/trl/index)

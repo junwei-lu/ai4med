@@ -2,6 +2,13 @@
 
 While standard Transformers (like BERT) are powerful, they have limitations when applied to the vast scale of the genome and the complexity of single-cell data.
 
+In this lecture we introduce **two advanced model directions** that go beyond a basic SNP encoder:
+
+1.  **Enformer**, which is designed for **long-range genomic regulation** and can connect a variant to distal enhancers far away in the sequence.
+2.  **Single-cell foundation models** represented by **scGPT** (with **Geneformer** as a closely related encoder-style reference), which model how cellular states and gene-expression programs respond across individual cells.
+
+The first direction extends sequence modeling across much longer genomic distances. The second extends foundation modeling from DNA sequence into the **cellular transcriptome**. Together they show two important ways that genomic AI moves beyond short-window SNP classification.
+
 ## Long-Range Interactions: Enformer
 
 Standard Transformers scale quadratically with sequence length ($O(N^2)$). This limits them to windows of ~512-4096 base pairs. However, gene regulation often involves **enhancers** interacting with **promoters** over distances of 100,000+ base pairs (100kb).

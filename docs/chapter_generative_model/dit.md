@@ -6,7 +6,7 @@ DiT is one of those ideas that feels obvious only after you see it:
 
 That is exactly the point of **Diffusion Transformers (DiT)**. Instead of using a convolutional **U-Net** to predict noise, DiT uses a **Transformer** that works on **patches of latent features**.
 
-This tutorial explains:
+This lecture explains:
 
 - what problem DiT solves,
 - how the model is structured,

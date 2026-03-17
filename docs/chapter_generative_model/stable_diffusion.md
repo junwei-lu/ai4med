@@ -2,7 +2,7 @@
 
 Stable Diffusion feels a bit like hiring a very patient painter who starts from television static and, one denoising step at a time, turns it into "a corgi wearing a lab coat in watercolor style." The surprising part is that the model does not paint directly in pixel space. Instead, it works in a compressed **latent space**, which is the main trick that makes high-resolution diffusion practical.
 
-This tutorial explains the mathematical principle behind Stable Diffusion, its architecture, the main training losses, and code templates for loading data, training, and sampling.
+This lecture explains the mathematical principle behind Stable Diffusion, its architecture, the main training losses, and code templates for loading data, training, and sampling.
 
 ## Why Stable Diffusion Was a Big Deal
 
