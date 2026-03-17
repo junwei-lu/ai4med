@@ -297,7 +297,7 @@ The encoder-decoder transformer is a variant of the Transformer that uses both e
 
 
 
-### Choosing Transformer Architecture
+## Choosing Transformer Architecture
 
 We list below the best use cases for each type of transformer architecture.
 
@@ -322,6 +322,64 @@ We list below the best use cases for each type of transformer architecture.
 - **Characteristics**: Encoder processes input, decoder generates output based on encoder representations
 - **Use when**: Your task involves transforming one sequence into another related sequence
 
+![compare](tf.assets/decoder-encoder.png)
+
+
+### Why Did Decoder-only Models Become So Successful?
+
+This is an important question. Decoder-only models were not the only Transformer design, but they became dominant for large language models.
+
+There are several reasons.
+
+#### Their training objective matches generation directly
+
+Decoder-only models are trained to predict the next token, which is exactly what they do at inference time.
+
+This alignment is powerful. There is no gap between "pretraining task" and "generation task". The model simply learns to continue sequences better and better.
+
+#### The objective scales well with large text corpora
+
+Almost any text on the internet can be turned into next-token prediction training data. You do not need labels. You only need sequences of tokens.
+
+That makes it easy to scale data collection and pretraining.
+
+#### One interface can solve many tasks
+
+With decoder-only models, many tasks can be written as prompting:
+
+- "Summarize this note: ..."
+- "Translate this sentence to Spanish: ..."
+- "Answer this question: ..."
+- "Write Python code that does ..."
+
+Instead of building a separate head for each task, we can often use one model and phrase the task in text.
+
+#### In-context learning emerged at scale
+
+Large decoder-only models showed a surprising ability to learn from examples placed inside the prompt.
+
+For example, if the prompt contains a few question-answer pairs, the model may continue with the correct pattern on a new example. This is called **in-context learning**.
+
+This property made decoder-only models much more general-purpose than many earlier NLP systems.
+
+#### They are convenient for product development
+
+From an engineering perspective, decoder-only models provide a simple pattern:
+
+- give the model a prompt
+- generate tokens
+- stop when a condition is met
+
+This simplicity made them attractive for chat systems, assistants, code tools, and agent-like workflows.
+
+#### Instruction tuning and RLHF fit naturally on top
+
+After pretraining, decoder-only models can be further adapted with:
+
+- supervised fine-tuning on instruction-response pairs
+- preference learning such as RLHF or DPO
+
+These methods improved helpfulness and alignment without changing the core left-to-right generation framework.
 
 ## Transformer with Hugging Face
 

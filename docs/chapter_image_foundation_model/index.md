@@ -17,6 +17,5 @@ Lectures:
 - [ViT Basics: Patches, Tokens, and Encoders](./vit_basics.md)
 - [Pretraining Image Foundation Models](./vit_pretraining.md)
 - [Fine-Tuning ViT in Practice](./vit_finetuning.md)
-- [Advanced Vision Transformer Variants](./vit_advanced_models.md)
 - [Multimodal Foundation Models: Mixing Text and Images](./multimodal_foundation_models.md)
 - [Interpreting Vision Transformers](./vit_interpretation.md)

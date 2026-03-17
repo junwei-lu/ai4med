@@ -10,6 +10,7 @@ This chapter covers language models with utilzing the transformer architecture. 
 - [Word Vectors](wordvec.md)
 - [Attention](attention.md)
 - [Transformer](transformer.md)
+- [Model Families](model_families.md)
 - [Hugging Face](hg_transformers.md)
 
 

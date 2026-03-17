@@ -1,6 +1,4 @@
-# Multimodal Foundation Models: Mixing Text and Images
-
-## From Vision-Only to Vision-and-Language
+# Multimodal Foundation models
 
 The previous tutorials introduced ViT as a way to treat images like sequences. The natural next question is: what happens when we want a single model that handles **both** images and text in the same sequence?
 
@@ -8,7 +6,7 @@ This is the goal of **multimodal foundation models**. Instead of building separa
 
 The clinical motivation is clear. A pathology report is not just text and not just an image. A radiology workflow involves reading a scan and writing a finding. A clinical decision support system benefits from reasoning jointly over lab values, notes, and medical images. Models that can natively mix modalities are a natural fit for these workflows.
 
-## Two Philosophies: Late Fusion vs Early Fusion
+## Late Fusion vs Early Fusion
 
 Before diving into architecture, it helps to understand the two main design philosophies for multimodal models.
 
@@ -26,9 +24,22 @@ The key idea is straightforward: if we can convert images into discrete tokens, 
 
 This early-fusion design allows for seamless reasoning across modalities and enables entirely new capabilities, such as generating documents that freely interleave text and images in any order.
 
+![fusion](vision.assets/fusion.png)
+
+| Aspect | Late Fusion (e.g., LLaVA, Flamingo) | Early Fusion (e.g., Chameleon) |
+|---|---|---|
+| Modality encoders | Separate image and text encoders | Single shared transformer |
+| When modalities interact | Late, through a bridging module | From the first layer |
+| Can generate images natively | No (needs external generator) | Yes |
+| Can leverage pretrained unimodal models | Yes, directly | No, must train from scratch |
+| Training stability | Generally easier | Requires special techniques (QK-Norm, z-loss) |
+| Interleaved generation | Limited | Native capability |
+
+Neither approach is strictly better. Late-fusion models benefit from strong pretrained components and are easier to train. Early-fusion models offer tighter integration and novel generation capabilities but require more careful optimization.
+
 ## Architecture: How Text and Image Tokens Share a Single Transformer
 
-![Chameleon architecture](./vision.assets/chameleon_architecture.png)
+![Chameleon architecture](./vision.assets/mmdal_arch.png)
 > **Figure: Early-fusion mixed-modal architecture.** On the left, during pre-training, text prompts and images are tokenized into a single interleaved sequence and fed to a unified autoregressive transformer. On the right, at generation time, the same model produces both text tokens and image tokens, which are then decoded back into pixels by an image de-tokenizer. Text tokens are shown in green; image tokens in blue. *(Source: Chameleon, Meta FAIR 2024)*
 
 The architecture of an early-fusion multimodal model like Chameleon can be understood as three components working together: a tokenizer for each modality, a shared vocabulary, and a single transformer backbone.
@@ -76,8 +87,8 @@ One important deviation from standard LLaMA is the placement of normalization la
 
 Training a model that mixes text and image tokens in a single transformer sounds elegant, but in practice it introduces serious optimization challenges. The Chameleon paper documents several techniques that were essential for stable training.
 
-![Training stability ablations](./vision.assets/chameleon_training_stability.png)
-> **Figure: Training stability ablations.** (a) Output norm growth over training steps: without QK-Norm or dropout, norms grow uncontrollably, predicting future loss divergence. (b) Training loss with and without QK-Norm on the 7B model — without it, the loss spikes and diverges after ~125k steps. (c) Training loss with and without dropout — dropout provides additional stabilization. *(Source: Chameleon, Meta FAIR 2024)*
+<!-- ![Training stability ablations](./vision.assets/chameleon_training_stability.png)
+> **Figure: Training stability ablations.** (a) Output norm growth over training steps: without QK-Norm or dropout, norms grow uncontrollably, predicting future loss divergence. (b) Training loss with and without QK-Norm on the 7B model — without it, the loss spikes and diverges after ~125k steps. (c) Training loss with and without dropout — dropout provides additional stabilization. *(Source: Chameleon, Meta FAIR 2024)* -->
 
 ### The Stability Problem
 
@@ -98,9 +109,9 @@ For the 7B model, adding dropout (rate 0.1) after the attention and feed-forward
 QK-Norm addresses the softmax inside attention, but the final output softmax over the vocabulary can still suffer from logit drift. To address this, a small **z-loss** term is added to the training objective. This regularizes the partition function of the output softmax, keeping logits well-behaved.
 
 The z-loss is defined as $10^{-5} \cdot \log^{2} Z$, where $Z = \sum_{i} e^{z_i}$ is the partition function. This is a lightweight addition to the loss that provides substantial training stability benefits.
-
+<!-- 
 ![Training loss curves](./vision.assets/chameleon_training_curves.png)
-> **Figure: Training loss curves at scale.** (a) Full 600k-step training curves for both the 7B and 34B models over mixed-modal data. (b) Training with image generation disabled does not suffer from instability, confirming the divergence is specific to the mixed-modal setting. (c) For the 34B model, dropout alone does not prevent divergence — norm reordering is additionally required. *(Source: Chameleon, Meta FAIR 2024)*
+> **Figure: Training loss curves at scale.** (a) Full 600k-step training curves for both the 7B and 34B models over mixed-modal data. (b) Training with image generation disabled does not suffer from instability, confirming the divergence is specific to the mixed-modal setting. (c) For the 34B model, dropout alone does not prevent divergence — norm reordering is additionally required. *(Source: Chameleon, Meta FAIR 2024)* -->
 
 ### Pre-Training Data
 
@@ -119,7 +130,7 @@ In total, the model sees approximately 9.2 trillion tokens across 2.1 epochs. Th
 After pre-training, a lightweight alignment stage uses supervised fine-tuning (SFT) on curated data across several categories: text, code, visual chat, image generation, interleaved text/image generation, and safety. Balancing the modality distribution during SFT is critical. If one modality dominates, the model can learn an unconditional bias toward generating only that modality.
 
 The fine-tuning uses a cosine learning rate schedule starting at 1e-5, batch size 128, sequence length 4096, and a dropout rate of 0.05. The loss is computed only on answer tokens, with prompt tokens masked.
-
+<!-- 
 ## What Early-Fusion Models Can Do
 
 The payoff of the early-fusion design is a single model that can handle a wide range of tasks without architectural changes:
@@ -236,22 +247,10 @@ trainer.train()
 - **Prompt format**: Different models expect different prompt templates. Always check the model card.
 - **Loss masking**: For a production fine-tune, you should mask the prompt tokens so the loss is only computed on the answer tokens. This prevents the model from wasting capacity memorizing the question.
 - **Image resolution**: Some multimodal models accept variable resolutions. Check whether the processor handles this or whether you need to resize manually.
-- **LoRA or QLoRA**: For large models, parameter-efficient fine-tuning methods can reduce memory requirements significantly while preserving most of the performance.
+- **LoRA or QLoRA**: For large models, parameter-efficient fine-tuning methods can reduce memory requirements significantly while preserving most of the performance. -->
 
-## Early Fusion vs Late Fusion: A Practical Comparison
 
-| Aspect | Late Fusion (e.g., LLaVA, Flamingo) | Early Fusion (e.g., Chameleon) |
-|---|---|---|
-| Modality encoders | Separate image and text encoders | Single shared transformer |
-| When modalities interact | Late, through a bridging module | From the first layer |
-| Can generate images natively | No (needs external generator) | Yes |
-| Can leverage pretrained unimodal models | Yes, directly | No, must train from scratch |
-| Training stability | Generally easier | Requires special techniques (QK-Norm, z-loss) |
-| Interleaved generation | Limited | Native capability |
-
-Neither approach is strictly better. Late-fusion models benefit from strong pretrained components and are easier to train. Early-fusion models offer tighter integration and novel generation capabilities but require more careful optimization.
-
-## Relevance to Medical AI
+## Medical Applications
 
 Multimodal models are a natural fit for many clinical workflows:
 

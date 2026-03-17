@@ -183,6 +183,7 @@ nav:
     - Word Vectors: chapter_language_model/wordvec.md
     - Attention: chapter_language_model/attention.md
     - Transformer: chapter_language_model/transformer.md
+    - Model Families: chapter_language_model/model_families.md
     - Hugging Face: chapter_language_model/hg_transformers.md
   - Chapter 5. Language Model Training:
     - chapter_llm_ft/index.md
@@ -203,19 +204,14 @@ nav:
     - Vision Transformer (ViT): chapter_image_foundation_model/vit_basics.md
     - ViT Pretraining: chapter_image_foundation_model/vit_pretraining.md
     - ViT Fine-Tuning: chapter_image_foundation_model/vit_finetuning.md
-    - Vision Transformer Variants: chapter_image_foundation_model/vit_advanced_models.md
+    - Multi-Modal Models: chapter_image_foundation_model/multimodal_foundation_models.md
     - ViT Interpretation: chapter_image_foundation_model/vit_interpretation.md
   - Chapter 8. Self-Supervised Learning:
     - chapter_self_supervised_learning/index.md
     - Self-Supervised Learning: chapter_self_supervised_learning/encoder_motivation.md
     - Contrastive Learning: chapter_self_supervised_learning/contrastive_learning.md
     - Self Distillation: chapter_self_supervised_learning/dinov2.md
-  - Chapter 9. Reinforcement Learning:
-    - chapter_reinforcement_learning/index.md
-    - Markov Decision Process: chapter_reinforcement_learning/mdp.md
-    - Policy Gradient: chapter_reinforcement_learning/policy_grad.md
-    - Proximal Policy Optimization: chapter_reinforcement_learning/ppo.md
-  - Chapter 10. Generative Models:
+  - Chapter 9. Generative Models:
     - chapter_generative_model/index.md
     - Langevin Dynamics: chapter_generative_model/langevin_dynamics.md
     - Diffusion Models: chapter_generative_model/ddpm.md
@@ -223,6 +219,12 @@ nav:
     - Conditional Generation: chapter_generative_model/text_to_image.md
     - Stable Diffusion: chapter_generative_model/stable_diffusion.md
     - Diffusion Transformers: chapter_generative_model/dit.md
+  - Chapter 10. Reinforcement Learning:
+    - chapter_reinforcement_learning/index.md
+    - Markov Decision Process: chapter_reinforcement_learning/mdp.md
+    - Policy Gradient: chapter_reinforcement_learning/policy_grad.md
+    - Proximal Policy Optimization: chapter_reinforcement_learning/ppo.md
+
   # - Appendix:
   #   - chapter_appendix/index.md
   #   - Installation: chapter_appendix/installation.md
