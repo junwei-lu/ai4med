@@ -186,7 +186,7 @@ nav:
     - Hugging Face: chapter_language_model/hg_transformers.md
   - Chapter 5. Language Model Training:
     - chapter_llm_ft/index.md
-    - Next-Token Prediction: chapter_llm_ft/ntp.md
+    - LLM Pretraining: chapter_llm_ft/ntp.md
     - Supervised Fine-Tuning: chapter_llm_ft/sft.md
     - Parameter Efficient Fine-Tuning: chapter_llm_ft/peft.md
     - Reinforcement Learning Fine-Tuning: chapter_llm_ft/grpo.md
@@ -200,16 +200,16 @@ nav:
     - Model Interpretation: chapter_foundation_model/snp_interpretation.md
   - Chapter 7. Image Foundation Models:
     - chapter_image_foundation_model/index.md
-    - ViT Basics: chapter_image_foundation_model/vit_basics.md
-    - Pretraining Image Foundation Models: chapter_image_foundation_model/vit_pretraining.md
-    - Fine-Tuning ViT in Practice: chapter_image_foundation_model/vit_finetuning.md
-    - Advanced Vision Transformer Variants: chapter_image_foundation_model/vit_advanced_models.md
-    - Interpreting Vision Transformers: chapter_image_foundation_model/vit_interpretation.md
+    - Vision Transformer (ViT): chapter_image_foundation_model/vit_basics.md
+    - ViT Pretraining: chapter_image_foundation_model/vit_pretraining.md
+    - ViT Fine-Tuning: chapter_image_foundation_model/vit_finetuning.md
+    - Vision Transformer Variants: chapter_image_foundation_model/vit_advanced_models.md
+    - ViT Interpretation: chapter_image_foundation_model/vit_interpretation.md
   - Chapter 8. Self-Supervised Learning:
     - chapter_self_supervised_learning/index.md
-    - Encoder: chapter_self_supervised_learning/encoder_motivation.md
-    - Contrastive Learning and CLIP: chapter_self_supervised_learning/contrastive_learning.md
-    - DINO: chapter_self_supervised_learning/dinov2.md
+    - Self-Supervised Learning: chapter_self_supervised_learning/encoder_motivation.md
+    - Contrastive Learning: chapter_self_supervised_learning/contrastive_learning.md
+    - Self Distillation: chapter_self_supervised_learning/dinov2.md
   - Chapter 9. Reinforcement Learning:
     - chapter_reinforcement_learning/index.md
     - Markov Decision Process: chapter_reinforcement_learning/mdp.md

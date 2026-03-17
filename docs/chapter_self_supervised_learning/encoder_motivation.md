@@ -57,6 +57,8 @@ The exact target can vary: match two views, recover masked content, predict a te
 
 Even Principal Component Analysis can be viewed as a simple self-supervised method.
 
+![pca](ssl.assets/pca.png)
+
 If $X$ is a centered data matrix, then
 
 $$
