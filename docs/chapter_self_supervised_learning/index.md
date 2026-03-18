@@ -8,12 +8,7 @@ Why this matters:
 - unlabeled images are everywhere,
 - a good encoder can be reused for classification, retrieval, segmentation, and multimodal learning.
 
-![DINOv2 overview](./ssl.assets/dinov2_share.png)
-> Public image from the official DINOv2 demo page, highlighting the idea of one visual encoder supporting many downstream tasks.
-
-This chapter focuses on one big theme:
-
-> Train a strong encoder first, then reuse it everywhere.
+![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg) [Open In Colab](https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/ssl/ssl_clip_dinov2.ipynb)
 
 We will cover:
 
