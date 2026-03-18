@@ -36,6 +36,9 @@ Quantization is not the same thing as PEFT, but the two are often combined. In p
 | 4-bit quantization | `bitsandbytes` (`load_in_4bit=True`) | Severe memory pressure | Best compression, more care needed |
 | GPTQ / AWQ style quantization | specialized inference stacks | Mostly inference deployment | Fast inference, less common for training |
 
+
+![Quantization](./ft.assets/quant.png)
+
 ### How to choose
 
 - Choose **full precision / mixed precision** if the model fits and you want the simplest debugging experience

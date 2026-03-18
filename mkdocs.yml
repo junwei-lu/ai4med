@@ -188,9 +188,9 @@ nav:
     - chapter_llm_ft/index.md
     - LLM Pretraining: chapter_llm_ft/ntp.md
     - Supervised Fine-Tuning: chapter_llm_ft/sft.md
-    - Parameter Efficient Fine-Tuning: chapter_llm_ft/peft.md
     - Reinforcement Learning Fine-Tuning: chapter_llm_ft/grpo.md
     - Direct Preference Optimization: chapter_llm_ft/dpo.md
+    - Parameter Efficient Fine-Tuning: chapter_llm_ft/peft.md
   - Chapter 6. Genomic Foundation Models:
     - chapter_foundation_model/index.md
     - Tokenization & Architecture: chapter_foundation_model/snp_tokenization.md
