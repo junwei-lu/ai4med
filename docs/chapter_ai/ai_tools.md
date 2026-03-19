@@ -54,7 +54,7 @@ There are more agentic coding tools which can run commands in terminal. You can 
 
 ## Data analysis
 
-[Pardus AI](https://www.pardus.ai/): Prompt-free data analysis tool. Just upload your data and it will generate the analysis report automatically.
+[Pardus AI](https://pardusai.org/): Prompt-free data analysis tool. Just upload your data and it will generate the analysis report automatically.
 
 ## Search tools
 
