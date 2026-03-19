@@ -1,4 +1,4 @@
-# Chapter 13. Genomic Foundation Models
+# Genomic Foundation Models
 
 This chapter explores the concept of **Foundation Models**—large-scale models trained on vast amounts of data that can be adapted to a wide range of downstream tasks. We will use the SNP as the example to show you how to build transformer-based foundation models beyond natural language.
 
