@@ -13,6 +13,10 @@ We emphasize practical breadth with biomedical relevance. You will gain exposure
 
 If you are excited by the possibility of using AI to accelerate discovery, improve patient care, and tackle important problems in medicine and biology, this course is for you.
 
+## GitHub repository
+
+The course is open source and available on GitHub at [https://github.com/junwei-lu/ai4med](https://github.com/junwei-lu/ai4med). You can find the source code, homework assignments, and other materials there.
+
 <!-- !!! success "Prerequisites"
 
     You should know how to write and read simple code in [python](https://www.python.org/) and [R](https://www.r-project.org/). You should also have basic knowledge of [probability](https://www.coursicle.com/harvard/courses/BIOSTAT/230/), [statistics](https://www.coursicle.com/harvard/courses/BIOSTAT/232/), and [linear algebra](https://web.mit.edu/18.06/www/). You can refer to the [MIT6.100L]([../chapter_appendix/python_intro.md](https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/)) for the basic Python we expect you to know.
