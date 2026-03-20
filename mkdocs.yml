@@ -204,7 +204,6 @@ nav:
     - ViT Pretraining: chapter_image_foundation_model/vit_pretraining.md
     - ViT Fine-Tuning: chapter_image_foundation_model/vit_finetuning.md
     - Multi-Modal Models: chapter_image_foundation_model/multimodal_foundation_models.md
-    - ViT Interpretation: chapter_image_foundation_model/vit_interpretation.md
   - Chapter 8. Self-Supervised Learning:
     - chapter_self_supervised_learning/index.md
     - Self-Supervised Learning: chapter_self_supervised_learning/encoder_motivation.md

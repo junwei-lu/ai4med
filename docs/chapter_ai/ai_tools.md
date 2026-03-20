@@ -45,6 +45,7 @@ Check [Chat Arena](https://lmarena.ai/?leaderboard) for the assessment of the la
 There are more agentic coding tools which can run commands in terminal. You can design a todo list and it will generate pipelines of commands using tools to achieve your goals. There are two types of agentic coding tools now: IDE-based and terminal-based. All the IDE-based tools we listed above have the agentic features as well, especially for Cursor, Codex and Antigravity. Below we list some terminal-based agentic coding tools.
 
 - [Claude Code](https://www.anthropic.com/claude-code): One of the best terminal coding tools.
+- [Open Code](https://opencode.ai/) Open source CLI tool with agentic features where you can use all APIs and local language models.
 - [Gemini CLI](https://github.com/google-gemini/gemini-cli): Similar to Claude Code, but with free tier: 60 requests/min and 1,000 requests/day with personal Google account.
 - [Qwen Code](https://github.com/QwenLM/qwen-code): Based on the Qwen model.
 

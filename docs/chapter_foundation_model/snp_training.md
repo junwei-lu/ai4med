@@ -11,7 +11,7 @@ This is the standard objective for Encoder models (like BERT).
 
 *   **Process**: Randomly mask a percentage (e.g., 15%) of the k-mer tokens in the input sequence.
 *   **Goal**: Predict the original identity of the masked tokens based on the surrounding context.
-*   **Formula**: $$ P(x_i \mid x_{\setminus i}) $$
+*   **Formula**: $P(x_i \mid x_{\setminus i})$
 *   **Biological Intuition**: To predict a masked region, the model must learn patterns like "TATA box is usually followed by a transcription start site" or "this motif pairs with that motif."
 
 ![mlm](./assets/mlm.png)

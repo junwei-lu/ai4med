@@ -106,7 +106,7 @@ Generative DNA models use **causal attention**.
 
 For most downstream SNP tasks in this course, the practical default is therefore an **encoder-only Transformer**.
 
-## Example Architecture: `InstaDeepAI/nucleotide-transformer-v2-50m-multi-species`
+## Example Model: nucleotide-transformer-v2-50m-multi-species`
 
 As a concrete example, consider `InstaDeepAI/nucleotide-transformer-v2-50m-multi-species`, one of the most accessible pretrained genomic foundation models on Hugging Face.
 
