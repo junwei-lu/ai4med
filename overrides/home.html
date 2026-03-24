@@ -4,8 +4,55 @@
 
 {% block content %}
 <style>
-  body { background-color: #0a0a1a !important; }
-  .md-container, .md-main, .md-main__inner, .md-content, .md-content__inner { background-color: #0a0a1a !important; }
+  /* Homepage layout — applied inline, no JS dependency */
+  body,
+  .md-container,
+  .md-main,
+  .md-main__inner,
+  .md-content,
+  .md-content__inner {
+    background-color: #0a0a1a !important;
+  }
+  .md-main {
+    margin-top: 0 !important;
+  }
+  .md-main__inner.md-grid {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-inline: 0 !important;
+  }
+  .md-content {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .md-content__inner {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  article.md-content__inner,
+  article.md-content__inner.md-typeset {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .md-header {
+    background: rgba(10, 10, 26, 0.45) !important;
+    backdrop-filter: saturate(150%) blur(16px) !important;
+    -webkit-backdrop-filter: saturate(150%) blur(16px) !important;
+    box-shadow: 0 1px 0 rgba(100, 180, 255, 0.08) !important;
+  }
+  .md-header .md-header__title,
+  .md-header .md-header__button,
+  .md-header .md-logo {
+    color: #e0f0ff !important;
+  }
+  .md-footer {
+    background-color: #080c18 !important;
+  }
+  .md-footer-meta {
+    background-color: #060a14 !important;
+  }
 </style>
 <div class="home-hero" id="home-hero">
 <script>document.body.classList.add('home-page');</script>
