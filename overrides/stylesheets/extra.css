@@ -78,6 +78,68 @@
   color: var(--md-default-fg-color) !important;
 }
 
+/* Chapter icons in primary sidebar menu */
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link .md-ellipsis::before {
+  content: "";
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  margin-right: 0.45em;
+  vertical-align: -0.18em;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(1) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/book-open-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/book-open-outline.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(2) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/robot-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/robot-outline.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(3) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/chart-line.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/chart-line.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(4) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/brain.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/brain.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(5) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/text-box-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/text-box-outline.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(6) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/tune-variant.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/tune-variant.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(7) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/dna.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/dna.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(8) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/image-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/image-outline.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(9) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/auto-fix.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/auto-fix.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(10) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/creation-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/creation-outline.svg");
+}
+.md-nav--primary > .md-nav__list > .md-nav__item:nth-child(11) > .md-nav__link .md-ellipsis::before {
+  -webkit-mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/gamepad-variant-outline.svg");
+  mask-image: url("https://cdn.jsdelivr.net/npm/@mdi/svg/svg/gamepad-variant-outline.svg");
+}
+
 /* Figure class */
 .animation-figure {
   border-radius: 0.3rem;
