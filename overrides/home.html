@@ -1,0 +1,115 @@
+{% extends "main.html" %}
+
+{% block tabs %}{% endblock %}
+
+{% block content %}
+<style>
+  body { background-color: #0a0a1a !important; }
+  .md-container, .md-main, .md-main__inner, .md-content, .md-content__inner { background-color: #0a0a1a !important; }
+</style>
+<div class="home-hero" id="home-hero">
+<script>document.body.classList.add('home-page');</script>
+  <canvas id="neuron-canvas"></canvas>
+  <div class="home-hero__overlay">
+    <div class="home-hero__content">
+      <h1 class="home-hero__title">
+        <span class="home-hero__title-main">Generative AI</span>
+        <span class="home-hero__title-sub">for Biomedical Research</span>
+      </h1>
+      <p class="home-hero__tagline">Junwei Lu, Harvard University</p>
+      <div class="home-hero__actions">
+        <a href="{{ 'chapter_preface/' | url }}" class="home-hero__cta home-hero__cta--primary">
+          <span>Dive in</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="https://github.com/junwei-lu/ai4med" target="_blank" rel="noopener" class="home-hero__cta home-hero__cta--secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <a href="#home-chapters" class="home-hero__scroll" aria-label="Scroll to chapters">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 13l5 5 5-5"/>
+      <path d="M7 6l5 5 5-5"/>
+    </svg>
+  </a>
+</div>
+
+<div class="home-chapters" id="home-chapters">
+  <h2 class="home-chapters__title">Course Chapters</h2>
+  <p class="home-chapters__subtitle">From vibe coding to generative AI</p>
+  <div class="home-chapters__grid">
+
+    <a href="{{ 'chapter_preface/' | url }}" class="home-card">
+      <span class="home-card__number">00</span>
+      <h3 class="home-card__title">Introduction</h3>
+      <p class="home-card__desc">Course overview and getting started</p>
+    </a>
+
+    <a href="{{ 'chapter_ai/' | url }}" class="home-card">
+      <span class="home-card__number">01</span>
+      <h3 class="home-card__title">Coding with AI</h3>
+      <p class="home-card__desc">AI Copilot, Prompt Engineering, AI Agents</p>
+    </a>
+
+    <a href="{{ 'chapter_optimization/' | url }}" class="home-card">
+      <span class="home-card__number">02</span>
+      <h3 class="home-card__title">Optimization</h3>
+      <p class="home-card__desc">Convexity, Gradient Descent, SGD, ADMM</p>
+    </a>
+
+    <a href="{{ 'chapter_neural_networks/' | url }}" class="home-card">
+      <span class="home-card__number">03</span>
+      <h3 class="home-card__title">Neural Networks</h3>
+      <p class="home-card__desc">CNNs, ResNets, Fine-tuning, Training</p>
+    </a>
+
+    <a href="{{ 'chapter_language_model/' | url }}" class="home-card">
+      <span class="home-card__number">04</span>
+      <h3 class="home-card__title">Language Models Architecture</h3>
+      <p class="home-card__desc">Word Vectors, Attention, Transformers</p>
+    </a>
+
+    <a href="{{ 'chapter_llm_ft/' | url }}" class="home-card">
+      <span class="home-card__number">05</span>
+      <h3 class="home-card__title">Language Models Training</h3>
+      <p class="home-card__desc">SFT, RLHF, DPO, PEFT</p>
+    </a>
+
+    <a href="{{ 'chapter_foundation_model/' | url }}" class="home-card">
+      <span class="home-card__number">06</span>
+      <h3 class="home-card__title">Genomic Foundation Models</h3>
+      <p class="home-card__desc">Tokenization, Pretraining, Interpretation</p>
+    </a>
+
+    <a href="{{ 'chapter_image_foundation_model/' | url }}" class="home-card">
+      <span class="home-card__number">07</span>
+      <h3 class="home-card__title">Image Foundation Models</h3>
+      <p class="home-card__desc">ViT, Pretraining, Multi-Modal Models</p>
+    </a>
+
+    <a href="{{ 'chapter_self_supervised_learning/' | url }}" class="home-card">
+      <span class="home-card__number">08</span>
+      <h3 class="home-card__title">Self-Supervised Learning</h3>
+      <p class="home-card__desc">Contrastive Learning, Self-Distillation</p>
+    </a>
+
+    <a href="{{ 'chapter_generative_model/' | url }}" class="home-card">
+      <span class="home-card__number">09</span>
+      <h3 class="home-card__title">Generative Models</h3>
+      <p class="home-card__desc">Diffusion, Flow Matching, Stable Diffusion</p>
+    </a>
+
+    <a href="{{ 'chapter_reinforcement_learning/' | url }}" class="home-card">
+      <span class="home-card__number">10</span>
+      <h3 class="home-card__title">Reinforcement Learning</h3>
+      <p class="home-card__desc">MDP, Policy Gradients, PPO</p>
+    </a>
+
+  </div>
+</div>
+
+<script src="{{ 'javascripts/neuron-network.js' | url }}"></script>
+{% endblock %}
