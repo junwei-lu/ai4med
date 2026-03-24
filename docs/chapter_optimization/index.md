@@ -4,7 +4,7 @@
 
 This chapter covers optimization methods. We will focus on the optimization algorithms motivated by data analysis and machine learning.
 
-![cover](./preface.assets/preface_opt.gif)
+![cover](./preface.assets/opt_cover.gif)
 
 
 

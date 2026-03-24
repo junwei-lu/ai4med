@@ -2,6 +2,7 @@
 
 This course aims to create a beginner-friendly course on statistical computing and artificial intelligence in medicine.
 
+![Cover](../index.assets/course_cover.gif)
 
 ## Target audience
 
