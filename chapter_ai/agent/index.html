@@ -1,0 +1,3192 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AI4Med">
+      
+      
+      
+        <link rel="canonical" href="https://junwei-lu.github.io/ai4med/chapter_ai/agent/">
+      
+      
+        <link rel="prev" href="../prompt_engineering/">
+      
+      
+        <link rel="next" href="../ai_tools/">
+      
+      
+      <link rel="icon" href="../../assets/images/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>AI Agents - Generative AI for Biomedical Research</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+  
+      
+
+    
+  <!-- Default Statcounter code for AI for Biomedical Research https://junwei-lu.github.io/ai4med -->
+  <script type="text/javascript">
+  var sc_project=13212352; 
+  var sc_invisible=1; 
+  var sc_security="4e1cedd5"; 
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13212352/0/4e1cedd5/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ai-agent" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Generative AI for Biomedical Research" class="md-header__button md-logo" aria-label="Generative AI for Biomedical Research" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI for Biomedical Research
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AI Agents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Generative AI for Biomedical Research" class="md-nav__button md-logo" aria-label="Generative AI for Biomedical Research" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.png" alt="logo">
+
+    </a>
+    Generative AI for Biomedical Research
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_preface/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 0. Introduction
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 0. Introduction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 1. Coding with AI
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 1. Coding with AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai_copilot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI Copilot
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompt_engineering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prompt Engineering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    AI Agents
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    AI Agents
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-an-ai-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is an AI agent?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is an AI agent?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ide-vs-cli-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      IDE vs CLI Diagram
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentic-coding-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agentic Coding Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentic Coding Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-github-copilot-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Github Copilot CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Infrastructure
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directory Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruction-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instruction Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prompt Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skill Format
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-study-the-crypto-watchtower" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study: The Crypto Watchtower
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case Study: The Crypto Watchtower">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Core Concept:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Pipeline Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task Decomposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-of-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow of Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai_tools/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI Tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_optimization/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 2. Optimization
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 2. Optimization
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/convexity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Convexity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/rate_of_convergence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rate of Convergence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/pytorch_basics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PyTorch Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/gradient_descent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gradient Descent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/agd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accelerated Gradient Descent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/sgd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stochastic Gradient Descent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/proximal_gradient_descent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Proximal Gradient Descent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/mirror_descent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mirror Descent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/nesterov_smooth/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nesterov's Smooth Method
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_optimization/duality_and_admm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Duality and ADMM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_neural_networks/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 3. Neural Networks
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 3. Neural Networks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/nn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Neural Networks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/regularization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regularization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/cnn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Convolutional Neural Networks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/resnet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Residual Networks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/fine_tuning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fine-tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/computer_vision/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computer Vision
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/dl_workflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training Workflow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/dl_gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PyTorch for GPU
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/dl_tips/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deep Learning Tips
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_neural_networks/pitfall/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PyTorch Pitfalls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_language_model/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 4. Language Model Architecture
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 4. Language Model Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_language_model/wordvec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Word Vectors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_language_model/attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_language_model/transformer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Transformer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_language_model/hg_transformers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hugging Face
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_llm_ft/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 5. Language Model Training
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 5. Language Model Training
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_llm_ft/ntp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Pretraining
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_llm_ft/sft/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Supervised Fine-Tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_llm_ft/grpo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reinforcement Learning Fine-Tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_llm_ft/dpo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Direct Preference Optimization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_llm_ft/peft/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Efficient Fine-Tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_foundation_model/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 6. Genomic Foundation Models
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 6. Genomic Foundation Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_foundation_model/snp_tokenization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tokenization & Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_foundation_model/snp_training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Model Training
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_foundation_model/snp_finetuning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fine-Tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_foundation_model/snp_advanced_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Advanced Genomic Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_foundation_model/snp_interpretation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Model Interpretation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_image_foundation_model/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 7. Image Foundation Models
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 7. Image Foundation Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_image_foundation_model/vit_basics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vision Transformer (ViT)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_image_foundation_model/vit_pretraining/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ViT Pretraining
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_image_foundation_model/vit_finetuning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ViT Fine-Tuning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_image_foundation_model/multimodal_foundation_models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi-Modal Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_self_supervised_learning/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 8. Self-Supervised Learning
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 8. Self-Supervised Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_self_supervised_learning/encoder_motivation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Self-Supervised Learning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_self_supervised_learning/contrastive_learning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contrastive Learning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_self_supervised_learning/dinov2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Self Distillation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_generative_model/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 9. Generative Models
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 9. Generative Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/langevin_dynamics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Langevin Dynamics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/ddpm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diffusion Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/flow_match/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Matching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/text_to_image.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditional Generation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/stable_diffusion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stable Diffusion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_generative_model/dit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diffusion Transformers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../chapter_reinforcement_learning/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Chapter 10. Reinforcement Learning
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Chapter 10. Reinforcement Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_reinforcement_learning/mdp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Markov Decision Process
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_reinforcement_learning/policy_grad/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Policy Gradient
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter_reinforcement_learning/ppo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Proximal Policy Optimization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-an-ai-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is an AI agent?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is an AI agent?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ide-vs-cli-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      IDE vs CLI Diagram
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentic-coding-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agentic Coding Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agentic Coding Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-github-copilot-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Github Copilot CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Infrastructure
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directory Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruction-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instruction Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prompt Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skill Format
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-study-the-crypto-watchtower" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study: The Crypto Watchtower
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case Study: The Crypto Watchtower">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Core Concept:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Pipeline Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task Decomposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-of-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow of Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  <!-- Tags -->
+
+
+<!-- Actions -->
+<!-- Actions -->
+
+
+  <!-- Edit button -->
+  
+
+  <!-- View button -->
+  
+
+
+<!-- Page content -->
+<h1 id="ai-agent">AI Agent<a class="headerlink" href="#ai-agent" title="Permanent link">&para;</a></h1>
+<h2 id="what-is-an-ai-agent">What is an AI agent?<a class="headerlink" href="#what-is-an-ai-agent" title="Permanent link">&para;</a></h2>
+<p>An <strong>AI agent</strong> is a goal-directed AI system that can do more than chat: it can <strong>plan</strong> a sequence of steps, <strong>use tools</strong> (like the terminal, editor, search, and linters/tests), observe the results, and <strong>adapt</strong> its next actions until the task is completed. In practice, that means you can give higher-level instructions (e.g., “add a feature,” “fix this bug,” “refactor this module”), and the agent can break the work into actions, make concrete changes, and verify them—acting like a collaborative assistant that operates directly on your project rather than only describing what you should do.</p>
+<div class="admonition note">
+<p class="admonition-title">Why we need agents?</p>
+<p>If you ask one prompt to handle grammar, layout, math, and code all at once, it won’t excel at any of them—it quickly exceeds context limits and gives lackluster results. By contrast, specialized agents concentrate on a single focus area and deliver much more thorough, high-quality outcomes.</p>
+</div>
+<h3 id="ide-vs-cli-diagram">IDE vs CLI Diagram<a class="headerlink" href="#ide-vs-cli-diagram" title="Permanent link">&para;</a></h3>
+<p>Command-line-inferface (CLI) coding becomes much more powerful when paired with an AI agent because the CLI is a <strong>programmable interface</strong> to your entire project and toolchain. Instead of giving one-off suggestions, an agent can execute multi-step workflows end-to-end—search the codebase, run scripts, inspect outputs, apply edits, and iterate until the result works—while keeping every action <strong>explicit and reproducible</strong> as commands you can re-run later. This tight loop makes it faster to debug, refactor, and validate changes (e.g., by running tests or linters immediately), and it scales well from small tasks to complex automation because the CLI provides consistent, composable primitives for building and verifying software.</p>
+<p>Modern IDEs can do far more than autocomplete—debugging, refactors, builds, plugins—but a CLI agent shines at end-to-end orchestration.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>IDE Paradigm</th>
+<th>CLI Paradigm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary mode</strong></td>
+<td>Interactive editing (you drive); tools assist inside the IDE</td>
+<td>Delegation (agent drives); tools are invoked via commands</td>
+</tr>
+<tr>
+<td><strong>Automation level</strong></td>
+<td>Usually <strong>single-step</strong> help (edit, navigate, refactor one action at a time)</td>
+<td><strong>Multi-step orchestration</strong> (plan → run → check → fix → repeat)</td>
+</tr>
+<tr>
+<td><strong>Execution</strong></td>
+<td>Runs some tasks, but often you trigger and coordinate them manually</td>
+<td>Directly runs shell commands/scripts; can chain many steps reliably</td>
+</tr>
+<tr>
+<td><strong>Verification loop</strong></td>
+<td>Helpful feedback, but results are often reviewed/assembled by the user</td>
+<td>Built-in “prove it works” loop (tests, lint, logs, diffs, reruns)</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Precise editing, local refactors, debugging in a rich UI</td>
+<td>“Do this outcome end-to-end” (setup, data cleaning pipelines, releases, large changes)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="agentic-coding-tools">Agentic Coding Tools<a class="headerlink" href="#agentic-coding-tools" title="Permanent link">&para;</a></h2>
+<p>Almost all AI coding tools have agentic features now, for both the IDE-based and the terminal-based tools. We list below those that are more popular for their agentic features.</p>
+<ul>
+<li><a href="https://www.anthropic.com/claude-code">Claude Code</a>: One of the best terminal coding tools. Need Claude Pro subscription.</li>
+<li><a href="https://openai.com/codex/">Codex</a>: OpenAI's AI agent for coding.</li>
+<li><a href="https://antigravity.google/">Antigravity</a>: Google's agentic development platform for agents to plan, execute, and verify complex tasks. </li>
+<li><a href="https://github.com/google-gemini/gemini-cli">Gemini CLI</a>: Google's agentic development platform for agents to plan, execute, and verify complex tasks.</li>
+<li><a href="https://cursor.com/product">Cursor Agent</a>: Cursor's agentic development platform for agents to plan, execute, and verify complex tasks.</li>
+<li><a href="https://openclaw.ai/">OpenClaw</a>: OpenClaw is a platform for building and running AI agents to control your entire system instead of a single project.</li>
+</ul>
+<p>In our course, we will use a less popular CLI tool <a href="https://github.com/features/copilot">Github Copilot CLI</a> for terminal coding to be consistent with our previous lectures on AI Copilot (and they are free for students).</p>
+<h3 id="install-github-copilot-cli">Install Github Copilot CLI<a class="headerlink" href="#install-github-copilot-cli" title="Permanent link">&para;</a></h3>
+<p>Follow the instructions <a href="https://github.com/github/copilot-cli?locale=en-US">here</a> to install Github Copilot CLI.</p>
+<p>To install Copilot, 
+on macOS or Linux, install with Homebrew:<br />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>install<span class="w"> </span>copilot-cli
+</code></pre></div></p>
+<p>On Windows, use WinGet:<br />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>winget<span class="w"> </span>install<span class="w"> </span>GitHub.Copilot
+</code></pre></div></p>
+<p>In the terminal, you can run <code>copilot</code> to see this:</p>
+<p><a class="glightbox" href="../agent.assets/copilot_cli.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Github Copilot CLI" src="../agent.assets/copilot_cli.png" /></a></p>
+<p>Here are some commands for you to set up your Copilot CLI. We recommend you to read the official <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-getting-started">tutorial</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\login</td>
+<td>Login to your Github account</td>
+<td>Type: \login</td>
+</tr>
+<tr>
+<td>\logout</td>
+<td>Logout from your Github account</td>
+<td>Type: \logout</td>
+</tr>
+<tr>
+<td>\help</td>
+<td>Get help on using Copilot CLI</td>
+<td>Type: \help what can you do?</td>
+</tr>
+<tr>
+<td>\version</td>
+<td>Get the version of Copilot CLI</td>
+<td>Type: \version</td>
+</tr>
+<tr>
+<td>\config</td>
+<td>Get the configuration of Copilot CLI</td>
+<td>Type: \config</td>
+</tr>
+<tr>
+<td>\set</td>
+<td>Set the configuration of Copilot CLI</td>
+<td>Type: \set <key> <value></td>
+</tr>
+<tr>
+<td>\model</td>
+<td>Set the model of Copilot CLI</td>
+<td>Type: \model <model></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-infrastructure">Agent Infrastructure<a class="headerlink" href="#agent-infrastructure" title="Permanent link">&para;</a></h3>
+<p>An AI agent pipeline architecture consists of three main components, each with a distinct role:</p>
+<ul>
+<li>
+<p><strong>Instructions</strong>: The project-wide conventions. Instructions define project-wide conventions, policies, thresholds, and implementation details for agents and skills.</p>
+</li>
+<li>
+<p><strong>Prompts</strong>: The task runners. Prompts are simple, one-click triggers for executing a single, well-defined task. They are useful for automating repetitive actions.</p>
+</li>
+<li>
+<p><strong>Agents</strong>: The orchestrators. Agents manage complex, multi-step workflows. They can make decisions, use tools (like a terminal or file editor), and coordinate the overall process from start to finish.</p>
+</li>
+<li>
+<p><strong>Skills</strong>: The knowledge base. Skills provide detailed, domain-specific "how-to" documentation. An agent consults these skills to learn how to perform a specific task, such as calling a particular API or using a command-line tool.</p>
+</li>
+</ul>
+<p>This separation of concerns makes the system modular, scalable, and easy to maintain.</p>
+<h4 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h4>
+<p>Different CLI tools may have different requirements on the directory structure, but they are more or less similar. For VS Copilot and Copilot CLI, you can read the official <a href="https://code.visualstudio.com/docs/copilot/customization/overview">tutorial</a> for more details. You can organize your components within a <code>.github/</code> directory in the root of your project:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>.github/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── agent/          # Contains all agent definitions
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   └── data-pipeline.agent.md
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── skills/         # Contains all skill categories
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   └── data-fetch/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│       └── SKILL.md
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>└── prompts/        # Contains all prompt definitions
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    └── fetch-crypto.prompt.md
+</code></pre></div>
+<ul>
+<li><code>.github/agent/</code>: Each file (e.g., <code>data-pipeline.agent.md</code>) defines an agent and its high-level workflow.</li>
+<li><code>.github/skills/</code>: Each sub-directory (e.g., <code>data-fetch/</code>) represents a domain of expertise, containing a <code>SKILL.md</code> file with implementation details.</li>
+<li><code>.github/prompts/</code>: Each file (e.g., <code>fetch-crypto.prompt.md</code>) defines a specific, single-shot task.</li>
+</ul>
+<p>All components are defined in Markdown files with YAML frontmatter, making them easy for both humans and AI to read.</p>
+<h4 id="instruction-files">Instruction Files<a class="headerlink" href="#instruction-files" title="Permanent link">&para;</a></h4>
+<p>Instruction files define project-wide conventions, policies, thresholds, and implementation details for agents and skills.</p>
+<ul>
+<li><strong>Location:</strong><ul>
+<li>Typically at the root as <code>copilot-instructions.md</code></li>
+<li>Specific instructions with the name <code>&lt;instruction-name&gt;.instructions.md</code></li>
+</ul>
+</li>
+<li><strong>YAML Frontmatter:</strong><ul>
+<li>Metadata such as <code>applyTo</code> to scope the rules (e.g., by file/glob).</li>
+</ul>
+</li>
+<li><strong>Markdown Body:</strong><ul>
+<li>Project-wide conventions, policies, thresholds, and reproducible implementation details for agents and skills.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example: <code>copilot-instructions.md</code></strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>applyTo: &quot;**&quot;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gh"># Project-wide Instructions</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">-</span><span class="w"> </span>Use snake_case for Python filenames.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">-</span><span class="w"> </span>Encoding: utf-8 for all file I/O.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">-</span><span class="w"> </span>Volatility filter: |price_change_percentage_24h| &gt; 5%.
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">-</span><span class="w"> </span>Outputs: crypto_raw.json, volatile_movers.json, volatility_report.json, daily_brief.txt, market_chart.png, index.html.
+</code></pre></div>
+<strong>Example: <code>doc.instructions.md</code></strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>applyTo: &quot;docs/**/*.md&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="gh"># Documentation Standards</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">-</span><span class="w"> </span>Use sentence case for headings unless a proper noun is required.
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">-</span><span class="w"> </span>All code blocks must specify the language for syntax highlighting.
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">-</span><span class="w"> </span>Prefer active voice and concise sentences.
+</code></pre></div></p>
+<p><strong>Best Practices:</strong>
+- Keep instructions concise, clear, and definitive.
+- Use <code>applyTo</code> to limit rules' scope when appropriate.
+- Focus on policy and conventions that can be enacted or verified automatically—avoid including ad hoc commands.</p>
+<h4 id="prompt-files">Prompt Files<a class="headerlink" href="#prompt-files" title="Permanent link">&para;</a></h4>
+<p>Prompt files define specific, one-click tasks for agents to execute.</p>
+<ul>
+<li><strong>Location:</strong><ul>
+<li><code>.github/prompts/&lt;action&gt;.prompt.md</code></li>
+</ul>
+</li>
+<li><strong>YAML Frontmatter:</strong><ul>
+<li><code>mode</code>: <code>agent</code> (for workflow triggers) or <code>manual</code></li>
+<li><code>description</code>: brief summary of the prompt's purpose</li>
+<li><code>tools</code>: which tools to use, e.g., <code>terminalLastCommand</code>, <code>editFiles</code>, <code>codebase</code></li>
+</ul>
+</li>
+<li><strong>Markdown Body:</strong><ul>
+<li>Bulletproof, step-by-step workflow.</li>
+<li>Required input(s), specific commands/script invocations, and validation/checks (exit codes, file presence, minimal sanity checks).</li>
+</ul>
+</li>
+</ul>
+<p>The header is formatted as YAML frontmatter with the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>description</td>
+<td>A short description of the prompt.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the prompt, used after typing / in chat. If not specified, the file name is used.</td>
+</tr>
+<tr>
+<td>argument-hint</td>
+<td>Optional hint text shown in the chat input field to guide users on how to interact with the prompt.</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>The agent used for running the prompt: ask, edit, agent, or the name of a custom agent. By default, the current agent is used. If tools are specified and the current agent is ask or edit, the default agent is agent.</td>
+</tr>
+<tr>
+<td>model</td>
+<td>The language model used when running the prompt. If not specified, the currently selected model in model picker is used.</td>
+</tr>
+<tr>
+<td>tools</td>
+<td>A list of tool or tool set names that are available for this prompt. Can include built-in tools, tool sets, MCP tools, or tools contributed by extensions. To include all tools of an MCP server, use the <server name>/* format.</td>
+</tr>
+<tr>
+<td></td>
+<td>Learn more about tools in chat.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example: <code>fetch-crypto.prompt.md</code></strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mode: agent
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>description: Fetch the top 50 cryptocurrencies from the CoinGecko API.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>tools: [terminalLastCommand]
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="gh"># Fetch Crypto Data</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">1.</span> Use <span class="sb">`curl`</span> to fetch the current top 50 cryptocurrencies by market cap from the CoinGecko API.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">2.</span> Verify the output file <span class="sb">`crypto_raw.json`</span> exists and is not empty.
+</code></pre></div></p>
+<h4 id="agent-format">Agent Format<a class="headerlink" href="#agent-format" title="Permanent link">&para;</a></h4>
+<p>An agent file defines the high-level plan.
+The agent file is a markdown file with YAML frontmatter and a markdown body. The file name is <code>&lt;name&gt;.agent.md</code>.</p>
+<ul>
+<li><strong>YAML Frontmatter</strong>: <code>name</code>, <code>description</code>, and <code>tools</code> the agent can use.</li>
+<li><strong>Markdown Body</strong>: A step-by-step description of the workflow the agent should orchestrate.</li>
+</ul>
+<p><strong>Example: <code>data-pipeline.agent.md</code></strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>name: Data Pipeline Agent
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>description: Orchestrates the entire crypto data pipeline.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>tools: [terminalLastCommand, editFiles, codebase]
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>model: [&#39;Claude Opus 4.5&#39;, &#39;GPT-4o&#39;]
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="gh"># Crypto Data Pipeline Workflow</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">1.</span>  <span class="gs">**Fetch Data**</span>: Use the <span class="sb">`data-fetch`</span> skill to get the top 50 coins from the CoinGecko API and save to <span class="sb">`crypto_raw.json`</span>.
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">2.</span>  <span class="gs">**Filter Data**</span>: Use the <span class="sb">`data-analysis`</span> skill with <span class="sb">`jq`</span> to filter for volatile movers and save to <span class="sb">`volatile_movers.json`</span>.
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">3.</span>  <span class="gs">**Analyze Data**</span>: Use the <span class="sb">`data-analysis`</span> skill with Python to generate a <span class="sb">`volatility_report.json`</span> and a <span class="sb">`daily_brief.txt`</span>.
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">4.</span>  <span class="gs">**Visualize Data**</span>: Use the <span class="sb">`data-viz`</span> skill to create <span class="sb">`market_chart.png`</span>.
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">5.</span>  <span class="gs">**Publish**</span>: Use the <span class="sb">`github-pages`</span> and <span class="sb">`github-deploy`</span> skills to build and deploy <span class="sb">`index.html`</span>.
+</code></pre></div></p>
+<h4 id="skill-format">Skill Format<a class="headerlink" href="#skill-format" title="Permanent link">&para;</a></h4>
+<p>A skill file provides the "how-to" knowledge.
+The skill file is a markdown file with YAML frontmatter and a markdown body. The file name is <code>&lt;skill-name&gt;/SKILL.md</code>.</p>
+<ul>
+<li><strong>YAML Frontmatter</strong>: <code>name</code> and <code>description</code> of the skill.</li>
+<li><strong>Markdown Body</strong>: Detailed instructions, code snippets, and best practices for a specific domain.</li>
+</ul>
+<p>In practice, a <code>&lt;skill-name&gt;/</code> folder can contain more than just <code>SKILL.md</code>. These extra files help the agent <strong>execute</strong> the skill reliably and help humans <strong>maintain</strong> it over time:</p>
+<ul>
+<li><strong>Scripts</strong> (e.g., <code>run.sh</code>, <code>fetch.py</code>, <code>transform.R</code>): reusable “known-good” implementations the agent can run instead of re-creating commands every time.</li>
+<li><strong>Templates</strong> (e.g., <code>template.ipynb</code>, <code>report.md.tmpl</code>, <code>config.yaml.tmpl</code>): scaffolding the agent can copy/modify to produce consistent outputs.</li>
+<li><strong>Example inputs/outputs</strong> (e.g., <code>examples/</code>, small <code>sample.json</code>): concrete references for expected formats, useful for prompting and debugging.</li>
+<li><strong>Validation fixtures</strong> (e.g., <code>tests/</code>, <code>expected/</code>): lightweight checks (golden files, unit tests, sanity checks) so the agent can verify it did the right thing.</li>
+<li><strong>Dependency notes</strong> (e.g., <code>requirements.txt</code>, <code>environment.yml</code>, <code>Dockerfile</code>): pinning tools/packages needed for reproducible execution.</li>
+<li><strong>Prompts / guidelines</strong> (e.g., <code>PROMPT.md</code>, <code>CONVENTIONS.md</code>): house rules for style, edge cases, and safety constraints specific to that skill.</li>
+</ul>
+<p><strong>Example: <code>data-fetch/SKILL.md</code></strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>name: Data Fetching
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>description: How to fetch data from the CoinGecko API.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="gu">## Fetching Market Data with `curl`</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>To get the top 50 cryptocurrencies, use the following <span class="sb">`curl`</span> command.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="gs">**Validation:**</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">-</span><span class="w"> </span>The command should exit with status 0.
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">-</span><span class="w"> </span>The output file <span class="sb">`crypto_raw.json`</span> should contain a JSON array of 50 objects.
+</code></pre></div></p>
+<h2 id="case-study-the-crypto-watchtower">Case Study: The Crypto Watchtower<a class="headerlink" href="#case-study-the-crypto-watchtower" title="Permanent link">&para;</a></h2>
+<p>Let's see how these components work together in our crypto watchtower pipeline. The goal is to build a system that wakes up, fetches real-time cryptocurrency data from the <a href="https://www.coingecko.com/">CoinGecko API</a>, detects "Whale" movements (high volatility), generates a visual market report, and deploys a live dashboard to GitHub Pages—all without writing manual code.</p>
+<h4 id="the-core-concept">The Core Concept:<a class="headerlink" href="#the-core-concept" title="Permanent link">&para;</a></h4>
+<p>Agents (Orchestrators): High-level managers that define what needs to be done.</p>
+<p>Skills (Domain Modules): Specific technical instructions that define how to do it.</p>
+<h4 id="the-pipeline-architecture">The Pipeline Architecture<a class="headerlink" href="#the-pipeline-architecture" title="Permanent link">&para;</a></h4>
+<p><strong>Tip:</strong> You should always start with brainstorming with AI to design a prompt on how to design the agents, skills, and their interactions. Most of the markdown files could be generated by AI. In Copilot CLI, you can use the <code>\plan</code> command to get to the plan mode and ask AI to design the agents, skills, and their interactions.</p>
+<p>The data flows through our system in three distinct stages:</p>
+<ul>
+<li>
+<p><strong>Ingest</strong>: Fetch raw data -&gt; Filter for volatility.</p>
+</li>
+<li>
+<p><strong>Analyze</strong>: Calculate stats -&gt; Generate charts.</p>
+</li>
+<li>
+<p><strong>Publish</strong>: Build HTML -&gt; Deploy to the Web.</p>
+</li>
+</ul>
+<p><strong>Key Thresholds:</strong></p>
+<ul>
+<li>
+<p><strong>Volatility Filter</strong>: Any coin moving &gt; 5% (up or down) in 24h.</p>
+</li>
+<li>
+<p><strong>Whale Alert</strong>: Any coin dropping &gt; 10% triggers an ASCII warning.</p>
+</li>
+</ul>
+<h3 id="task-decomposition">Task Decomposition<a class="headerlink" href="#task-decomposition" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../agent.assets/agent_workflow.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Flow of Control" src="../agent.assets/agent_workflow.png" /></a></p>
+<p>Decomposing the System
+To build this complex system, we break it down into 3 Agents and 6 Skills.</p>
+<p><strong>Agents:</strong></p>
+<p>These are markdown files that contain the "Mission Objectives." They don't know the syntax of every tool, but they know which Skills to call.</p>
+<table>
+<thead>
+<tr>
+<th>Agent Name</th>
+<th>File</th>
+<th>Mission</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data Pipeline</td>
+<td>data-pipeline.agent.md</td>
+<td>Fetch raw data, clean it, and compute statistics.</td>
+</tr>
+<tr>
+<td>Code Quality</td>
+<td>code-quality.agent.md</td>
+<td>Review generated scripts for errors and fix them.</td>
+</tr>
+<tr>
+<td>Publisher</td>
+<td>publisher.agent.md</td>
+<td>Create charts, build the website, and ship it.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Skills:</strong></p>
+<p>These are folders containing specific prompt context or scripts that the Agents use to execute tasks.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Skill</th>
+<th>Purpose</th>
+<th>Key Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data Pipeline</td>
+<td>data-fetch/</td>
+<td>Knowing how to query CoinGecko correctly.</td>
+<td>curl, API params</td>
+</tr>
+<tr>
+<td>Data Pipeline</td>
+<td>data-analysis/</td>
+<td>Filtering and computing stats.</td>
+<td>jq, pandas</td>
+</tr>
+<tr>
+<td>Data Pipeline</td>
+<td>data-viz/</td>
+<td>Creating beautiful charts.</td>
+<td>matplotlib</td>
+</tr>
+<tr>
+<td>Code Quality</td>
+<td>code-review/</td>
+<td>Ensuring safety and best practices.</td>
+<td>linting</td>
+</tr>
+<tr>
+<td>Publish</td>
+<td>github-pages/</td>
+<td>Building the frontend dashboard.</td>
+<td>html, css</td>
+</tr>
+<tr>
+<td>Publish</td>
+<td>github-deploy/</td>
+<td>Handling git operations.</td>
+<td>git</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flow-of-control">Flow of Control<a class="headerlink" href="#flow-of-control" title="Permanent link">&para;</a></h3>
+<p>The flow of control is as follows:</p>
+<ol>
+<li><strong>Trigger</strong>: The process starts by invoking the <strong>Data Pipeline Agent</strong>.</li>
+<li><strong>Orchestration</strong>: The agent reads its instructions in <code>data-pipeline.agent.md</code>. The first step is "Fetch Data".</li>
+<li><strong>Skill Consultation</strong>: To figure out <em>how</em> to fetch the data, the agent consults its knowledge base. It looks for the <strong><code>data-fetch</code> skill</strong> and finds the <code>curl</code> command in its <code>SKILL.md</code> file.</li>
+<li><strong>Execution</strong>: The agent uses its <code>terminal</code> tool to execute the <code>curl</code> command it just learned. The raw data is saved to <code>crypto_raw.json</code>.</li>
+<li><strong>Iteration</strong>: The agent proceeds to the next step, "Filter Data". It consults the <strong><code>data-analysis</code> skill</strong> to learn the correct <code>jq</code> command, executes it, and creates <code>volatile_movers.json</code>.</li>
+<li><strong>Completion</strong>: This process repeats for all subsequent steps—analysis, visualization, and deployment. The agent acts as a project manager, consulting different skill experts at each stage to get the job done.</li>
+</ol>
+<p>Here is the complete directory structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>.github/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├─ agent/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│  ├─ code-quality.agent.md
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│  ├─ data-pipeline.agent.md
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│  └─ publisher.agent.md
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>├─ skills/
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│  ├─ code-review/
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│  │  └─ SKILL.md
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│  ├─ code-revise/
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│  │  └─ SKILL.md
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│  ├─ data-analysis/
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│  │  ├─ SKILL.md
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│  │  └─ scripts/
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│  │     └─ analyze_volatility.py
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│  ├─ data-fetch/
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│  │  ├─ SKILL.md
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│  │  └─ scripts/
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│  │     └─ fetch_top50.sh
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│  ├─ data-viz/
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│  │  ├─ SKILL.md
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│  │  └─ scripts/
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│  │     └─ generate_chart.py
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│  ├─ github-action/
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│  │  └─ SKILL.md
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>│  ├─ github-deploy/
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>│  │  └─ SKILL.md
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>│  └─ github-pages/
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>│     └─ SKILL.md
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>├─ prompts/
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>│  ├─ fetch-crypto.prompt.md
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>│  ├─ filter-volatile.prompt.md
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>│  ├─ generate-chart.prompt.md
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>│  ├─ build-dashboard.prompt.md
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>│  ├─ deploy-pages.prompt.md
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>│  └─ run-pipeline.prompt.md
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>└─ copilot-instructions.md
+</code></pre></div>
+
+<!-- Source file information -->
+
+
+<!-- Was this page helpful? -->
+
+
+
+
+<!-- Previous and next pages link -->
+<nav
+class="md-footer__inner md-grid"
+aria-label="Footer"
+
+>
+
+<!-- Link to previous page -->
+
+  
+  <a
+    href="../prompt_engineering/"
+    class="md-footer__link md-footer__link--prev"
+    aria-label="Previous: Prompt Engineering"
+    rel="prev"
+  >
+    <div class="md-footer__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+    </div>
+    <div class="md-footer__title">
+      <span class="md-footer__direction">
+        Previous
+      </span>
+      <div class="md-ellipsis">
+        Prompt Engineering
+      </div>
+    </div>
+  </a>
+
+
+<!-- Link to next page -->
+
+  
+  <a
+    href="../ai_tools/"
+    class="md-footer__link md-footer__link--next"
+    aria-label="Next: AI Tools"
+    rel="next"
+  >
+    <div class="md-footer__title">
+      <span class="md-footer__direction">
+        Next
+      </span>
+      <div class="md-ellipsis">
+        AI Tools
+      </div>
+    </div>
+    <div class="md-footer__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+    </div>
+  </a>
+
+</nav>
+
+<!-- Comment system -->
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../prompt_engineering/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Prompt Engineering">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Prompt Engineering
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ai_tools/" class="md-footer__link md-footer__link--next" aria-label="Next: AI Tools">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                AI Tools
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Junwei Lu, Department of Biostatistics, Harvard T.H. Chan School of Public Health.
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/junwei-lu/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://junwei-lu.github.io/" target="_blank" rel="noopener" title="junwei-lu.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6m80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3l89.3 89.4-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tabs.link", "content.tooltips", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      
+    
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "none"});})</script></body>
+</html>
