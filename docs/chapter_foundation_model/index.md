@@ -4,7 +4,7 @@
 
 This chapter explores the concept of **Foundation Models**—large-scale models trained on vast amounts of data that can be adapted to a wide range of downstream tasks. We will use the SNP as the example to show you how to build transformer-based foundation models beyond natural language.
 
-
+![Cover](./assets/Gene_model.gif)
 
 *   **[SNP Tokenization & Architecture](snp_tokenization.md)**: How to tokenize DNA (K-mers) and why Encoder-only architectures are preferred.
 *   **[SNP Model Training](snp_training.md)**: Pretraining objectives (Masked Language Modeling) and downstream tasks (eQTL prediction).

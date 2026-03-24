@@ -5,6 +5,7 @@
 This chapter covers fine-tuning large language models (LLMs) built on the Transformer architecture. We start from the mathematical foundations of how LLMs are trained and progress through parameter-efficient adaptation and reinforcement-learning-based fine-tuning.
 
 
+![Cover](./ft.assets/llm_train.gif)
 
 ## Lectures
 

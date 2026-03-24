@@ -4,7 +4,7 @@
 
 Neural networks are a type of machine learning model that are inspired by the structure of the human brain. They are a type of deep learning model that are used to model complex relationships between input and output variables.
 
-![cover](./nn.assets/dance_relu.png)
+![cover](./nn.assets/nn.gif)
 
 
 
