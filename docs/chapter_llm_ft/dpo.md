@@ -1,5 +1,7 @@
 # Direct Preference Optimization
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec6_dpo" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 This lecture introduces **Direct Preference Optimization (DPO)**, a stable and efficient method to align Large Language Models (LLMs) with human preferences. Unlike traditional Reinforcement Learning from Human Feedback (RLHF), DPO does not require training a separate reward model or using complex RL algorithms like PPO.
 
 The main motivation is practical: in many domains, **pairwise preference is easier to collect than absolute grading**. A clinician may find it hard to assign a precise score to a response on a 1-10 scale, but it is often easy to say **response A is safer than response B**. Likewise, for summarization or bedside advice, comparing two answers is often easier than writing the perfect answer from scratch.

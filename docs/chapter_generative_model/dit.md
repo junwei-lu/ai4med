@@ -1,5 +1,7 @@
 # Diffusion Transformers (DiT): A Beginner-Friendly Math-to-Code Tutorial
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb#scrollTo=x6mbvxmx6i" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 DiT is one of those ideas that feels obvious only after you see it:
 
 > If diffusion models are so strong, and Transformers are so strong, why not use a Transformer as the diffusion backbone?

@@ -1,5 +1,7 @@
 # Langevin Dynamics
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb#scrollTo=x6mbvxmx6i" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Our goal is to sample from a target distribution 
 
 $$
@@ -424,7 +426,6 @@ Selecting an appropriate step size $\epsilon$ is crucial and presents similar ch
 
 
 One way to have a robust way to sample using Langevin dynamics insensitive to the choice of step size $\epsilon$ is to use the **Metropolis-adjusted Langevin algorithm** (MALA). We will not go into the details of MALA here. You can refer to the [paper](https://projecteuclid.org/journals/bernoulli/volume-2/issue-4/Exponential-convergence-of-Langevin-distributions-and-their-discrete-approximations/bj/1178291835.full) for more details.
-
 
 
 

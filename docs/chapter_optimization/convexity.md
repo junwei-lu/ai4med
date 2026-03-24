@@ -1,5 +1,7 @@
 # Convex Optimization
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/opt/chapter08_optimization.ipynb#scrollTo=303b67e9a038" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 ## Convex Problems
 
 Many statistical estimators can be formulated as optimization problems. A classic example is the Lasso estimator:

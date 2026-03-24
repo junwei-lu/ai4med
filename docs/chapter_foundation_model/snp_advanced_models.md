@@ -1,5 +1,7 @@
 # Advanced Genomic Models
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/snp/snp_genomics_workshop.ipynb#scrollTo=Qp3nRb7sTt4K" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 While standard Transformers (like BERT) are powerful, they have limitations when applied to the vast scale of the genome and the complexity of single-cell data.
 
 In this lecture we introduce **two advanced model directions** that go beyond a basic SNP encoder:

@@ -1,5 +1,7 @@
 # Residual Networks 
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=Qwv5Zm3iOrlf" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 
 As neural networks grew deeper, researchers encountered a counterintuitive problem: adding more layers to a deep network led to higher training error, not just higher testing error. This phenomenon, known as the **degradation problem**, could not be explained by overfitting alone.
@@ -161,4 +163,3 @@ class ResNet18(nn.Module):
         x = self.fc(x)
         return x
 ```
-

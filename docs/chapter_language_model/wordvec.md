@@ -1,5 +1,7 @@
 # Word Vectors
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec2_tok_embed" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Word vectors, also known as word embeddings, are dense vector representations of words. As computer programs can only understand numbers, we need to convert the words into numbers. 
 
 The simplest way to represent words as vectors is to use **one-hot vectors** (means one 1, the rest 0s):
@@ -290,8 +292,6 @@ print(position_embeddings_output.shape) # [batch_size, seq_length, embedding_dim
 word_embeddings = model.get_input_embeddings()(input_ids) 
 input_embeddings = word_embeddings + position_embeddings_output # Model_Input = X + P
 ```
-
-
 
 
 

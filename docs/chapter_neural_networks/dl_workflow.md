@@ -1,5 +1,7 @@
 # Deep Learning Training Workflow
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=7JB5JL6vOrlf" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 ## Training Template
 
@@ -244,7 +246,6 @@ logger.add_hparams(hparam_dict, metric_dict)
 This is super useful for comparing different configurations and you can use it to tune the hyperparameters for the best performance logged in `metric_dict`.
 
 ![tb_hparams](./nn.assets/tb_hparam.png)
-
 
 
 

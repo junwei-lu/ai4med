@@ -1,5 +1,7 @@
 # ViT Basics: Patches, Tokens, and Encoders
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/vit/vit_multimodal_cxr_workshop.ipynb#scrollTo=57199061" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 For a long time, computer vision was dominated by **convolutional neural networks (CNNs)**. CNNs were designed with images in mind: they look at local neighborhoods, share filters across space, and gradually build up larger receptive fields.
 

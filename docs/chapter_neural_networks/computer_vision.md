@@ -1,5 +1,7 @@
 # Computer Vision
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=XN0ZhYO_Orle" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 
 Computer vision applications such as medical imaging, autonomous vehicles, surveillance systems, and photo filters have become increasingly integrated into our daily lives and will continue to shape our future. Deep learning has revolutionized this field, dramatically improving the capabilities of computer vision systems. Today's cutting-edge computer vision technologies rely almost exclusively on deep learning approaches. This lecture explores the computer vision domain, examining basic pipelines for image classification.
@@ -137,7 +139,6 @@ Every batch the `trainloader` will apply different augmentations to the images t
 <!-- ## Feature Extraction
 
 We will use TinyVGG model to illustrate how to output the features from the middle layers of the model. -->
-
 
 
 

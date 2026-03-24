@@ -1,5 +1,7 @@
 # Reinforcement Learning Fine-Tuning with GRPO
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec7_grpo" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Group Relative Policy Optimization (GRPO) fine-tunes LLMs via reinforcement learning without a separate value model. For each prompt, the policy samples multiple completions, receives rewards, and updates toward higher-reward behaviors.
 
 Why use RL at all after SFT? Because **high-quality target answers are expensive**, but **reward signals are often cheaper**. For example, solving a math problem step by step may require an expert-written solution, yet checking whether the final numeric answer is correct is easy. Likewise, in biomedical tasks, it may be expensive to author ideal long-form responses, but relatively cheap to verify whether the answer format is valid, the units are correct, or the predicted label matches the gold label.

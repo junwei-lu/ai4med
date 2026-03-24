@@ -1,5 +1,7 @@
 # PyTorch Pitfalls
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=bgauA0o0Orlf" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 This section serves as a collection of common pitfalls and best practices when using PyTorch. You may not encounter all of them, but it's still useful to know what to look out for.
 
 
@@ -343,4 +345,3 @@ Pytorch supports broadcasting, which means that it will automatically expand ten
   ```
 
   *Solution:* In your `forward` method, make sure to squeeze the output of the model to match the target shape.
-

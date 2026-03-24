@@ -1,5 +1,7 @@
 # Multimodal Foundation models
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/vit/vit_multimodal_cxr_workshop.ipynb#scrollTo=48df8023" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 The previous tutorials introduced ViT as a way to treat images like sequences. The natural next question is: what happens when we want a single model that handles **both** images and text in the same sequence?
 
 This is the goal of **multimodal foundation models**. Instead of building separate systems for each modality and bolting them together, these models learn a unified representation over interleaved text and image content from the start.

@@ -1,5 +1,7 @@
 # Model Interpretation in Genomics
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/snp/snp_genomics_workshop.ipynb#scrollTo=Yw8cNd5uVe1M" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 A major challenge with "Black Box" foundation models is trust. If a model predicts a SNP is pathogenic, a biologist needs to know *why*.
 
 ## Saliency Maps

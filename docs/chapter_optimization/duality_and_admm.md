@@ -1,5 +1,8 @@
 # Duality and ADMM
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/opt/chapter08_optimization.ipynb#scrollTo=1912f3b247ad" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
+
 ## Composite Objective Function
 
 We have introduced proximal gradient descent to solve optimization problems of the form $\min_x f(x) + g(x)$, where $f$ is smooth but $g$ is not differentiable. A key step in proximal gradient descent is solving the proximal operator:

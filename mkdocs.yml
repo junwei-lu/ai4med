@@ -1,5 +1,5 @@
 # Project information
-site_name: AI4Med
+site_name: Generative AI for Biomedical Research
 site_url: https://junwei-lu.github.io/ai4med/
 site_description: "AI4Med"
 docs_dir: docs
@@ -42,22 +42,22 @@ theme:
     # - toc.integrate
   palette:
     - scheme: default
-      primary: white
-      accent: teal
+      primary: blue
+      accent: blue
       toggle:
         icon: material/theme-light-dark
         name: Light mode
     - scheme: slate
-      primary: black
-      accent: teal
+      primary: blue
+      accent: blue
       toggle:
         icon: material/theme-light-dark
         name: Light mode
   font:
     text: Noto Sans SC
     code: Fira Code
-  favicon: assets/images/favicon-stat.png
-  logo: assets/images/stat-logo.svg
+  favicon: assets/images/logo.png
+  logo: assets/images/logo.png
   icon:
     logo: logo
     repo: fontawesome/brands/github

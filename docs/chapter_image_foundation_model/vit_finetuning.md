@@ -1,5 +1,7 @@
 # Fine-Tuning ViT in Practice
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/vit/vit_multimodal_cxr_workshop.ipynb#scrollTo=e5ee976c" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 ## The Typical Workflow
 
 Once a ViT encoder is pretrained, adapting it to a new task is usually straightforward:

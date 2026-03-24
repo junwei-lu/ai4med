@@ -6,9 +6,8 @@ RUN pip install mkdocs-material==9.5.5 mkdocs-glightbox
 
 WORKDIR /ai4med
 
-COPY overrides ./build/overrides
-
-COPY docs ./build/docs
+COPY overrides ./overrides
+COPY docs ./docs
 COPY mkdocs.yml mkdocs.yml
 RUN mkdocs build -f mkdocs.yml
 

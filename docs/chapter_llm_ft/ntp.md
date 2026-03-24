@@ -1,5 +1,7 @@
 # Next-Token Prediction
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec4_ntp" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Before fine-tuning, it is essential to understand what a language model actually learns during pre-training. The core objective is **next-token prediction (NTP)**: given a sequence of tokens, predict the next one. Everything from GPT-2 to Llama 3 is trained with this single principle.
 
 
@@ -388,5 +390,3 @@ The saved model can later serve as the starting point for [supervised fine-tunin
 - Vaswani et al., [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 - Radford et al., [Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
 - Devlin et al., [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
-
-

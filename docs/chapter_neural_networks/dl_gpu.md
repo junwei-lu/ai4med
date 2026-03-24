@@ -1,5 +1,7 @@
 # Deep Learning with GPU
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=7JB5JL6vOrlf" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Training deep learning models can be computationally intensive. Leveraging Graphics Processing Units (GPUs) can significantly accelerate this process. This guide introduces the basics of GPU usage in PyTorch, including the differences between CPUs and GPUs, how to move data and models between devices, and strategies for multi-GPU training.
 
 ## CPU versus GPU
@@ -447,7 +449,6 @@ This approach significantly speeds up training, but requires **fixed input dimen
 | Multi-GPU  | Use `torchrun --nproc_per_node=NUM_GPUs` | Launches one process per GPU |
 | | Wrap model in `DistributedDataParallel` | Enables gradient sync between GPUs |
 | Monitoring | `nvidia-smi` / `wandb` / `tensorboard` | Monitor GPU usage, memory, and training speed |
-
 
 
 

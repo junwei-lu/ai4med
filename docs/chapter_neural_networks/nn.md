@@ -1,5 +1,7 @@
 # Neural Networks
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=EGdt11gcOrlc" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 ## Linear Classifier
 
 Given the input $\mathbf{X} = (X_1, X_2, \ldots, X_d)$, a linear model with multiple outcomes $\mathbf{O} = (O_1, O_2, \ldots, O_m)$ is given by:

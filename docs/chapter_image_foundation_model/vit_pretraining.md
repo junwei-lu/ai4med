@@ -1,5 +1,7 @@
 # Pretraining Image Foundation Models
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/vit/vit_multimodal_cxr_workshop.ipynb#scrollTo=fff0bc8b" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 ## Why Pretraining Matters So Much
 
 A randomly initialized ViT usually does **not** outperform a well-tuned CNN on modest datasets. The magic happens when we first expose the model to a very large number of images and only later adapt it to a specific task.

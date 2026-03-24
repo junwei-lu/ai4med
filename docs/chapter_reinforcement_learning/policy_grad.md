@@ -1,5 +1,7 @@
 # Policy Gradient
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/rl/reinforcement_learning_tutorial.ipynb#scrollTo=rl_part2_pg" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 In reinforcement learning, our goal is to find a policy $\pi_{\theta}$ that maximizes the expected total reward over time. We can express this mathematically as:
 
 $$
@@ -311,8 +313,6 @@ for epoch in range(num_epochs):
     loss.backward()
     optimizer.step()
 ```
-
-
 
 
 

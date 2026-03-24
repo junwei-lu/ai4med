@@ -1,5 +1,7 @@
 # Flow Matching
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb#scrollTo=a4lgkoqxi5s" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 In the diffusion model, the forward process adding noise to the data distribution as
 
 $$
@@ -259,7 +261,6 @@ u_{t|1}(x|x_1) = -\frac{T'(1-t)}{2} \left[ \frac{e^{-T(1-t)}x - e^{-\frac{1}{2}T
 $$
 
 Mathematically, this is equivalent to the DDPM. However, it has been shown that the flow matching approach is more stable and efficient.
-
 
 
 

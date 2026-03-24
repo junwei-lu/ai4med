@@ -1,5 +1,7 @@
 # Parameter-Efficient Fine-Tuning (PEFT)
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec9_peft" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Large Language Models (LLMs) are expensive to fine-tune end-to-end. Parameter-Efficient Fine-Tuning (PEFT) adapts a pre-trained model by training a small number of additional parameters while keeping the original weights frozen. This lecture focuses on two beginner-friendly PEFT techniques widely used in practice:
 
 - LoRA (Low-Rank Adaptation)

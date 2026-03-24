@@ -1,5 +1,7 @@
 # Proximal Policy Optimization
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/rl/reinforcement_learning_tutorial.ipynb#scrollTo=rl_part4_ppo" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Proximal Policy Optimization (PPO) addresses a fundamental challenge in reinforcement learning: how can we maximize policy improvement using our current data while preventing catastrophic performance degradation from overly aggressive updates?
 
 Unlike vanilla policy gradient methods that maintain proximity between policies in parameter space, PPO recognizes that small parameter changes can sometimes lead to dramatic performance differences. This sensitivity makes large step sizes risky in traditional policy gradient approaches, limiting their sample efficiency. PPO introduces mechanisms to prevent harmful policy updates, allowing for larger improvement steps while maintaining stability, which typically results in faster and more reliable performance gains. In summary, we have the following two main ideas:
@@ -160,4 +162,3 @@ except KeyboardInterrupt:
 # Load best model
 model = PPO.load("logs/best_model.zip")
 ```
-

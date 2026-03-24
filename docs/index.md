@@ -1,8 +1,8 @@
-# AI4Med
+# Generative AI for Biomedical Research
 
 ![Turing](./assets/covers/chapter_welcome_banana.png)
 
-Welcome to AI4Med! I am delighted to have you in the course.
+Welcome to the course on Generative AI for Biomedical Research! I am delighted to have you in the course.
 
 AI is rapidly transforming how we study biology, deliver healthcare, and develop biomedical technologies. From analyzing high-dimensional genomic data to interpreting medical images, building predictive models, and working with large language models, modern biomedical research increasingly depends on computational and AI-driven approaches. This course is designed to give you a practical, accessible, and exciting introduction to that world.
 

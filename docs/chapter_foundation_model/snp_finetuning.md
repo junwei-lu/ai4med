@@ -1,5 +1,7 @@
 # Fine-Tuning for SNP Prediction
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/snp/snp_genomics_workshop.ipynb#scrollTo=Hk9vM2qPzL8r" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 Pretraining teaches a genomic foundation model the general grammar of DNA. **Fine-tuning** is the next step: we adapt that pretrained model to a specific **downstream task** with labeled data.
 

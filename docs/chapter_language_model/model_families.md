@@ -1,5 +1,7 @@
 # Encoder-only, Decoder-only, and Encoder-Decoder Models
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec3_tiny_gpt" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 When people say "Transformer model", they often mean one of three related model families:
 
 - **Encoder-only** models such as BERT

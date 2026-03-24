@@ -1,6 +1,8 @@
 
 # Fine-tuning
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=Pd94D7NfOrlg" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 Fine-tuning is a powerful technique in computer vision where a pre-trained model (typically trained on a large dataset like ImageNet) is adapted to a new, often smaller dataset. Instead of training a model from scratch, fine-tuning leverages the knowledge already captured in the pre-trained model's weights. This approach is particularly effective when you have limited training data. The process typically involves freezing the early layers of the network (which capture generic features like edges and textures) while retraining the later layers (which capture more task-specific features). Fine-tuning generally requires less computational resources and training time compared to training from scratch, and often results in better performance, especially for datasets similar to the one used for pre-training.
 

@@ -1,5 +1,7 @@
 # Regularization of Neural Networks
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nn/neural_networks_tutorial.ipynb#scrollTo=dKT7j2BLOrld" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Regularization techniques help prevent overfitting in neural networks by constraining the model's complexity, enabling better generalization to unseen data. This lecture examines several key regularization methods used in modern neural networks.
 
 ## Overfitting
@@ -158,4 +160,3 @@ class MyModel(nn.Module):
 ```
 
 Batch normalization is typically applied before the activation function, though some research suggests applying it after the activation can be beneficial in certain cases.
-

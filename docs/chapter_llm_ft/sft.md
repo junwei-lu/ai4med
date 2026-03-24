@@ -1,5 +1,7 @@
 # Supervised Fine-Tuning
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/nlp/llm_model2pretrain2ft.ipynb#scrollTo=nlp_sec5_sft" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 This lecture covers the topic on supervised fine-tuning (SFT) through a minimal, reliable workflow to fine-tune an open LLM using Hugging Face tools.
 
 You will learn to:
@@ -421,4 +423,3 @@ print(generate(f"You are a clinical calculator assistant.\n\n{user_q}"))
 - Ouyang et al., [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
 - Hugging Face, [TRL documentation](https://huggingface.co/docs/trl/index)
 - Hugging Face, [Chat templates](https://huggingface.co/docs/transformers/chat_templating)
-

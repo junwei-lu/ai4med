@@ -1,5 +1,7 @@
 # Conditional Generation
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/stable_diffusion_pokemon.ipynb#scrollTo=e0fe5e16" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 
 ## Contextual DDPM
 

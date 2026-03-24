@@ -1,5 +1,7 @@
 # Markov Decision Process
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/rl/reinforcement_learning_tutorial.ipynb#scrollTo=rl_part1_mdp" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 Reinforcement learning (RL) provides a computational approach for agents to learn optimal behaviors through interactions with their environment, aiming to maximize cumulative rewards. 
 The Markov Decision Process (MDP) offers a formal mathematical structure to represent and analyze reinforcement learning scenarios.
 
@@ -275,6 +277,4 @@ You can even estimate the optimal $Q^*$ function by temporal difference.
 $$
 \mathcal{L}_{\text{TD}}(\psi) = \sum_{t=0}^{T} \left( Q_{\psi}^{*}(s_t, a_t) - \left( r_t + \gamma \max_{a'} Q_{\psi}^{*}(s_{t+1}, a') \right) \right)^2,
 $$
-
-
 

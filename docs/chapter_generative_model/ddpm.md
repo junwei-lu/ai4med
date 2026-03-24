@@ -1,5 +1,7 @@
 # Diffusion Model
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/flow/generative_models_workshop.ipynb#scrollTo=heckuy85ht" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 The Langevin Dynamics can be used to sample from a distribution $p \propto \exp(-f)$ when $f$ is known. However, for most cases, we need to learn the distribution from finite samples, e.g., images, where the distribution is unknown. This lecture introduces a **diffusion generative model** based on the diffusion process, which is a powerful tool for learning unknown distributions.
 
 From the [previous lecture](./langevin_dynamics.md), we know that the diffusion process
@@ -302,7 +304,6 @@ for _ in range(10000):
     loss.backward()
     optimizer.step()
 ```
-
 
 
 

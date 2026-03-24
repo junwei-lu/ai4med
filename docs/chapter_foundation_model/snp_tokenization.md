@@ -1,5 +1,7 @@
 # SNP Foundation Models Basics
 
+<a href="https://colab.research.google.com/github/junwei-lu/ai4med/blob/main/codes/snp/snp_genomics_workshop.ipynb#scrollTo=J6wHfT9mYxA2" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600;">▶ Try in Colab</a>
+
 ## Introduction: The Language of DNA
 
 The central dogma of molecular biology—DNA makes RNA makes Protein—can be viewed through the lens of natural language processing (NLP). Just as Large Language Models (LLMs) learn the statistical properties of human language, **Genomic Foundation Models** learn the "language" of DNA.
